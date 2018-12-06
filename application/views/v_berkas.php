@@ -4,6 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta name="csrf-token" content="{{ csrf_token() }}" />
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Admin OJSApp</title>
@@ -17,8 +18,6 @@
   <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/dist/css/skins/_all-skins.min.css">
   <!-- iCheck for checkboxes and radio inputs -->
   <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/plugins/iCheck/all.css">
-  <!-- lighbox -->
-  <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/lightbox/dist/css/lightbox.css'); ?>">
   <!-- pop up -->
   <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/sweetalert/sweetalert.css'); ?>">
   <script type="text/javascript" src="<?php echo base_url('assets/sweetalert/sweetalert.min.js'); ?>"></script>
@@ -113,7 +112,7 @@
                   </td>
                   <td><div class="btn-group">
                   <label>
-                  <input type="checkbox" class="flat-red getSubmit" value="<?php echo "$u[jenis_berkas] "; ?>">
+                  <input type="checkbox" data-id="<?php echo "$u[uploader_user_id] "; ?>" class="getSubmit" value="<?php echo "$u[jenis_berkas] "; ?>">
                 </label>
                       
                     </div></td>
@@ -165,17 +164,10 @@
 <script src="<?php echo base_url(); ?>/assets/dist/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="<?php echo base_url(); ?>/assets/dist/js/demo.js"></script>
-<!-- lightbox -->
-<script src="<?php echo base_url(); ?>/assets/lightbox/dist/js/lightbox.js"></script>
 <!-- iCheck 1.0.1 -->
 <script src="<?php echo base_url(); ?>/assets/plugins/iCheck/icheck.min.js"></script>
 <!-- page script -->
-<script>
-    lightbox.option({
-      'resizeDuration': 200,
-      'wrapAround': true
-    })
-</script>
+
 <script>
   $(function () {
 	  $.ajaxSetup({
@@ -183,10 +175,34 @@
 	cache:false,
 	dataType: "json"
 	})
-	
-	$(document).on("click",".getSubmit",function(){
+  
+  $(document).ready(function(){
+        $(".getSubmit").change(function() { 
+          var id=$(this).attr("data-id");
+          var value= $(this).val();
+          alert(value);
+            if($(this).is(":checked")) { 
+              $.ajaxSetup({
+headers: {
+'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+}
+});
+                $.ajax({
+                    url: "<?php echo base_url('c_submission/centang'); ?>",
+                    data: { id:id, value:value, strState:1 }
+                });
+            } else {
+                $.ajax({
+                  url: "<?php echo base_url('c_submission/centang'); ?>",
+                    data: { id:id, value:value, strState:0 }
+                });
+            }
+        }); 
+    });
+
+	$(document).on("click",".btn-primary",function(){
 	var id=$(this).val();
-	function(){
+	alert("id");
 		 $.ajax({
 			url:"<?php echo base_url('c_submission/ceklis'); ?>",
 			data:{id:id},
@@ -194,7 +210,7 @@
 				
 			}
 		 });
-	}
+	
 });
 
 $(document).on("click",".pembayaran-valid",function(){

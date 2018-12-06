@@ -16,4 +16,9 @@ class m_mahasiswa extends CI_Model {
 		$this->db->insert("tugas",array("tugas_nama"=>""));
 		return $this->db->insert_id();
 	}
+	public function set_centang($id,$value,$strState){
+		$this->db->set($value, $strState);
+		$this->db->where('author_id', $id);
+		$this->db->update('submission');
+	}
 }

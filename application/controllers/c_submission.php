@@ -96,6 +96,9 @@ class c_submission extends CI_Controller {
 	}
 	public function centang(){
 		$id= $this->input->post("id");
+		$value= $this->input->post("value");
+		$strState= $this->input->post("strState");
+		$this->m_mahasiswa->set_centang($id,$value,$strState);
 		print_r($id);
 	}
 	
