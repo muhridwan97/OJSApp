@@ -5,6 +5,10 @@ class m_mahasiswa extends CI_Model {
 	public function getMahasiswa(){
 		return $this->db->get('mahasiswa');
 	}
+	public function getDataAuthor($id){
+		$this->db->where('author_id',$id);
+		return $this->db->get('submission');
+	}
 	public function getTugas(){
 		return $this->db->get('tugas');
 	}

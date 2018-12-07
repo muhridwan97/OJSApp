@@ -4,7 +4,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="csrf-token" content="{{ csrf_token() }}" />
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Admin OJSApp</title>
@@ -112,7 +111,33 @@
                   </td>
                   <td><div class="btn-group">
                   <label>
-                  <input type="checkbox" data-id="<?php echo "$u[uploader_user_id] "; ?>" class="getSubmit" value="<?php echo "$u[jenis_berkas] "; ?>">
+                  <input type="checkbox" data-id="<?php echo "$u[uploader_user_id] "; ?>" class="getSubmit" value="<?php echo "$u[jenis_berkas] "; ?>"
+                   <?php foreach($userApp as $us){ 
+                     if(str_replace(' ', '', "$u[jenis_berkas]")=="FormSC2-17"){
+                       if("$us[FormSC2_17]"==1)
+                       echo "checked";
+                       }
+                     if(str_replace(' ', '', "$u[jenis_berkas]")=="FormSC2-12"){
+                       if("$us[FormSC2_12]"==1)
+                       echo "checked";
+                       }  
+                    if(str_replace(' ', '', "$u[jenis_berkas]")=="ArticleText"){
+                       if("$us[ArticleText]"==1)
+                       echo "checked";
+                       }
+                    if(str_replace(' ', '', "$u[jenis_berkas]")=="PerjanjianHakCipta"){
+                       if("$us[PerjanjianHakCipta]"==1)
+                       echo "checked";
+                       }
+                    if(str_replace(' ', '', "$u[jenis_berkas]")=="EtikaPublikasi"){
+                       if("$us[EtikaPublikasi]"==1)
+                       echo "checked";
+                       }
+                    if(str_replace(' ', '', "$u[jenis_berkas]")=="CekPlagiasidenganTurnitin"){
+                       if("$us[CekPlagiasidenganTurnitin]"==1)
+                       echo "checked";
+                       }
+                    }?>>
                 </label>
                       
                     </div></td>
@@ -180,13 +205,7 @@
         $(".getSubmit").change(function() { 
           var id=$(this).attr("data-id");
           var value= $(this).val();
-          alert(value);
             if($(this).is(":checked")) { 
-              $.ajaxSetup({
-headers: {
-'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-}
-});
                 $.ajax({
                     url: "<?php echo base_url('c_submission/centang'); ?>",
                     data: { id:id, value:value, strState:1 }
@@ -205,7 +224,7 @@ headers: {
 	alert("id");
 		 $.ajax({
 			url:"<?php echo base_url('c_submission/ceklis'); ?>",
-			data:{id:id},
+			data:{id:1},
 			success: function(){
 				
 			}

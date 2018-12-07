@@ -80,6 +80,8 @@ class c_submission extends CI_Controller {
 		// ubah string JSON menjadi array
 		$userFiles = json_decode($userFiles, TRUE);
 		$data['userFiles']=$userFiles;
+		$data['userApp']=$this->m_mahasiswa->getDataAuthor($userId)->result_array();
+		
 		$this->load->view('v_berkas',$data);
 	}
 
@@ -97,6 +99,13 @@ class c_submission extends CI_Controller {
 	public function centang(){
 		$id= $this->input->post("id");
 		$value= $this->input->post("value");
+		$value= str_replace(' ', '', $value);
+		if($value=="FormSC2-17"){
+			$value="FormSC2_17";
+		}
+		if($value=="FormSC2-12"){
+			$value="FormSC2_12";
+		}
 		$strState= $this->input->post("strState");
 		$this->m_mahasiswa->set_centang($id,$value,$strState);
 		print_r($id);
