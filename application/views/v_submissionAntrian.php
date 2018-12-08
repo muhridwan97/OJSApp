@@ -115,7 +115,7 @@
                 foreach($user as $u){
                   $i++;
                 ?>
-                <tr data-id="" >
+                <tr data-id="<?php echo "$u[submission_id]"; ?>" >
 				<td ><?php echo $i; ?></td>
                   <td><?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?></td>
                   <td><span class="label label-danger">Belum Selesai</span>
@@ -123,7 +123,7 @@
                   <td><div class="btn-group">
                   
                   <button type="button" class="btn btn-danger btn-flat pembayaran-valid" 
-					  data-id="" data-nama2 =""><i class="fa fa-remove"  ></i></button>
+					  data-id2="" data-nama2 =""><i class="fa fa-remove"  ></i></button>
                       <button type="button" class="btn btn-success btn-flat submission-valid" 
 					  data-id="<?php echo "$u[submission_id]"; ?>" data-nama ="<?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?>">
             <i class="fa fa-check"  ></i></button>

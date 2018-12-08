@@ -55,12 +55,14 @@ class c_submission extends CI_Controller {
 	function http_request_post($url,$post){
 		// persiapkan curl
 		$ch = curl_init(); 
-	
+		$post = http_build_query($post);
+		//print_r($post);
 		// set url 
 		curl_setopt($ch, CURLOPT_URL, $url);
 	
 		// return the transfer as a string 
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+		curl_setopt($ch, CURLOPT_POST, true);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
 	
 		// $output contains the output string 
@@ -133,16 +135,17 @@ class c_submission extends CI_Controller {
 	public function submitIn(){
 		$submission_id= $this->input->post("id");
 		$date= date('Y-m-d H:i:s');
-		print_r($date);
+		//print_r($date);
 		$data = array(
-			'submission_id' => 6,
+			'submission_id' => $submission_id,
 			'user_group_id' => 20,
 			'user_id' => 3,//editor id
 			'date_assigned' => $date
 			);	
-		$userFiles = $this->http_request_post("http://localhost/serviceOJS/api/submitIn",$data);
+			
+		$userFiles = $this->http_request_post("http://localhost/serviceOJS/api/antrian/submitIn",$data);
 		echo(json_decode($userFiles, TRUE));
-		//echo "{}";
+		echo "{}";
 	}
 	
 }
