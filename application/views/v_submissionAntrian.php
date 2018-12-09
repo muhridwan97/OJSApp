@@ -125,8 +125,7 @@
                   </td>
                   <td><div class="btn-group">
                   
-                  <button type="button" class="btn btn-danger btn-flat pembayaran-valid" 
-					  data-id2="" data-nama2 =""><i class="fa fa-remove"  ></i></button>
+                  <a href="" type="button" class="btn btn-warning btn-flat"><i class="fa fa-send"></i></a>
                       <button type="button" class="btn btn-success btn-flat submission-valid" 
 					  data-id="<?php echo "$u[submission_id]"; ?>" data-nama ="<?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?>">
             <i class="fa fa-check"  ></i></button>
@@ -176,8 +175,7 @@
                   </td>
                   <td><div class="btn-group">
                   
-                  <button type="button" class="btn btn-danger btn-flat pembayaran-valid" 
-					  data-id2="" data-nama2 =""><i class="fa fa-remove"  ></i></button>
+                  <a href="" type="button" class="btn btn-warning btn-flat"><i class="fa fa-send"></i></a>
                       <button type="button" class="btn btn-success btn-flat submission-valid" 
 					  data-id="<?php echo "$u[submission_id]"; ?>" data-nama ="<?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?>">
             <i class="fa fa-check"  ></i></button>

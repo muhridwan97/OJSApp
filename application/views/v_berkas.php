@@ -104,7 +104,7 @@
                 foreach($userFiles as $u){
                   $i++;
                 ?>
-                <tr data-id="" >
+                <tr data-id="<?php echo "$u[uploader_user_id] "; ?>" >
 				<td ><?php echo $i; ?></td>
                   <td><a href="<?php echo base_url(); ?>c_submission/alamatBerkas/<?php echo "$u[file_id]" ?>" target="_blank" ><?php echo "$u[nama_file] "; ?></a></td>
                   <td><?php echo "$u[jenis_berkas] "; ?>
@@ -148,7 +148,8 @@
                 </tbody>
               </table>
               <div class="box-footer">
-                <button  type="submit" class="btn btn-primary pull-right">Submit</button>
+                <button  type="submit" data-id="<?php echo "$u[uploader_user_id] "; ?>" 
+                data-nama="<?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?>" class="btn btn-primary pull-right verifikasi">Verifikasi</button>
               </div>
             </div>
             <!-- /.box-body -->
@@ -219,38 +220,23 @@
         }); 
     });
 
-	$(document).on("click",".btn-primary",function(){
-	var id=$(this).val();
-	alert("id");
-		 $.ajax({
-			url:"<?php echo base_url('c_submission/ceklis'); ?>",
-			data:{id:1},
-			success: function(){
-				
-			}
-		 });
-	
-});
 
-$(document).on("click",".pembayaran-valid",function(){
-	var id=$(this).attr("data-id2");
-	var nama=$(this).attr("data-nama2");
+$(document).on("click",".verifikasi",function(){
+	var id=$(this).attr("data-id");
+	var nama=$(this).attr("data-nama");
 	swal({
-		title: "Pembayaran atas nama "+ nama +" Valid",
-		text:"Yakin Pemabayaran ini valid?",
+		title: "Submission atas nama "+ nama +" benar",
+		text:"Verifikasi?",
 		type: "warning",
 		showCancelButton: true,
-		confirmButtonText: "Yakin",
+		confirmButtonText: "Ya",
 		closeOnConfirm: true,
 	},
 		function(){
 		 $.ajax({
-			url:"<?php echo base_url('Adminika/pembayaranValid'); ?>",
+			url:"<?php echo base_url('c_submission/verifikasi'); ?>",
 			data:{id:id},
 			success: function(){
-				$("tr[data-id2='"+id+"']").fadeOut("fast",function(){
-					$(this).remove();
-				});
 			}
 		 });
 	});

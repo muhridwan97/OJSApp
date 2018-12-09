@@ -154,5 +154,19 @@ class c_submission extends CI_Controller {
 		echo(json_decode($userFiles, TRUE));
 		echo "{}";
 	}
+	public function verifikasi(){
+		$user_id= $this->input->post("id");
+		$date= date('Y-m-d H:i:s');
+		//print_r($date);
+		$data = array(
+			'user_id' => $user_id,
+			'editor_user_id' => 3,//editor id
+			'date_assigned' => $date
+			);	
+			
+		$userFiles = $this->http_request_post("http://localhost/serviceOJS/api/verifikasi",$data);
+		echo(json_decode($userFiles, TRUE));
+		echo "{}";
+	}
 	
 }

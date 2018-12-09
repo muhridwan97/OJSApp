@@ -15,8 +15,6 @@
   <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
   <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/dist/css/AdminLTE.min.css">
   <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/dist/css/skins/_all-skins.min.css">
-  <!-- lighbox -->
-  <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/lightbox/dist/css/lightbox.css'); ?>">
   <!-- pop up -->
   <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/sweetalert/sweetalert.css'); ?>">
   <script type="text/javascript" src="<?php echo base_url('assets/sweetalert/sweetalert.min.js'); ?>"></script>
@@ -118,7 +116,15 @@
                 <tr data-id="" >
 				<td ><?php echo $i; ?></td>
                   <td><?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?></td>
-                  <td><span class="label label-danger">Pending</span>
+                  <td>
+                  <?php if("$u[stage_id]"==3){
+                  ?>
+                  <span class="label label-info">Verified</span>
+                  <?php }else{
+                  ?>
+                  <span class="label label-danger">Pending</span>
+                  <?php }
+                  ?>
                   </td>
                   <td><div class="btn-group">
                   
@@ -172,15 +178,8 @@
 <script src="<?php echo base_url(); ?>/assets/dist/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="<?php echo base_url(); ?>/assets/dist/js/demo.js"></script>
-<!-- lightbox -->
-<script src="<?php echo base_url(); ?>/assets/lightbox/dist/js/lightbox.js"></script>
 <!-- page script -->
-<script>
-    lightbox.option({
-      'resizeDuration': 200,
-      'wrapAround': true
-    })
-</script>
+
 <script>
   $(function () {
 	  $.ajaxSetup({
