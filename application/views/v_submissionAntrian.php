@@ -104,7 +104,7 @@
                 <tr>
                   <th>No</th>
                   <th>Nama</th>
-                  <th>Status</th>
+                  <th>Status Skripsi</th>
                   <th>Action</th>
                 </tr>
                 
@@ -115,17 +115,20 @@
                 foreach($user as $u){
                   $i++;
                 ?>
-                <tr data-id="" >
+                <tr data-id="<?php echo "$u[submission_id]"; ?>" >
 				<td ><?php echo $i; ?></td>
                   <td><?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?></td>
-                  <td><span class="label label-danger">Pending</span>
+                  <td><span class="label 
+                  <?php if("$u[statusSkripsi]"=="selesai")echo "label-success"; else echo "label-danger";?>">
+                  
+                  <?php echo "$u[statusSkripsi]"; ?></span>
                   </td>
                   <td><div class="btn-group">
                   
-                  <button type="button" class="btn btn-danger btn-flat pembayaran-valid" 
-					  data-id="" data-nama2 =""><i class="fa fa-remove"  ></i></button>
-                      <button type="button" class="btn btn-success btn-flat pembayaran-valid" 
-					  data-id="" data-nama2 =""><i class="fa fa-check"  ></i></button>
+                  <a href="" type="button" class="btn btn-warning btn-flat"><i class="fa fa-send"></i></a>
+                      <button type="button" class="btn btn-success btn-flat submission-valid" 
+					  data-id="<?php echo "$u[submission_id]"; ?>" data-nama ="<?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?>">
+            <i class="fa fa-check"  ></i></button>
                     </div></td>
                 </tr>
                 <?php
@@ -138,7 +141,56 @@
           </div>
           <!-- /.box -->
         </div>
-	  
+        <div class="col-sm-6 col-xs-12">
+          
+          <!-- /.box -->
+
+          <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">Data Submission Revisi</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table id="example2" class="table table-bordered table-striped">
+                <thead>
+                
+                <tr>
+                  <th>No</th>
+                  <th>Nama</th>
+                  <th>Status Skripsi</th>
+                  <th>Action</th>
+                </tr>
+                
+                </thead>
+                <tbody>
+                <?php
+                 $i=0;
+                foreach($user as $u){
+                  $i++;
+                ?>
+                <tr data-id="<?php echo "$u[submission_id]"; ?>" >
+				<td ><?php echo $i; ?></td>
+                  <td><?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?></td>
+                  <td><span class="label label-danger">Belum Selesai</span>
+                  </td>
+                  <td><div class="btn-group">
+                  
+                  <a href="" type="button" class="btn btn-warning btn-flat"><i class="fa fa-send"></i></a>
+                      <button type="button" class="btn btn-success btn-flat submission-valid" 
+					  data-id="<?php echo "$u[submission_id]"; ?>" data-nama ="<?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?>">
+            <i class="fa fa-check"  ></i></button>
+                    </div></td>
+                </tr>
+                <?php
+                }
+                ?>
+                </tbody>
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
 	  
 		
 		
@@ -202,12 +254,12 @@
 		);
 });
 
-$(document).on("click",".pembayaran-valid",function(){
-	var id=$(this).attr("data-id2");
-	var nama=$(this).attr("data-nama2");
+$(document).on("click",".submission-valid",function(){
+	var id=$(this).attr("data-id");
+	var nama=$(this).attr("data-nama");
 	swal({
-		title: "Pembayaran atas nama "+ nama +" Valid",
-		text:"Yakin Pemabayaran ini valid?",
+		title: "Submission atas nama "+ nama +" Valid",
+		text:"Yakin Submission ini valid?",
 		type: "warning",
 		showCancelButton: true,
 		confirmButtonText: "Yakin",
@@ -215,10 +267,10 @@ $(document).on("click",".pembayaran-valid",function(){
 	},
 		function(){
 		 $.ajax({
-			url:"<?php echo base_url('Adminika/pembayaranValid'); ?>",
+			url:"<?php echo base_url('c_submission/submitIn'); ?>",
 			data:{id:id},
 			success: function(){
-				$("tr[data-id2='"+id+"']").fadeOut("fast",function(){
+				$("tr[data-id='"+id+"']").fadeOut("fast",function(){
 					$(this).remove();
 				});
 			}
@@ -274,14 +326,7 @@ $(document).on("click",".hapus-member",function(){
 	});
 });
     $('#example1').DataTable()
-    $('#example2').DataTable({
-      'paging'      : true,
-      'lengthChange': false,
-      'searching'   : false,
-      'ordering'    : true,
-      'info'        : true,
-      'autoWidth'   : false
-    })
+    $('#example2').DataTable()
   })
 </script>
 </body>

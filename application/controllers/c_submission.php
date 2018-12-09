@@ -52,6 +52,28 @@ class c_submission extends CI_Controller {
 		// mengembalikan hasil curl
 		return $output;
 	}
+	function http_request_post($url,$post){
+		// persiapkan curl
+		$ch = curl_init(); 
+		$post = http_build_query($post);
+		//print_r($post);
+		// set url 
+		curl_setopt($ch, CURLOPT_URL, $url);
+	
+		// return the transfer as a string 
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+		curl_setopt($ch, CURLOPT_POST, true);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+	
+		// $output contains the output string 
+		$output = curl_exec($ch); 
+	
+		// tutup curl 
+		curl_close($ch);      
+	
+		// mengembalikan hasil curl
+		return $output;
+	}
 	public function lihatAntrian(){
 		$profile = $this->http_request("http://localhost/serviceOJS/api/userSubmitAntrian");
 		
@@ -60,15 +82,22 @@ class c_submission extends CI_Controller {
 		
 		$mahasiswa = $this->m_mahasiswa->getMahasiswa()->result_array();	
 //print_r($profile);
-
+		$i=0;
 		foreach($profile as $a){
 			$nama=$a['first_name'].' '.$a['middle_name'].''.$a['last_name'];
-			foreach($mahasiswa as $b){
-				if(strtolower($nama) === strtolower($b['namaMahasiswa'])){
-					//echo $b['namaMahasiswa'];
-				} 
-			}
+			$nama=str_replace(' ', '', $nama);
 			
+			foreach($mahasiswa as $b){
+				$namaSiswa=$b['namaMahasiswa'];//dri filkomappp
+				$namaSiswa=str_replace(' ', '', $namaSiswa);
+				
+				if(strtolower($nama) == strtolower($namaSiswa)){
+					//echo $nama;
+					$profile[$i]['statusSkripsi']=$b['status'];
+				} 
+				
+			}
+		$i++;
 				
 	}
 		$data['user']=$profile;
@@ -108,7 +137,36 @@ class c_submission extends CI_Controller {
 		}
 		$strState= $this->input->post("strState");
 		$this->m_mahasiswa->set_centang($id,$value,$strState);
-		print_r($id);
+		//print_r($id);
+	}
+	public function submitIn(){
+		$submission_id= $this->input->post("id");
+		$date= date('Y-m-d H:i:s');
+		//print_r($date);
+		$data = array(
+			'submission_id' => $submission_id,
+			'user_group_id' => 20,
+			'user_id' => 3,//editor id
+			'date_assigned' => $date
+			);	
+			
+		$userFiles = $this->http_request_post("http://localhost/serviceOJS/api/antrian/submitIn",$data);
+		echo(json_decode($userFiles, TRUE));
+		echo "{}";
+	}
+	public function verifikasi(){
+		$user_id= $this->input->post("id");
+		$date= date('Y-m-d H:i:s');
+		//print_r($date);
+		$data = array(
+			'user_id' => $user_id,
+			'editor_user_id' => 3,//editor id
+			'date_assigned' => $date
+			);	
+			
+		$userFiles = $this->http_request_post("http://localhost/serviceOJS/api/verifikasi",$data);
+		echo(json_decode($userFiles, TRUE));
+		echo "{}";
 	}
 	
 }
