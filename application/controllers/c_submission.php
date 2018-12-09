@@ -82,15 +82,22 @@ class c_submission extends CI_Controller {
 		
 		$mahasiswa = $this->m_mahasiswa->getMahasiswa()->result_array();	
 //print_r($profile);
-
+		$i=0;
 		foreach($profile as $a){
 			$nama=$a['first_name'].' '.$a['middle_name'].''.$a['last_name'];
-			foreach($mahasiswa as $b){
-				if(strtolower($nama) === strtolower($b['namaMahasiswa'])){
-					//echo $b['namaMahasiswa'];
-				} 
-			}
+			$nama=str_replace(' ', '', $nama);
 			
+			foreach($mahasiswa as $b){
+				$namaSiswa=$b['namaMahasiswa'];//dri filkomappp
+				$namaSiswa=str_replace(' ', '', $namaSiswa);
+				
+				if(strtolower($nama) == strtolower($namaSiswa)){
+					//echo $nama;
+					$profile[$i]['statusSkripsi']=$b['status'];
+				} 
+				
+			}
+		$i++;
 				
 	}
 		$data['user']=$profile;

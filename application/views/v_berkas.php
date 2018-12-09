@@ -83,7 +83,7 @@
 
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Data Submission <?php foreach($userFiles as $u){ }echo "$u[first_name] $u[middle_name] $u[last_name]"; ?></h3>
+              <h3 class="box-title"><?php foreach($userFiles as $u){ }echo "$u[first_name] $u[middle_name] $u[last_name]"; ?></h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
