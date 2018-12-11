@@ -86,7 +86,7 @@ class c_submission extends CI_Controller {
 		foreach($profile as $a){
 			$nama=$a['first_name'].' '.$a['middle_name'].''.$a['last_name'];
 			$nama=str_replace(' ', '', $nama);
-			
+			$profile[$i]['statusSkripsi']="data tidak di temukan di filkop APP";
 			foreach($mahasiswa as $b){
 				$namaSiswa=$b['namaMahasiswa'];//dri filkomappp
 				$namaSiswa=str_replace(' ', '', $namaSiswa);
@@ -105,10 +105,12 @@ class c_submission extends CI_Controller {
 	}
 	public function lihatBerkas($userId){
 		$userFiles = $this->http_request("http://localhost/serviceOJS/api/userFiles/".$userId);
-		
+		$metadata = $this->http_request("http://localhost/serviceOJS/api/metadata/".$userId);
 		// ubah string JSON menjadi array
 		$userFiles = json_decode($userFiles, TRUE);
+		$metadata = json_decode($metadata, TRUE);
 		$data['userFiles']=$userFiles;
+		$data['user']=$metadata;
 		$data['userApp']=$this->m_mahasiswa->getDataAuthor($userId)->result_array();
 		
 		$this->load->view('v_berkas',$data);
@@ -165,6 +167,23 @@ class c_submission extends CI_Controller {
 			);	
 			
 		$userFiles = $this->http_request_post("http://localhost/serviceOJS/api/verifikasi",$data);
+		echo(json_decode($userFiles, TRUE));
+		echo "{}";
+	}
+	public function metadata(){
+		$submission_id= $this->input->post("id");
+		$judul= $this->input->post("judul");
+		$subtitle= $this->input->post("subtitle");
+		$abstract= $this->input->post("abstract");
+		//print_r($date);
+		$data = array(
+			'submission_id' => $submission_id,
+			'judul' => $judul,//editor id
+			'subtitle' => $subtitle,
+			'abstract' => $abstract
+			);	
+			
+		$userFiles = $this->http_request_post("http://localhost/serviceOJS/api/setMetadata",$data);
 		echo(json_decode($userFiles, TRUE));
 		echo "{}";
 	}

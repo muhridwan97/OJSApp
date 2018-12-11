@@ -106,8 +106,16 @@
                 <tbody>
                 <?php
                  $i=0;
+                 $judul="";
+                 $subtitle="";
+                 $abstract="";
                 foreach($userFiles as $u){
                   $i++;
+                  $judul="$u[judul]";
+                  $subtitle="$u[subtitle]";
+                  $abstract="$u[abstract]";
+                  $abstract=str_replace('<p>', '', $abstract);
+                  $abstract=str_replace('</p>', '', $abstract);
                 ?>
                 <tr data-id="<?php echo "$u[uploader_user_id] "; ?>" >
 				<td ><?php echo $i; ?></td>
@@ -177,11 +185,11 @@
 	<div class="box-body">
 		<div class="form-group">
 			<label>Judul</label>
-			<input type="text" class="form-control" id="judul" value="<?php   ?>" name="judul" placeholder="Masukkan Judul">
+			<input type="text" class="form-control" id="judul" value="<?php  echo $judul; ?>" name="judul" placeholder="Masukkan Judul">
 		</div>
 		<div class="form-group">
 			<label>Subtitle</label>
-			<input type="text" class="form-control" id="subtitle" value="<?php   ?>" name="subtitle" placeholder="Masukkan Subtitle">
+			<input type="text" class="form-control" id="subtitle" value="<?php echo $subtitle;  ?>" name="subtitle" placeholder="Masukkan Subtitle">
 		</div>
 		<div class="form-group">
 			<div class="box box-info">
@@ -198,16 +206,12 @@
 				</div>
 				<!-- /.box-header -->
 				<div class="box-body pad">
-					<form>
-						<textarea id="editor1" name="editor1" rows="10" cols="80">
-                  This is my textarea to be replaced with CKEditor.
-             </textarea>
-					</form>
+						<textarea id="editor1" class="form-control" name="editor1" rows="10" ><?php echo $abstract;?></textarea>
 				</div>
 			</div>
 		</div>
     <div class="form-group">
-    <table id="example1" class="table table-bordered table-striped">
+    <table id="example" class="table table-bordered table-striped">
                 <thead>
                 
                 <tr>
@@ -220,13 +224,15 @@
                 <tbody>
                 <?php
                  $i=0;
+                 $submission_id=0;
                 foreach($user as $u){
                   $i++;
+                  $submission_id="$u[submission_id]";
                 ?>
                 <tr data-id="<?php echo "$u[submission_id]"; ?>" >
 				<td ><?php echo $i; ?></td>
                   <td><?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?></td>
-                  <td><?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?></td>
+                  <td><?php echo "$u[email]"; ?></td>
                   
                 </tr>
                 <?php
@@ -243,7 +249,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-primary abstract" data-dismiss="modal" data-id="<?php echo "$submission_id"; ?>">Save changes</button>
       </div>
     </div>
   </div>
@@ -261,7 +267,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-primary" >Save changes</button>
       </div>
     </div>
   </div>
@@ -365,28 +371,19 @@ $(document).on("click",".verifikasi",function(){
 	});
 });
 
-$(document).on("click",".ijazah-valid",function(){
+$(document).on("click",".abstract",function(){
 	var id=$(this).attr("data-id");
-	var nama=$(this).attr("data-nama");
-	swal({
-		title: "Ijazah atas nama  "+ nama +" Valid",
-		text:"Yakin Ijazah ini valid?",
-		type: "warning",
-		showCancelButton: true,
-		confirmButtonText: "Yakin",
-		closeOnConfirm: true,
-	},
-		function(){
-		 $.ajax({
-			url:"<?php echo base_url('Adminika/ijazahValid'); ?>",
-			data:{id:id},
+	var judul=$('#judul').prop('value');
+  var subtitle=$('#subtitle').prop('value');
+  var abstract=$('textarea#editor1').val();
+  alert(abstract);
+	$.ajax({
+			url:"<?php echo base_url('c_submission/metadata'); ?>",
+			data:{id:id,judul:judul,subtitle:subtitle,abstract:abstract},
 			success: function(){
-				$("tr[data-id='"+id+"']").fadeOut("fast",function(){
-					$(this).remove();
-				});
+        alert("data berhasil di update");
 			}
 		 });
-	});
 });
 
 $(document).on("click",".hapus-member",function(){
