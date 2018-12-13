@@ -69,7 +69,9 @@
           </a>
           <ul class="treeview-menu">
             <li  ><a href="<?php echo base_url(); ?>c_submission/lihatAntrian">Antrian Submission</a></li>
-            <li class="active" ><a href="<?php echo base_url(); ?>c_submission/">Submission</a></li>
+            <li ><a href="<?php echo base_url(); ?>c_submission/">Submission</a></li>
+            
+            <li class="active" ><a href="<?php echo base_url(); ?>c_submission/lihatPublication">Publication</a></li>
           </ul>
         </li>
 			<span class="pull-right-container">
@@ -117,21 +119,13 @@
 				<td ><?php echo $i; ?></td>
                   <td><?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?></td>
                   <td>
-                  <?php if("$u[stage_id]"==3){
-                  ?>
-                  <span class="label label-info">Verified</span>
-                  <?php }else{
-                  ?>
-                  <span class="label label-danger">Pending</span>
-                  <?php }
-                  ?>
+                  <span class="label label-info">Publised</span>
+                  
                   </td>
                   <td><div class="btn-group">
                   
-                  <a href="<?php echo base_url(); ?>c_submission/lihatBerkas/<?php echo "$u[user_id]" ?>" type="button" class="btn btn-info btn-flat"><i class="fa fa-info"></i></a>
-                      <button type="button" class="btn btn-success btn-flat pembayaran-valid" 
-					  data-id="" data-nama2 =""><i class="fa fa-check"  ></i></button>
-					  <a href="" type="button" class="btn btn-warning btn-flat"><i class="fa fa-send"></i></a>
+                  <a href="<?php echo base_url(); ?>c_submission/lihatBerkasPublication/<?php echo "$u[user_id]" ?>" type="button" class="btn btn-info btn-flat"><i class="fa fa-info"></i></a>
+                      
                     </div></td>
                 </tr>
                 <?php

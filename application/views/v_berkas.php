@@ -171,6 +171,57 @@
           </div>
           <!-- /.box -->
         </div>
+
+ <!-- /.data skripsi filkomapp -->
+        <div class="col-sm-6 col-xs-12">
+          
+          <!-- /.box -->
+
+          <div class="box">
+            <div class="box-header">
+              <h3 class="box-title"><?php foreach($userFiles as $u){ }echo "$u[first_name] $u[middle_name] $u[last_name]"; ?></h3>
+              
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table id="" class="table table-bordered table-striped">
+                <thead>
+                
+                <tr>
+                  <th>No</th>
+                  <th>Nama Berkas</th>
+                  <th>Jenis Berkas</th>
+                </tr>
+                
+                </thead>
+                <tbody>
+                <?php
+                foreach($berkasApp as $u){
+                ?>
+                <tr data-id=" "" >
+				<td >1</td>
+                  <td><a href="<?php echo base_url(); ?>c_submission/alamatBerkasApp/<?php echo "$u[hardcover]" ?>" target="_blank" ><?php echo "$u[hardcover] "; ?></a></td>
+                  <td>hardcover
+                  </td>
+                  
+                </tr>
+                <tr data-id=" "" >
+				<td >2</td>
+                  <td><a href="<?php echo base_url(); ?>c_submission/alamatBerkasApp/<?php echo "$u[sc_12]" ?>" target="_blank" ><?php echo "$u[sc_12] "; ?></a></td>
+                  <td>SC-12
+                  </td>
+                  
+                </tr>
+                <?php
+                }
+                ?>
+                </tbody>
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
   
   <!-- /.modal -->
   <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
