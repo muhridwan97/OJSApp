@@ -12,24 +12,27 @@ class c_submission extends CI_Controller {
 	public function index()
 	{
 		$profile = $this->http_request("http://localhost/serviceOJS/api/userSubmit");
-		
+		$issue = $this->http_request("http://localhost/serviceOJS/api/publicationIssue");
 		// ubah string JSON menjadi array
 		$profile = json_decode($profile, TRUE);
+		$issue = json_decode($issue, TRUE);
 		
-		$mahasiswa = $this->m_mahasiswa->getMahasiswa()->result_array();	
+		//$mahasiswa = $this->m_mahasiswa->getMahasiswa()->result_array();	
 //print_r($profile);
 
-		foreach($profile as $a){
-			$nama=$a['first_name'].' '.$a['middle_name'].''.$a['last_name'];
-			foreach($mahasiswa as $b){
-				if(strtolower($nama) === strtolower($b['namaMahasiswa'])){
-					//echo $b['namaMahasiswa'];
-				} 
-			}
+	// 	foreach($profile as $a){
+	// 		$nama=$a['first_name'].' '.$a['middle_name'].''.$a['last_name'];
+	// 		foreach($mahasiswa as $b){
+	// 			if(strtolower($nama) === strtolower($b['namaMahasiswa'])){
+	// 				//echo $b['namaMahasiswa'];
+	// 			} 
+	// 		}
 			
 				
-	}
+	// }
+		
 		$data['user']=$profile;
+		$data['issue']=$issue;
 		$this->load->view('v_submission',$data);
 
 	}

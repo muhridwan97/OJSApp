@@ -157,13 +157,56 @@
       <div class="box-body">
 		<div class="form-group">
 			<label>Issue</label>
-			<select name="" id=""class="form-control select" style="width: 100%;">
-        <option>isu 1</option>
-        <option>isu 2</option>
-        <option>isu 3</option>
+			<select name="" id="issue"class="form-control select" style="width: 100%;">
+      <option>------Future Issue------</option>
+      <?php
+          foreach($issue as $i){
+                ?>
+                
+                <?php
+              if( "$i[published]"==0 && "$i[current]"==0 ){
+              ?>
+        <option value="<?php echo "$i[issue_id]"; ?>"><?php echo "Vol "."$i[volume]"." No "."$i[number]"." ($i[year]) : "."$i[setting_value]"; ?></option>
+             <?php
+              }
+              ?>
+                <?php
+              }
+              ?>
+      <option>------Current Issue------</option>
+      <?php
+          foreach($issue as $i){
+                ?>
+                
+                <?php
+              if( "$i[published]"==1 && "$i[current]"==1 ){
+              ?>
+        <option value="<?php echo "$i[issue_id]"; ?>"><?php echo "Vol "."$i[volume]"." No "."$i[number]"." ($i[year]) : "."$i[setting_value]"; ?></option>
+             <?php
+              }
+              ?>
+                <?php
+              }
+              ?>
+      <option>------Back Issue------</option>
+      <?php
+          foreach($issue as $i){
+                ?>
+                
+                <?php
+              if( "$i[published]"==1 && "$i[current]"==0 ){
+              ?>
+        <option value="<?php echo "$i[issue_id]"; ?>"><?php echo "Vol "."$i[volume]"." No "."$i[number]"." ($i[year]) : "."$i[setting_value]"; ?></option>
+             <?php
+              }
+              ?>
+                <?php
+              }
+              ?>
       </select>
       
 		</div>
+                             
     <div class="form-group">
     <label>Page</label>
       <input type="text" class="form-control" id="page" value="<?php  echo 10; ?>" name="page" placeholder="Masukkan page">
@@ -173,6 +216,16 @@
     <label>Tahun</label>
       <input type="text" class="form-control" id="tahun" value="<?php    ?>" name="tahun" placeholder="2018">
 		</div>
+    <div class="form-group">
+    <label for="exampleInputFile">File arsip</label>
+      <input type="file" id="arsip">
+      <button style="margin-top:10px;" type="button" class="btn btn-primary" >Upload File</button>
+    </div>
+    <div class="form-group">
+    <label for="exampleInputFile">File galley</label>
+      <input type="file" id="galley">
+      <button style="margin-top:10px;" type="button" class="btn btn-primary" >Upload File</button>
+    </div>
     </div>
       </div>
       <div class="modal-footer">
@@ -250,10 +303,11 @@ $('#myModal').on('shown.bs.modal', function () {
 
 $(document).on("click",".publication",function(){
 	var id=$('#id_orang').val();
+  var issue_id=$('#issue').val();
 	var page=$('#page').prop('value');
   //var subtitle=$('#subtitle').prop('value');
   //var abstract=$('textarea#editor1').val();
-  //alert(id);
+  alert(issue_id);
 	$.ajax({
 			url:"<?php echo base_url('c_submission/setPublication'); ?>",
 			data:{id:id,judul:judul,subtitle:subtitle,abstract:abstract},
