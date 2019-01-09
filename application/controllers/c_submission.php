@@ -267,5 +267,10 @@ class c_submission extends CI_Controller {
 		echo(json_decode($userFiles, TRUE));
 		echo "{}";
 	}
+
+	public function submitArsip(){
+		echo $this->input->post("arsip");
+		echo "{}";
+	}
 	
 }

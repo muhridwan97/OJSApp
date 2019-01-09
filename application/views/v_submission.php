@@ -217,14 +217,19 @@
       <input type="text" class="form-control" id="tahun" value="<?php    ?>" name="tahun" placeholder="2018">
 		</div>
     <div class="form-group">
+    <form id="formArsip" method="post" enctype="multipart/form-data">
     <label for="exampleInputFile">File arsip</label>
-      <input type="file" id="arsip">
-      <button style="margin-top:10px;" type="button" class="btn btn-primary" >Upload File</button>
+      <input type="file" id="arsip" name="arsip">
+      <input type="text" id="a" name="a">
+      </form>
+      <button style="margin-top:10px;" id="submitArsip" class="btn btn-primary" >Upload File</button>
     </div>
     <div class="form-group">
+    <form id="formGalley" method="post" enctype="multipart/form-data">
     <label for="exampleInputFile">File galley</label>
-      <input type="file" id="galley">
-      <button style="margin-top:10px;" type="button" class="btn btn-primary" >Upload File</button>
+      <input type="file" id="galley" name="galley">
+      <button style="margin-top:10px;" id="submitGalley" class="btn btn-primary" >Upload File</button>
+      </form>
     </div>
     </div>
       </div>
@@ -279,7 +284,7 @@ $('.cek').on('click', function () {
 
 
 $('#myModal').on('shown.bs.modal', function () {
-
+  
 });
   $(function () {
 	  $.ajaxSetup({
@@ -313,6 +318,23 @@ $(document).on("click",".publication",function(){
 			data:{id:id,judul:judul,subtitle:subtitle,abstract:abstract},
 			success: function(){
         alert("data berhasil di update");
+			}
+		 });
+});
+
+$(document).on("click","#submitArsip",function(){
+  
+  var qq=$("#formArsip").serialize()
+  //alert(qq);
+  console.log(qq);
+	$.ajax({
+			url:"<?php echo base_url('c_submission/submitArsip'); ?>",
+      data:$("#formArsip").serialize(),
+      type: "POST",
+      contentType: false,
+      processData: false,
+			success: function(){
+        alert("data berhasil di upload");
 			}
 		 });
 });
