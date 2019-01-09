@@ -15,6 +15,10 @@
   <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
   <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/dist/css/AdminLTE.min.css">
   <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/dist/css/skins/_all-skins.min.css">
+  <!-- iCheck for checkboxes and radio inputs -->
+  <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/plugins/iCheck/all.css">
+  <!-- bootstrap wysihtml5 - text editor -->
+  <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
   <!-- pop up -->
   <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/sweetalert/sweetalert.css'); ?>">
   <script type="text/javascript" src="<?php echo base_url('assets/sweetalert/sweetalert.min.js'); ?>"></script>
@@ -60,19 +64,7 @@
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header">MAIN NAVIGATION</li>
 		<li ><a href="<?php echo base_url(); ?>"><i class="fa fa-dashboard"></i> <span>DASHBOARD</span></a></li>
-    <li class="active" class="treeview">
-          <a href="<?php echo base_url(); ?>c_submission/">
-            <i class="fa fa-envelope"></i>  <span>SUBMISSION</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li  ><a href="<?php echo base_url(); ?>c_submission/lihatAntrian">Antrian Submission</a></li>
-            <li class="active" ><a href="<?php echo base_url(); ?>c_submission/">Submission</a></li>
-            <li ><a href="<?php echo base_url(); ?>c_submission/lihatPublication">Publication</a></li>
-          </ul>
-        </li>
+		<li class="active"><a href="<?php echo base_url(); ?>c_submission/"><i class="fa fa-envelope"></i> <span>SUBMISSION</span>
 			<span class="pull-right-container">
               
             </span></a></li>
@@ -82,7 +74,7 @@
   <div class="content-wrapper">
     <section class="content-header">
       <h1>
-      SUBMISSION
+        SUBMISSION
       </h1>
     </section>
     <section class="content">
@@ -93,47 +85,43 @@
 
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Data Submission</h3>
+              <h3 class="box-title"><?php foreach($userFiles as $u){ }echo "$u[first_name] $u[middle_name] $u[last_name]"; ?></h3>
+              <button type="button" style="margin-right:10px;" class="btn btn-primary pull-right" data-toggle="modal" data-target="#myModal">
+                Metadata
+              </button>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              <table id="example1" class="table table-bordered table-striped">
+              <table id="" class="table table-bordered table-striped">
                 <thead>
                 
                 <tr>
                   <th>No</th>
-                  <th>Nama</th>
-                  <th>Status</th>
-                  <th>Action</th>
+                  <th>Nama Berkas</th>
+                  <th>Jenis Berkas</th>
                 </tr>
                 
                 </thead>
                 <tbody>
                 <?php
                  $i=0;
-                foreach($user as $u){
+                 $judul="";
+                 $subtitle="";
+                 $abstract="";
+                foreach($userFiles as $u){
                   $i++;
+                  $judul="$u[judul]";
+                  $subtitle="$u[subtitle]";
+                  $abstract="$u[abstract]";
+                  $abstract=str_replace('<p>', '', $abstract);
+                  $abstract=str_replace('</p>', '', $abstract);
                 ?>
-                <tr data-id="" >
+                <tr data-id="<?php echo "$u[uploader_user_id] "; ?>" >
 				<td ><?php echo $i; ?></td>
-                  <td><?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?></td>
-                  <td>
-                  <?php if("$u[stage_id]"==3){
-                  ?>
-                  <span class="label label-info">Verified</span>
-                  <?php }else{
-                  ?>
-                  <span class="label label-danger">Pending</span>
-                  <?php }
-                  ?>
+                  <td><a href="<?php echo base_url(); ?>c_submission/alamatBerkas/<?php echo "$u[file_id]" ?>" target="_blank" ><?php echo "$u[nama_file] "; ?></a></td>
+                  <td><?php echo "$u[jenis_berkas] "; ?>
                   </td>
-                  <td><div class="btn-group">
                   
-                  <a href="<?php echo base_url(); ?>c_submission/lihatBerkas/<?php echo "$u[user_id]" ?>" type="button" class="btn btn-info btn-flat"><i class="fa fa-info"></i></a>
-                      <a data-toggle="modal" data-target="#myModal" class="btn btn-success btn-flat cek"
-					  data-id="<?php echo "$u[user_id]" ?>" ><i class="fa fa-check"  ></i></a>
-					  <a href="" type="button" class="btn btn-warning btn-flat"><i class="fa fa-send"></i></a>
-                    </div></td>
                 </tr>
                 <?php
                 }
@@ -145,102 +133,107 @@
           </div>
           <!-- /.box -->
         </div>
-	  <!-- /.modal -->
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  
+  <!-- /.modal -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Publication</h4>
+        <h4 class="modal-title" id="myModalLabel">Metadata</h4>
       </div>
       <div class="modal-body">
-      <div class="box-body">
+<form action="<?php echo base_url(); ?>#" method="post" enctype="multipart/form-data">
+	<div class="box-body">
 		<div class="form-group">
-			<label>Issue</label>
-			<select name="" id="issue"class="form-control select" style="width: 100%;">
-      <option>------Future Issue------</option>
-      <?php
-          foreach($issue as $i){
-                ?>
-                
-                <?php
-              if( "$i[published]"==0 && "$i[current]"==0 ){
-              ?>
-        <option value="<?php echo "$i[issue_id]"; ?>"><?php echo "Vol "."$i[volume]"." No "."$i[number]"." ($i[year]) : "."$i[setting_value]"; ?></option>
-             <?php
-              }
-              ?>
-                <?php
-              }
-              ?>
-      <option>------Current Issue------</option>
-      <?php
-          foreach($issue as $i){
-                ?>
-                
-                <?php
-              if( "$i[published]"==1 && "$i[current]"==1 ){
-              ?>
-        <option value="<?php echo "$i[issue_id]"; ?>"><?php echo "Vol "."$i[volume]"." No "."$i[number]"." ($i[year]) : "."$i[setting_value]"; ?></option>
-             <?php
-              }
-              ?>
-                <?php
-              }
-              ?>
-      <option>------Back Issue------</option>
-      <?php
-          foreach($issue as $i){
-                ?>
-                
-                <?php
-              if( "$i[published]"==1 && "$i[current]"==0 ){
-              ?>
-        <option value="<?php echo "$i[issue_id]"; ?>"><?php echo "Vol "."$i[volume]"." No "."$i[number]"." ($i[year]) : "."$i[setting_value]"; ?></option>
-             <?php
-              }
-              ?>
-                <?php
-              }
-              ?>
-      </select>
-      
+			<label>Judul</label>
+			<input type="text" class="form-control" id="judul" value="<?php  echo $judul; ?>" name="judul" placeholder="Masukkan Judul">
 		</div>
-                             
-    <div class="form-group">
-    <label>Page</label>
-      <input type="text" class="form-control" id="page" value="<?php  echo 10; ?>" name="page" placeholder="Masukkan page">
-      <input type="hidden" id="id_orang">
+		<div class="form-group">
+			<label>Subtitle</label>
+			<input type="text" class="form-control" id="subtitle" value="<?php echo $subtitle;  ?>" name="subtitle" placeholder="Masukkan Subtitle">
+		</div>
+		<div class="form-group">
+			<div class="box box-info">
+				<div class="box-header">
+					<h3 class="box-title">CK Editor
+						<small>Advanced and full of features</small>
+					</h3>
+					<!-- tools box -->
+					<div class="pull-right box-tools">
+						<button type="button" class="btn btn-info btn-sm" data-widget="collapse" data-toggle="tooltip" title="Collapse">
+							<i class="fa fa-minus"></i></button>
+					</div>
+					<!-- /. tools -->
+				</div>
+				<!-- /.box-header -->
+				<div class="box-body pad">
+						<textarea id="editor1" class="form-control" name="editor1" rows="10" ><?php echo $abstract;?></textarea>
+				</div>
+			</div>
 		</div>
     <div class="form-group">
-    <label>Tahun</label>
-      <input type="text" class="form-control" id="tahun" value="<?php    ?>" name="tahun" placeholder="2018">
+    <table id="example" class="table table-bordered table-striped">
+                <thead>
+                
+                <tr>
+                  <th>No</th>
+                  <th>Nama</th>
+                  <th>E-mail</th>
+                </tr>
+                
+                </thead>
+                <tbody>
+                <?php
+                 $i=0;
+                 $submission_id=0;
+                foreach($user as $u){
+                  $i++;
+                  $submission_id="$u[submission_id]";
+                ?>
+                <tr data-id="<?php echo "$u[submission_id]"; ?>" >
+				<td ><?php echo $i; ?></td>
+                  <td><?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?></td>
+                  <td><?php echo "$u[email]"; ?></td>
+                  
+                </tr>
+                <?php
+                }
+                ?>
+                </tbody>
+              </table>
 		</div>
-    <div class="form-group">
-    <form id="formArsip" method="post" enctype="multipart/form-data">
-    <label for="exampleInputFile">File arsip</label>
-      <input type="file" id="arsip" name="arsip">
-      <input type="text" id="a" name="a">
-      </form>
-      <button style="margin-top:10px;" id="submitArsip" class="btn btn-primary" >Upload File</button>
-    </div>
-    <div class="form-group">
-    <form id="formGalley" method="post" enctype="multipart/form-data">
-    <label for="exampleInputFile">File galley</label>
-      <input type="file" id="galley" name="galley">
-      <button style="margin-top:10px;" id="submitGalley" class="btn btn-primary" >Upload File</button>
-      </form>
-    </div>
-    </div>
+	</div>
+</form>
+      <button type="button"  class="btn btn-primary " data-toggle="modal" data-target="#myModal2">
+                Tambah Penulis
+              </button>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary publication" >Publication</button>
+        <button type="button" class="btn btn-primary abstract" data-dismiss="modal" data-id="<?php echo "$submission_id"; ?>">Save changes</button>
       </div>
     </div>
   </div>
 </div>
-	  
+	  <!-- /.modal2 -->
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <div class="modal-body">
+      ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" >Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
 		
 		
       <!-- /.row -->
@@ -273,94 +266,86 @@
 <script src="<?php echo base_url(); ?>/assets/dist/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="<?php echo base_url(); ?>/assets/dist/js/demo.js"></script>
+<!-- iCheck 1.0.1 -->
+<script src="<?php echo base_url(); ?>/assets/plugins/iCheck/icheck.min.js"></script>
 <!-- page script -->
-
+<!-- CK Editor -->
+<script src="<?php echo base_url(); ?>/assets/bower_components/ckeditor/ckeditor.js"></script>
+<!-- Bootstrap WYSIHTML5 -->
+<script src="<?php echo base_url(); ?>/assets/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
 <script>
-$('.cek').on('click', function () {
-  var id=$(this).data('id');
-  //alert(id); 
-  $('#id_orang').val(id);
-});
-
-
+  $(function () {
+    // Replace the <textarea id="editor1"> with a CKEditor
+    // instance, using default configuration.
+    CKEDITOR.replace('editor1')
+    //bootstrap WYSIHTML5 - text editor
+    $('.textarea').wysihtml5()
+  })
+</script>
+<script>
 $('#myModal').on('shown.bs.modal', function () {
-  
-});
+  $('#myInput').focus()
+})
   $(function () {
 	  $.ajaxSetup({
 	type:"post",
 	cache:false,
 	dataType: "json"
 	})
-	
-	$(document).on("click",".info-pembayaran",function(){
+  
+  $(document).ready(function(){
+        $(".getSubmit").change(function() { 
+          var id=$(this).attr("data-id");
+          var value= $(this).val();
+            if($(this).is(":checked")) { 
+                $.ajax({
+                    url: "<?php echo base_url('c_submission/centang'); ?>",
+                    data: { id:id, value:value, strState:1 }
+                });
+            } else {
+                $.ajax({
+                  url: "<?php echo base_url('c_submission/centang'); ?>",
+                    data: { id:id, value:value, strState:0 }
+                });
+            }
+        }); 
+    });
+
+
+$(document).on("click",".verifikasi",function(){
 	var id=$(this).attr("data-id");
-	var harga=$(this).attr("data-harga");
+	var nama=$(this).attr("data-nama");
 	swal({
-		title: "Total Harga : Rp "+ harga +" ,-",
-		text:"Pembayaran harus sesuai dengan harga",
-		type: "info",
-		confirmButtonText: "Oke",
+		title: "Submission atas nama "+ nama +" benar",
+		text:"Verifikasi?",
+		type: "warning",
+		showCancelButton: true,
+		confirmButtonText: "Ya",
 		closeOnConfirm: true,
 	},
-		);
+		function(){
+		 $.ajax({
+			url:"<?php echo base_url('c_submission/verifikasi'); ?>",
+			data:{id:id},
+			success: function(){
+			}
+		 });
+	});
 });
 
-$(document).on("click",".publication",function(){
-	var id=$('#id_orang').val();
-  var issue_id=$('#issue').val();
-	var page=$('#page').prop('value');
-  //var subtitle=$('#subtitle').prop('value');
-  //var abstract=$('textarea#editor1').val();
-  alert(issue_id);
+$(document).on("click",".abstract",function(){
+	var id=$(this).attr("data-id");
+	var judul=$('#judul').prop('value');
+  var subtitle=$('#subtitle').prop('value');
+  var abstract=$('textarea#editor1').val();
+  alert(abstract);
 	$.ajax({
-			url:"<?php echo base_url('c_submission/setPublication'); ?>",
+			url:"<?php echo base_url('c_submission/metadata'); ?>",
 			data:{id:id,judul:judul,subtitle:subtitle,abstract:abstract},
 			success: function(){
         alert("data berhasil di update");
 			}
 		 });
-});
-
-$(document).on("click","#submitArsip",function(){
-  
-  var qq=$("#formArsip").serialize()
-  //alert(qq);
-  console.log(qq);
-	$.ajax({
-			url:"<?php echo base_url('c_submission/submitArsip'); ?>",
-      data:$("#formArsip").serialize(),
-      type: "POST",
-      contentType: false,
-      processData: false,
-			success: function(){
-        alert("data berhasil di upload");
-			}
-		 });
-});
-
-$(document).on("click",".ijazah-valid",function(){
-	var id=$(this).attr("data-id");
-	var nama=$(this).attr("data-nama");
-	swal({
-		title: "Ijazah atas nama  "+ nama +" Valid",
-		text:"Yakin Ijazah ini valid?",
-		type: "warning",
-		showCancelButton: true,
-		confirmButtonText: "Yakin",
-		closeOnConfirm: true,
-	},
-		function(){
-		 $.ajax({
-			url:"<?php echo base_url('Adminika/ijazahValid'); ?>",
-			data:{id:id},
-			success: function(){
-				$("tr[data-id='"+id+"']").fadeOut("fast",function(){
-					$(this).remove();
-				});
-			}
-		 });
-	});
 });
 
 $(document).on("click",".hapus-member",function(){
@@ -386,6 +371,11 @@ $(document).on("click",".hapus-member",function(){
 		 });
 	});
 });
+//Flat red color scheme for iCheck
+$('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+      checkboxClass: 'icheckbox_flat-blue',
+      radioClass   : 'iradio_flat-green'
+    })
     $('#example1').DataTable()
     $('#example2').DataTable({
       'paging'      : true,

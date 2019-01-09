@@ -17,6 +17,8 @@
   <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/dist/css/skins/_all-skins.min.css">
   <!-- iCheck for checkboxes and radio inputs -->
   <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/plugins/iCheck/all.css">
+  <!-- bootstrap wysihtml5 - text editor -->
+  <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
   <!-- pop up -->
   <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/sweetalert/sweetalert.css'); ?>">
   <script type="text/javascript" src="<?php echo base_url('assets/sweetalert/sweetalert.min.js'); ?>"></script>
@@ -84,6 +86,9 @@
           <div class="box">
             <div class="box-header">
               <h3 class="box-title"><?php foreach($userFiles as $u){ }echo "$u[first_name] $u[middle_name] $u[last_name]"; ?></h3>
+              <button type="button" style="margin-right:10px;" class="btn btn-primary pull-right" data-toggle="modal" data-target="#myModal">
+                Metadata
+              </button>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -101,8 +106,16 @@
                 <tbody>
                 <?php
                  $i=0;
+                 $judul="";
+                 $subtitle="";
+                 $abstract="";
                 foreach($userFiles as $u){
                   $i++;
+                  $judul="$u[judul]";
+                  $subtitle="$u[subtitle]";
+                  $abstract="$u[abstract]";
+                  $abstract=str_replace('<p>', '', $abstract);
+                  $abstract=str_replace('</p>', '', $abstract);
                 ?>
                 <tr data-id="<?php echo "$u[uploader_user_id] "; ?>" >
 				<td ><?php echo $i; ?></td>
@@ -148,16 +161,168 @@
                 </tbody>
               </table>
               <div class="box-footer">
+              
                 <button  type="submit" data-id="<?php echo "$u[uploader_user_id] "; ?>" 
-                data-nama="<?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?>" class="btn btn-primary pull-right verifikasi">Verifikasi</button>
+                data-nama="<?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?>"  style="margin-top:20px;" class="btn btn-primary pull-right verifikasi">Verifikasi</button>
+                
               </div>
             </div>
             <!-- /.box-body -->
           </div>
           <!-- /.box -->
         </div>
-	  
-	  
+
+ <!-- /.data skripsi filkomapp -->
+        <div class="col-sm-6 col-xs-12">
+          
+          <!-- /.box -->
+
+          <div class="box">
+            <div class="box-header">
+              <h3 class="box-title"><?php foreach($userFiles as $u){ }echo "$u[first_name] $u[middle_name] $u[last_name]"; ?></h3>
+              
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <table id="" class="table table-bordered table-striped">
+                <thead>
+                
+                <tr>
+                  <th>No</th>
+                  <th>Nama Berkas</th>
+                  <th>Jenis Berkas</th>
+                </tr>
+                
+                </thead>
+                <tbody>
+                <?php
+                foreach($berkasApp as $u){
+                ?>
+                <tr data-id=" "" >
+				<td >1</td>
+                  <td><a href="<?php echo base_url(); ?>c_submission/alamatBerkasApp/<?php echo "$u[hardcover]" ?>" target="_blank" ><?php echo "$u[hardcover] "; ?></a></td>
+                  <td>hardcover
+                  </td>
+                  
+                </tr>
+                <tr data-id=" "" >
+				<td >2</td>
+                  <td><a href="<?php echo base_url(); ?>c_submission/alamatBerkasApp/<?php echo "$u[sc_12]" ?>" target="_blank" ><?php echo "$u[sc_12] "; ?></a></td>
+                  <td>SC-12
+                  </td>
+                  
+                </tr>
+                <?php
+                }
+                ?>
+                </tbody>
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+  
+  <!-- /.modal -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Metadata</h4>
+      </div>
+      <div class="modal-body">
+<form action="<?php echo base_url(); ?>#" method="post" enctype="multipart/form-data">
+	<div class="box-body">
+		<div class="form-group">
+			<label>Judul</label>
+			<input type="text" class="form-control" id="judul" value="<?php  echo $judul; ?>" name="judul" placeholder="Masukkan Judul">
+		</div>
+		<div class="form-group">
+			<label>Subtitle</label>
+			<input type="text" class="form-control" id="subtitle" value="<?php echo $subtitle;  ?>" name="subtitle" placeholder="Masukkan Subtitle">
+		</div>
+		<div class="form-group">
+			<div class="box box-info">
+				<div class="box-header">
+					<h3 class="box-title">CK Editor
+						<small>Advanced and full of features</small>
+					</h3>
+					<!-- tools box -->
+					<div class="pull-right box-tools">
+						<button type="button" class="btn btn-info btn-sm" data-widget="collapse" data-toggle="tooltip" title="Collapse">
+							<i class="fa fa-minus"></i></button>
+					</div>
+					<!-- /. tools -->
+				</div>
+				<!-- /.box-header -->
+				<div class="box-body pad">
+						<textarea id="editor1" class="form-control" name="editor1" rows="10" ><?php echo $abstract;?></textarea>
+				</div>
+			</div>
+		</div>
+    <div class="form-group">
+    <table id="example" class="table table-bordered table-striped">
+                <thead>
+                
+                <tr>
+                  <th>No</th>
+                  <th>Nama</th>
+                  <th>E-mail</th>
+                </tr>
+                
+                </thead>
+                <tbody>
+                <?php
+                 $i=0;
+                 $submission_id=0;
+                foreach($user as $u){
+                  $i++;
+                  $submission_id="$u[submission_id]";
+                ?>
+                <tr data-id="<?php echo "$u[submission_id]"; ?>" >
+				<td ><?php echo $i; ?></td>
+                  <td><?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?></td>
+                  <td><?php echo "$u[email]"; ?></td>
+                  
+                </tr>
+                <?php
+                }
+                ?>
+                </tbody>
+              </table>
+		</div>
+	</div>
+</form>
+      <button type="button"  class="btn btn-primary " data-toggle="modal" data-target="#myModal2">
+                Tambah Penulis
+              </button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary abstract" data-dismiss="modal" data-id="<?php echo "$submission_id"; ?>">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+	  <!-- /.modal2 -->
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <div class="modal-body">
+      ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" >Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
 		
 		
       <!-- /.row -->
@@ -193,8 +358,23 @@
 <!-- iCheck 1.0.1 -->
 <script src="<?php echo base_url(); ?>/assets/plugins/iCheck/icheck.min.js"></script>
 <!-- page script -->
-
+<!-- CK Editor -->
+<script src="<?php echo base_url(); ?>/assets/bower_components/ckeditor/ckeditor.js"></script>
+<!-- Bootstrap WYSIHTML5 -->
+<script src="<?php echo base_url(); ?>/assets/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
 <script>
+  $(function () {
+    // Replace the <textarea id="editor1"> with a CKEditor
+    // instance, using default configuration.
+    CKEDITOR.replace('editor1')
+    //bootstrap WYSIHTML5 - text editor
+    $('.textarea').wysihtml5()
+  })
+</script>
+<script>
+$('#myModal').on('shown.bs.modal', function () {
+  $('#myInput').focus()
+})
   $(function () {
 	  $.ajaxSetup({
 	type:"post",
@@ -242,28 +422,19 @@ $(document).on("click",".verifikasi",function(){
 	});
 });
 
-$(document).on("click",".ijazah-valid",function(){
+$(document).on("click",".abstract",function(){
 	var id=$(this).attr("data-id");
-	var nama=$(this).attr("data-nama");
-	swal({
-		title: "Ijazah atas nama  "+ nama +" Valid",
-		text:"Yakin Ijazah ini valid?",
-		type: "warning",
-		showCancelButton: true,
-		confirmButtonText: "Yakin",
-		closeOnConfirm: true,
-	},
-		function(){
-		 $.ajax({
-			url:"<?php echo base_url('Adminika/ijazahValid'); ?>",
-			data:{id:id},
+	var judul=$('#judul').prop('value');
+  var subtitle=$('#subtitle').prop('value');
+  var abstract=$('textarea#editor1').val();
+  alert(abstract);
+	$.ajax({
+			url:"<?php echo base_url('c_submission/metadata'); ?>",
+			data:{id:id,judul:judul,subtitle:subtitle,abstract:abstract},
 			success: function(){
-				$("tr[data-id='"+id+"']").fadeOut("fast",function(){
-					$(this).remove();
-				});
+        alert("data berhasil di update");
 			}
 		 });
-	});
 });
 
 $(document).on("click",".hapus-member",function(){

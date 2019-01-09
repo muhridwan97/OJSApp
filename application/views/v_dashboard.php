@@ -61,8 +61,20 @@
       </div>
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header">MAIN NAVIGATION</li>
-		<li class="active"><a href="<?php echo base_url(); ?>adminika/"><i class="fa fa-dashboard"></i> <span>DASHBOARD</span></a></li>
-		<li><a href="<?php echo base_url(); ?>c_submission/"><i class="fa fa-envelope"></i> <span>SUBMISSION</span>
+		<li class="active"><a href="<?php echo base_url(); ?>"><i class="fa fa-dashboard"></i> <span>DASHBOARD</span></a></li>
+    <li  class="treeview">
+          <a href="<?php echo base_url(); ?>c_submission/">
+            <i class="fa fa-envelope"></i>  <span>SUBMISSION</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li  ><a href="<?php echo base_url(); ?>c_submission/lihatAntrian">Antrian Submission</a></li>
+            <li><a href="<?php echo base_url(); ?>c_submission/">Submission</a></li>
+            <li ><a href="<?php echo base_url(); ?>c_submission/lihatPublication">Publication</a></li>
+          </ul>
+        </li>
 			<span class="pull-right-container">
               
             </span></a></li>

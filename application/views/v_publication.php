@@ -15,8 +15,6 @@
   <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
   <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/dist/css/AdminLTE.min.css">
   <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/dist/css/skins/_all-skins.min.css">
-  <!-- lighbox -->
-  <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/lightbox/dist/css/lightbox.css'); ?>">
   <!-- pop up -->
   <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/sweetalert/sweetalert.css'); ?>">
   <script type="text/javascript" src="<?php echo base_url('assets/sweetalert/sweetalert.min.js'); ?>"></script>
@@ -70,9 +68,10 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li class="active" ><a href="<?php echo base_url(); ?>c_submission/lihatAntrian">Antrian Submission</a></li>
-            <li><a href="<?php echo base_url(); ?>c_submission/">Submission</a></li>
-            <li ><a href="<?php echo base_url(); ?>c_submission/lihatPublication">Publication</a></li>
+            <li  ><a href="<?php echo base_url(); ?>c_submission/lihatAntrian">Antrian Submission</a></li>
+            <li ><a href="<?php echo base_url(); ?>c_submission/">Submission</a></li>
+            
+            <li class="active" ><a href="<?php echo base_url(); ?>c_submission/lihatPublication">Publication</a></li>
           </ul>
         </li>
 			<span class="pull-right-container">
@@ -105,7 +104,7 @@
                 <tr>
                   <th>No</th>
                   <th>Nama</th>
-                  <th>Status Skripsi</th>
+                  <th>Status</th>
                   <th>Action</th>
                 </tr>
                 
@@ -116,20 +115,17 @@
                 foreach($user as $u){
                   $i++;
                 ?>
-                <tr data-id="<?php echo "$u[submission_id]"; ?>" >
+                <tr data-id="" >
 				<td ><?php echo $i; ?></td>
                   <td><?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?></td>
-                  <td><span class="label 
-                  <?php if("$u[statusSkripsi]"=="selesai")echo "label-success"; else echo "label-danger";?>">
+                  <td>
+                  <span class="label label-info">Publised</span>
                   
-                  <?php echo "$u[statusSkripsi]"; ?></span>
                   </td>
                   <td><div class="btn-group">
                   
-                  <a href="" type="button" class="btn btn-warning btn-flat"><i class="fa fa-send"></i></a>
-                      <button type="button" class="btn btn-success btn-flat submission-valid" 
-					  data-id="<?php echo "$u[submission_id]"; ?>" data-nama ="<?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?>">
-            <i class="fa fa-check"  ></i></button>
+                  <a href="<?php echo base_url(); ?>c_submission/lihatBerkasPublication/<?php echo "$u[user_id]" ?>" type="button" class="btn btn-info btn-flat"><i class="fa fa-info"></i></a>
+                      
                     </div></td>
                 </tr>
                 <?php
@@ -142,7 +138,7 @@
           </div>
           <!-- /.box -->
         </div>
-        
+	  
 	  
 		
 		
@@ -176,15 +172,8 @@
 <script src="<?php echo base_url(); ?>/assets/dist/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="<?php echo base_url(); ?>/assets/dist/js/demo.js"></script>
-<!-- lightbox -->
-<script src="<?php echo base_url(); ?>/assets/lightbox/dist/js/lightbox.js"></script>
 <!-- page script -->
-<script>
-    lightbox.option({
-      'resizeDuration': 200,
-      'wrapAround': true
-    })
-</script>
+
 <script>
   $(function () {
 	  $.ajaxSetup({
@@ -206,12 +195,12 @@
 		);
 });
 
-$(document).on("click",".submission-valid",function(){
-	var id=$(this).attr("data-id");
-	var nama=$(this).attr("data-nama");
+$(document).on("click",".pembayaran-valid",function(){
+	var id=$(this).attr("data-id2");
+	var nama=$(this).attr("data-nama2");
 	swal({
-		title: "Submission atas nama "+ nama +" Valid",
-		text:"Yakin Submission ini valid?",
+		title: "Pembayaran atas nama "+ nama +" Valid",
+		text:"Yakin Pemabayaran ini valid?",
 		type: "warning",
 		showCancelButton: true,
 		confirmButtonText: "Yakin",
@@ -219,10 +208,10 @@ $(document).on("click",".submission-valid",function(){
 	},
 		function(){
 		 $.ajax({
-			url:"<?php echo base_url('c_submission/submitIn'); ?>",
+			url:"<?php echo base_url('Adminika/pembayaranValid'); ?>",
 			data:{id:id},
 			success: function(){
-				$("tr[data-id='"+id+"']").fadeOut("fast",function(){
+				$("tr[data-id2='"+id+"']").fadeOut("fast",function(){
 					$(this).remove();
 				});
 			}
@@ -278,7 +267,14 @@ $(document).on("click",".hapus-member",function(){
 	});
 });
     $('#example1').DataTable()
-    $('#example2').DataTable()
+    $('#example2').DataTable({
+      'paging'      : true,
+      'lengthChange': false,
+      'searching'   : false,
+      'ordering'    : true,
+      'info'        : true,
+      'autoWidth'   : false
+    })
   })
 </script>
 </body>
