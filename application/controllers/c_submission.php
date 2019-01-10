@@ -90,6 +90,7 @@ class c_submission extends CI_Controller {
 			$nama=$a['first_name'].' '.$a['middle_name'].''.$a['last_name'];
 			$nama=str_replace(' ', '', $nama);
 			$profile[$i]['statusSkripsi']="data tidak di temukan di filkop APP";
+			$profile[$i]['author_id']=0;
 			foreach($mahasiswa as $b){
 				$namaSiswa=$b['namaMahasiswa'];//dri filkomappp
 				$namaSiswa=str_replace(' ', '', $namaSiswa);
@@ -97,6 +98,7 @@ class c_submission extends CI_Controller {
 				if(strtolower($nama) == strtolower($namaSiswa)){
 					//echo $nama;
 					$profile[$i]['statusSkripsi']=$b['status'];
+					$profile[$i]['author_id']=$b['mahasiswa_id'];
 				} 
 				
 			}
@@ -175,6 +177,8 @@ class c_submission extends CI_Controller {
 	}
 	public function submitIn(){
 		$submission_id= $this->input->post("id");
+		$author_id= $this->input->post("author_id");//dari filkomapp
+		$user_id= $this->input->post("user_id");//dari ojs
 		$date= date('Y-m-d H:i:s');
 		//print_r($date);
 		$data = array(
@@ -185,7 +189,14 @@ class c_submission extends CI_Controller {
 			);	
 			
 		$userFiles = $this->http_request_post("http://localhost/serviceOJS/api/antrian/submitIn",$data);
-		echo(json_decode($userFiles, TRUE));
+		$dataSub = array(
+			'submission_id' => $submission_id,
+			'author_id' => $user_id
+			);
+		print_r($dataSub);
+		$this->m_mahasiswa->insertSubmission($author_id,$user_id,$dataSub);
+
+		//echo(json_decode($userFiles, TRUE));
 		echo "{}";
 	}
 	public function verifikasi(){
@@ -216,6 +227,27 @@ class c_submission extends CI_Controller {
 			);	
 			
 		$userFiles = $this->http_request_post("http://localhost/serviceOJS/api/setMetadata",$data);
+		echo(json_decode($userFiles, TRUE));
+		echo "{}";
+	}
+	public function tambahPenulis(){
+		$submission_id= $this->input->post("id");
+		$first_name= $this->input->post("first_name");
+		$middle_name= $this->input->post("middle_name");
+		$last_name= $this->input->post("last_name");
+		$email= $this->input->post("email");
+		$affiliation= $this->input->post("affiliation");
+		//print_r($date);
+		$data = array(
+			'submission_id' => $submission_id,
+			'first_name' => $first_name,
+			'middle_name' => $middle_name,
+			'last_name' => $last_name,
+			'affiliation' => $affiliation,
+			'email' => $email
+			);	
+			
+		$userFiles = $this->http_request_post("http://localhost/serviceOJS/api/tambahPenulis",$data);
 		echo(json_decode($userFiles, TRUE));
 		echo "{}";
 	}

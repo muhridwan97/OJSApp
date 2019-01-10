@@ -15,8 +15,6 @@
   <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
   <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/dist/css/AdminLTE.min.css">
   <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/dist/css/skins/_all-skins.min.css">
-  <!-- lighbox -->
-  <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/lightbox/dist/css/lightbox.css'); ?>">
   <!-- pop up -->
   <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/sweetalert/sweetalert.css'); ?>">
   <script type="text/javascript" src="<?php echo base_url('assets/sweetalert/sweetalert.min.js'); ?>"></script>
@@ -128,7 +126,8 @@
                   
                   <a href="" type="button" class="btn btn-warning btn-flat"><i class="fa fa-send"></i></a>
                       <button type="button" class="btn btn-success btn-flat submission-valid" 
-					  data-id="<?php echo "$u[submission_id]"; ?>" data-nama ="<?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?>">
+					  data-id="<?php echo "$u[submission_id]"; ?>" data-author="<?php echo "$u[author_id]"; ?>" 
+            data-user="<?php echo "$u[user_id]"; ?>" data-nama ="<?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?>">
             <i class="fa fa-check"  ></i></button>
                     </div></td>
                 </tr>
@@ -176,15 +175,8 @@
 <script src="<?php echo base_url(); ?>/assets/dist/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="<?php echo base_url(); ?>/assets/dist/js/demo.js"></script>
-<!-- lightbox -->
-<script src="<?php echo base_url(); ?>/assets/lightbox/dist/js/lightbox.js"></script>
 <!-- page script -->
-<script>
-    lightbox.option({
-      'resizeDuration': 200,
-      'wrapAround': true
-    })
-</script>
+
 <script>
   $(function () {
 	  $.ajaxSetup({
@@ -208,7 +200,13 @@
 
 $(document).on("click",".submission-valid",function(){
 	var id=$(this).attr("data-id");
-	var nama=$(this).attr("data-nama");
+  var nama=$(this).attr("data-nama");
+  var author_id=$(this).attr("data-author");
+  var user_id=$(this).attr("data-user");
+  console.log(id);
+  console.log(nama);
+  console.log(author_id);
+  console.log(user_id);
 	swal({
 		title: "Submission atas nama "+ nama +" Valid",
 		text:"Yakin Submission ini valid?",
@@ -220,7 +218,7 @@ $(document).on("click",".submission-valid",function(){
 		function(){
 		 $.ajax({
 			url:"<?php echo base_url('c_submission/submitIn'); ?>",
-			data:{id:id},
+			data:{id:id,author_id:author_id,user_id:user_id},
 			success: function(){
 				$("tr[data-id='"+id+"']").fadeOut("fast",function(){
 					$(this).remove();

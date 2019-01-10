@@ -64,7 +64,19 @@
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header">MAIN NAVIGATION</li>
 		<li ><a href="<?php echo base_url(); ?>"><i class="fa fa-dashboard"></i> <span>DASHBOARD</span></a></li>
-		<li class="active"><a href="<?php echo base_url(); ?>c_submission/"><i class="fa fa-envelope"></i> <span>SUBMISSION</span>
+		<li class="active" class="treeview">
+          <a href="<?php echo base_url(); ?>c_submission/">
+            <i class="fa fa-envelope"></i>  <span>SUBMISSION</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li  ><a href="<?php echo base_url(); ?>c_submission/lihatAntrian">Antrian Submission</a></li>
+            <li class="active" ><a href="<?php echo base_url(); ?>c_submission/">Submission</a></li>
+            <li ><a href="<?php echo base_url(); ?>c_submission/lihatPublication">Publication</a></li>
+          </ul>
+        </li>
 			<span class="pull-right-container">
               
             </span></a></li>
@@ -243,23 +255,8 @@
 			<input type="text" class="form-control" id="subtitle" value="<?php echo $subtitle;  ?>" name="subtitle" placeholder="Masukkan Subtitle">
 		</div>
 		<div class="form-group">
-			<div class="box box-info">
-				<div class="box-header">
-					<h3 class="box-title">CK Editor
-						<small>Advanced and full of features</small>
-					</h3>
-					<!-- tools box -->
-					<div class="pull-right box-tools">
-						<button type="button" class="btn btn-info btn-sm" data-widget="collapse" data-toggle="tooltip" title="Collapse">
-							<i class="fa fa-minus"></i></button>
-					</div>
-					<!-- /. tools -->
-				</div>
-				<!-- /.box-header -->
-				<div class="box-body pad">
-						<textarea id="editor1" class="form-control" name="editor1" rows="10" ><?php echo $abstract;?></textarea>
-				</div>
-			</div>
+    <label>Abstract</label>
+    <textarea id="editor2" class="form-control" name="editor2" rows="10" ><?php echo $abstract;?></textarea>
 		</div>
     <div class="form-group">
     <table id="example" class="table table-bordered table-striped">
@@ -314,11 +311,36 @@
         <h4 class="modal-title" id="myModalLabel">Modal title</h4>
       </div>
       <div class="modal-body">
-      ...
+      <div class="row">
+      <div class="form-group col-xs-3">
+			<label>First Name</label>
+			<input type="text" class="form-control" id="first_name" value="" name="first_name">
+		</div>
+    <div class="form-group col-xs-3">
+			<label>Middle Name</label>
+			<input type="text" class="form-control" id="middle_name" value="" name="middle_name">
+		</div>
+    <div class="form-group col-xs-3">
+			<label>Last Name</label>
+			<input type="text" class="form-control" id="last_name" value="" name="last_name">
+		</div>
+    </div>
+    <div class="row">
+      <div class="form-group col-xs-6">
+			<label>Email</label>
+			<input type="text" class="form-control" id="email" value="" name="email">
+		</div>
+    </div>
+    <div class="row">
+      <div class="form-group col-xs-6">
+			<label>Affiliation</label>
+			<input type="text" class="form-control" id="affiliation" value="Universitas Brawijaya" name="affiliation">
+		</div>
+    </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" >Save changes</button>
+        <button type="button" class="btn btn-primary tambahPenulis"data-dismiss="modal" data-id="<?php echo "$submission_id"; ?>">Save changes</button>
       </div>
     </div>
   </div>
@@ -362,15 +384,7 @@
 <script src="<?php echo base_url(); ?>/assets/bower_components/ckeditor/ckeditor.js"></script>
 <!-- Bootstrap WYSIHTML5 -->
 <script src="<?php echo base_url(); ?>/assets/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
-<script>
-  $(function () {
-    // Replace the <textarea id="editor1"> with a CKEditor
-    // instance, using default configuration.
-    CKEDITOR.replace('editor1')
-    //bootstrap WYSIHTML5 - text editor
-    $('.textarea').wysihtml5()
-  })
-</script>
+
 <script>
 $('#myModal').on('shown.bs.modal', function () {
   $('#myInput').focus()
@@ -403,31 +417,41 @@ $('#myModal').on('shown.bs.modal', function () {
 
 $(document).on("click",".verifikasi",function(){
 	var id=$(this).attr("data-id");
-	var nama=$(this).attr("data-nama");
-	swal({
-		title: "Submission atas nama "+ nama +" benar",
-		text:"Verifikasi?",
-		type: "warning",
-		showCancelButton: true,
-		confirmButtonText: "Ya",
-		closeOnConfirm: true,
-	},
-		function(){
-		 $.ajax({
-			url:"<?php echo base_url('c_submission/verifikasi'); ?>",
-			data:{id:id},
+  var nama=$(this).attr("data-nama");
+  $.ajax({
+			url:"<?php echo base_url('c_submission/cekComboBox'); ?>",
+			data:{},
 			success: function(){
-			}
+        swal({
+          title: "Submission atas nama "+ nama +" benar",
+          text:"Verifikasi?",
+          type: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Ya",
+          closeOnConfirm: true,
+        },
+          function(){
+          $.ajax({
+            url:"<?php echo base_url('c_submission/verifikasi'); ?>",
+            data:{id:id},
+            success: function(){
+            }
+          });
+        });
+      },
+      error: function() {
+     alert("berkas belum di cek semua");
+      }
 		 });
-	});
+	
 });
 
 $(document).on("click",".abstract",function(){
 	var id=$(this).attr("data-id");
 	var judul=$('#judul').prop('value');
   var subtitle=$('#subtitle').prop('value');
-  var abstract=$('textarea#editor1').val();
-  alert(abstract);
+  var abstract=$('textarea#editor2').val();
+  //console.log(abstract);
 	$.ajax({
 			url:"<?php echo base_url('c_submission/metadata'); ?>",
 			data:{id:id,judul:judul,subtitle:subtitle,abstract:abstract},
@@ -436,30 +460,28 @@ $(document).on("click",".abstract",function(){
 			}
 		 });
 });
-
-$(document).on("click",".hapus-member",function(){
-	var id=$(this).attr("data-id");
-	var nama=$(this).attr("data-nama");
-	swal({
-		title: "Hapus "+ nama +" sebagai Member",
-		text:"Yakin akan menghapus member ini?",
-		type: "warning",
-		showCancelButton: true,
-		confirmButtonText: "Hapus",
-		closeOnConfirm: true,
-	},
-		function(){
-		 $.ajax({
-			url:"<?php echo base_url('Adminika/hapus'); ?>",
-			data:{id:id},
+$(document).on("click",".tambahPenulis",function(){
+  var id=$(this).attr("data-id");
+	var first_name=$('#first_name').prop('value');
+  var middle_name=$('#middle_name').prop('value');
+  var last_name=$('#last_name').prop('value');
+  var email=$('#email').prop('value');
+  var affiliation=$('#affiliation').prop('value');
+  //console.log(id);
+	$.ajax({
+			url:"<?php echo base_url('c_submission/tambahPenulis'); ?>",
+      data:{id:id,first_name:first_name,
+        middle_name:middle_name,
+        last_name:last_name,
+        email:email,
+        affiliation:affiliation},
 			success: function(){
-				$("tr[data-id='"+id+"']").fadeOut("fast",function(){
-					$(this).remove();
-				});
+        alert("data berhasil di update");
 			}
 		 });
-	});
 });
+
+
 //Flat red color scheme for iCheck
 $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
       checkboxClass: 'icheckbox_flat-blue',

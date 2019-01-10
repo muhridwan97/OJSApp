@@ -14,6 +14,13 @@ class m_mahasiswa extends CI_Model {
 		$this->db->where('author_id', $id);
 		$this->db->update('submission');
 	}
+	public function insertSubmission($author_id,$user_id,$dataSub){
+		$this->db->set('mahasiswa_id', $user_id);
+		$this->db->where('mahasiswa_id', $author_id);
+		$this->db->update('mahasiswa');
+
+		$this->db->insert('submission',$dataSub);
+	}
 	public function getDataMahasiswa($mahasiswa_id){
 		$this->db->select('*');
 		$this->db->from('mahasiswa');
