@@ -20,7 +20,10 @@ class m_mahasiswa extends CI_Model {
 		$this->db->update('mahasiswa');
 
 		$this->db->insert('submission',$dataSub);
+		return 1;
 	}
+
+
 	public function getDataMahasiswa($mahasiswa_id){
 		$this->db->select('*');
 		$this->db->from('mahasiswa');

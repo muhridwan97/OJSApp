@@ -193,11 +193,41 @@ class c_submission extends CI_Controller {
 			'submission_id' => $submission_id,
 			'author_id' => $user_id
 			);
-		print_r($dataSub);
+		//print_r($dataSub);
 		$this->m_mahasiswa->insertSubmission($author_id,$user_id,$dataSub);
 
-		//echo(json_decode($userFiles, TRUE));
+		echo(json_decode($userFiles, TRUE));
 		echo "{}";
+	}
+	public function cekComboBox(){
+		$user_id= $this->input->post("id");
+		//print_r($date);
+		$combo=$this->m_mahasiswa->getDataAuthor($user_id)->result_array();
+		$count=0;
+		foreach($combo as $c){
+			if($c['ArticleText']==1){
+				$count++;
+			}
+			if($c['PerjanjianHakCipta']==1){
+				$count++;
+			}
+			if($c['EtikaPublikasi']==1){
+				$count++;
+			}
+			if($c['CekPlagiasidenganTurnitin']==1){
+				$count++;
+			}
+			if($c['FormSC2_17']==1){
+				$count++;
+			}
+			if($c['FormSC2_12']==1){
+				$count++;
+			}
+		}
+		if($count==6){
+			echo "{}";
+		}
+
 	}
 	public function verifikasi(){
 		$user_id= $this->input->post("id");

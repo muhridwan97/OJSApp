@@ -203,10 +203,10 @@ $(document).on("click",".submission-valid",function(){
   var nama=$(this).attr("data-nama");
   var author_id=$(this).attr("data-author");
   var user_id=$(this).attr("data-user");
-  console.log(id);
-  console.log(nama);
-  console.log(author_id);
-  console.log(user_id);
+  // console.log(id);
+  // console.log(nama);
+  // console.log(author_id);
+  // console.log(user_id);
 	swal({
 		title: "Submission atas nama "+ nama +" Valid",
 		text:"Yakin Submission ini valid?",

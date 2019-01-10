@@ -420,7 +420,7 @@ $(document).on("click",".verifikasi",function(){
   var nama=$(this).attr("data-nama");
   $.ajax({
 			url:"<?php echo base_url('c_submission/cekComboBox'); ?>",
-			data:{},
+			data:{id:id},
 			success: function(){
         swal({
           title: "Submission atas nama "+ nama +" benar",
