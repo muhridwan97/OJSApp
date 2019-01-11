@@ -141,6 +141,28 @@ class c_submission extends CI_Controller {
 		
 		$this->load->view('v_berkas',$data);
 	}
+	public function reloadPenulis(){
+		$userId= $this->input->post("userId");
+		$user = $this->http_request("http://localhost/serviceOJS/api/metadata/".$userId);
+		$user = json_decode($user, TRUE);
+
+		$i=0;
+		$submission_id=0;
+		if( !empty($user) ) {
+        foreach($user as $u){
+            $i++;
+			$submission_id=$u['seq'];
+		$hasil="";
+		$hasil.= "<tr data-id='$submission_id'>";
+		$hasil.="<td > $i</td>";
+		$hasil.="<td>".$u['first_name'].$u['middle_name'].$u['last_name']."</td>";
+		$hasil.="<td>".$u['email']."</td></tr>";
+		echo $hasil;
+		}
+	}else{
+		echo $userId;
+	}
+	}
 
 	public function alamatBerkas($fileId){
 		$path = $this->http_request("http://localhost/serviceOJS/api/lihatFilesAsli/".$fileId);
@@ -331,7 +353,12 @@ class c_submission extends CI_Controller {
 	}
 
 	public function submitArsip(){
-		echo $this->input->post("arsip");
+		$fileArsip= $this->input->post("fileArsip");
+		print_r($fileArsip);
+		//return $fileArsip;
+		//$userFiles = $this->http_request_post("http://localhost/serviceOJS/api/uploadArsip",$fileArsip);
+		//echo(json_decode($userFiles, TRUE));
+		
 		echo "{}";
 	}
 	

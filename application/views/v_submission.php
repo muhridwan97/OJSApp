@@ -219,10 +219,10 @@
     <div class="form-group">
     <form id="formArsip" method="post" enctype="multipart/form-data">
     <label for="exampleInputFile">File arsip</label>
-      <input type="file" id="arsip" name="arsip">
+      <input type="file" id="fileArsip" name="fileArsip">
       <input type="text" id="a" name="a">
       </form>
-      <button style="margin-top:10px;" id="submitArsip" class="btn btn-primary" >Upload File</button>
+      <button style="margin-top:10px;" type="submit" id="submitArsip" class="btn btn-primary" >Upload File</button>
     </div>
     <div class="form-group">
     <form id="formGalley" method="post" enctype="multipart/form-data">
@@ -324,18 +324,21 @@ $(document).on("click",".publication",function(){
 
 $(document).on("click","#submitArsip",function(){
   
-  var qq=$("#formArsip").serialize()
+  var fileArsip=$('#fileArsip').prop('files');
   //alert(qq);
-  console.log(qq);
+  console.log(fileArsip);
 	$.ajax({
 			url:"<?php echo base_url('c_submission/submitArsip'); ?>",
-      data:$("#formArsip").serialize(),
+      data:{fileArsip:fileArsip},
       type: "POST",
       contentType: false,
       processData: false,
 			success: function(){
-        alert("data berhasil di upload");
-			}
+        alert("data berhasil");
+      },
+      error: function() {
+     alert("gagal");
+      }
 		 });
 });
 

@@ -173,7 +173,7 @@
                 </tbody>
               </table>
               <div class="box-footer">
-              
+              <input type="hidden" id="uploader_user_id" value="<?php echo "$u[uploader_user_id]"; ?>">
                 <button  type="submit" data-id="<?php echo "$u[uploader_user_id] "; ?>" 
                 data-nama="<?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?>"  style="margin-top:20px;" class="btn btn-primary pull-right verifikasi">Verifikasi</button>
                 
@@ -269,7 +269,7 @@
                 </tr>
                 
                 </thead>
-                <tbody>
+                <tbody id="penulis">
                 <?php
                  $i=0;
                  $submission_id=0;
@@ -277,7 +277,7 @@
                   $i++;
                   $submission_id="$u[submission_id]";
                 ?>
-                <tr data-id="<?php echo "$u[submission_id]"; ?>" >
+                <tr data-id="<?php echo "$u[seq]"; ?>" >
 				<td ><?php echo $i; ?></td>
                   <td><?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?></td>
                   <td><?php echo "$u[email]"; ?></td>
@@ -395,7 +395,9 @@ $('#myModal').on('shown.bs.modal', function () {
 	cache:false,
 	dataType: "json"
 	})
+
   
+
   $(document).ready(function(){
         $(".getSubmit").change(function() { 
           var id=$(this).attr("data-id");
@@ -476,11 +478,39 @@ $(document).on("click",".tambahPenulis",function(){
         email:email,
         affiliation:affiliation},
 			success: function(){
+        var userId=$('#uploader_user_id').val();
+        console.log(userId);
+        $.ajax({
+        url:"<?php echo base_url('c_submission/reloadPenulis'); ?>",
+        data:{userId:userId},
+        type: "POST",
+        dataType : "html",
+        success: function(response){
+          console.log(response);
+        $("#penulis").html(response);
+        },
+        error: function() {
+     alert("gagal reload");
+      }
+        })
         alert("data berhasil di update");
 			}
 		 });
 });
 
+$("#fakultas").change(function(){
+	
+	var value=$(this).val();
+	if(value>0){
+	$.ajax({
+	data:{modul:'jurusan',id:value},
+	success: function(respond){
+	$("#jurusan").html(respond);
+	}
+	})
+	}
+
+	});
 
 //Flat red color scheme for iCheck
 $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
