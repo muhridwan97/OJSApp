@@ -77,6 +77,32 @@ class c_submission extends CI_Controller {
 		// mengembalikan hasil curl
 		return $output;
 	}
+	function http_request_postFile($url,$post){
+		// persiapkan curl
+		$ch = curl_init(); 
+		$post = http_build_query($post);
+		$cfile = new CURLFile($post);
+ 
+		// Assign POST data
+		$data = array('test_file' => $cfile);
+		//print_r($post);
+		// set url 
+		curl_setopt($ch, CURLOPT_URL, $url);
+	
+		// return the transfer as a string 
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
+		curl_setopt($ch, CURLOPT_POST, true);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+	
+		// $output contains the output string 
+		$output = curl_exec($ch); 
+	
+		// tutup curl 
+		curl_close($ch);      
+	
+		// mengembalikan hasil curl
+		return $output;
+	}
 	public function lihatAntrian(){
 		$profile = $this->http_request("http://localhost/serviceOJS/api/userSubmitAntrian");
 		
@@ -353,12 +379,15 @@ class c_submission extends CI_Controller {
 	}
 
 	public function submitArsip(){
-		$fileArsip= $this->input->post("fileArsip");
-		print_r($fileArsip);
+		$fileArsip= $_FILES['fileArsip'];
+		//print_r($fileArsip);
 		//return $fileArsip;
-		//$userFiles = $this->http_request_post("http://localhost/serviceOJS/api/uploadArsip",$fileArsip);
-		//echo(json_decode($userFiles, TRUE));
-		
+		$data = array(
+			'fileArsip' => $fileArsip
+			);	
+		$userFiles = $this->http_request_postFile("http://localhost/serviceOJS/api/uploadArsip",$data);
+		print_r ($userFiles);
+		//print_r($fileArsip);
 		echo "{}";
 	}
 	

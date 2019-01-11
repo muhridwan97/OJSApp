@@ -220,7 +220,6 @@
     <form id="formArsip" method="post" enctype="multipart/form-data">
     <label for="exampleInputFile">File arsip</label>
       <input type="file" id="fileArsip" name="fileArsip">
-      <input type="text" id="a" name="a">
       </form>
       <button style="margin-top:10px;" type="submit" id="submitArsip" class="btn btn-primary" >Upload File</button>
     </div>
@@ -323,18 +322,23 @@ $(document).on("click",".publication",function(){
 });
 
 $(document).on("click","#submitArsip",function(){
-  
-  var fileArsip=$('#fileArsip').prop('files');
+  var fileArsip = $('#fileArsip').prop('files')[0];
+  //var fileArsip = new FormData($("#formArsip"));
+  //var fileArsip = $('#fileArsip')[0].files[0];
   //alert(qq);
+  //var file_data = $('#policy_image').prop('files')[0];
+  var form_data = new FormData();
+  form_data.append('fileArsip', fileArsip);
   console.log(fileArsip);
 	$.ajax({
 			url:"<?php echo base_url('c_submission/submitArsip'); ?>",
-      data:{fileArsip:fileArsip},
+      data:form_data,
       type: "POST",
       contentType: false,
       processData: false,
+      dataType : "html",
 			success: function(){
-        alert("data berhasil");
+        alert("file berhasil diupload");
       },
       error: function() {
      alert("gagal");

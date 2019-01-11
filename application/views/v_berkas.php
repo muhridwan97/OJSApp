@@ -498,19 +498,7 @@ $(document).on("click",".tambahPenulis",function(){
 		 });
 });
 
-$("#fakultas").change(function(){
-	
-	var value=$(this).val();
-	if(value>0){
-	$.ajax({
-	data:{modul:'jurusan',id:value},
-	success: function(respond){
-	$("#jurusan").html(respond);
-	}
-	})
-	}
 
-	});
 
 //Flat red color scheme for iCheck
 $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
