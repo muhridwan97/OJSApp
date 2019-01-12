@@ -120,10 +120,10 @@
                   <td>
                   <?php if("$u[stage_id]"==3){
                   ?>
-                  <span class="label label-info">Verified</span>
+                  <span class="label label-info">Verified</span><span class="label label-warning">Revisi</span>
                   <?php }else{
                   ?>
-                  <span class="label label-danger">Pending</span>
+                  <span class="label label-danger">Pending</span><span class="label label-warning">Revisi</span>
                   <?php }
                   ?>
                   </td>
@@ -250,7 +250,20 @@
       </div>
       <div class="modal-body">
       <div class="box-body">
-		
+      <div class="form-group">
+                  <div class="radio">
+                    <label>
+                      <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+                      Mengirim Email ke mahasiswa
+                    </label>
+                  </div>
+                  <div class="radio">
+                    <label>
+                      <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                      Mengirim Email ke mahasiswa dan dosen pembimbing
+                    </label>
+                  </div>
+                </div>
     <div class="form-group">
     <label>Isi pesan email</label>
     <input type="hidden" id="submission_id">
@@ -361,10 +374,14 @@ $(document).on("click",".publication",function(){
 $(document).on("click",".sendEmail",function(){
 	 var id=$('#submission_id').val();
 	var pesan=$('textarea#pesan').val();
-  console.log(pesan);
+  var option=0;
+  if($('#optionsRadios1').is(":checked")){
+    option=1;
+  }
+  console.log(option);
 	$.ajax({
 			url:"<?php echo base_url('c_submission/send_email'); ?>",
-			data:{id:id,pesan:pesan},
+			data:{id:id,pesan:pesan,option:option},
 			success: function(){
         alert("Sukses! email berhasil dikirim.");
 			},

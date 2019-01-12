@@ -394,12 +394,12 @@ class c_submission extends CI_Controller {
 	public function send_email(){
 		$user_id= $this->input->post("id");
 		$pesan= $this->input->post("pesan");
+		$option= $this->input->post("option");
 		$emailTujuan= array();
 		$getEmail = $this->http_request("http://localhost/serviceOJS/api/getEmail/".$user_id);
 		// ubah string JSON menjadi array
 		$getEmail = json_decode($getEmail, TRUE);
-		
-		if(true){//buat pilihan
+		if($option==1){//buat pilihan
 			$i=0;			
 		foreach($getEmail as $g){
 			$emailTujuan[$i]="";
@@ -437,7 +437,7 @@ class c_submission extends CI_Controller {
 	//  print_r($emailTujuan[0]);
 	//  print_r($emailTujuan[1]);
 	//  print_r($emailTujuan[2]);
-	if (true){
+	if ($option==1){
 	 $this->email->to($emailTujuan[0]); // Ganti dengan email tujuan kamu
 	}else{
 		$this->email->to($emailTujuan); // Ganti dengan email tujuan kamu

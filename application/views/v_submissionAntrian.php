@@ -117,14 +117,26 @@
                 <tr data-id="<?php echo "$u[submission_id]"; ?>" >
 				<td ><?php echo $i; ?></td>
                   <td><?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?></td>
-                  <td><span class="label 
+                  
+                  <td>
+                  <?php if("$u[statusSkripsi]"!="revisi"){
+                    ?>
+                    <span class="label 
                   <?php if("$u[statusSkripsi]"=="selesai")echo "label-success"; else echo "label-danger";?>">
                   
                   <?php echo "$u[statusSkripsi]"; ?></span>
+                  <?php }else{?>
+                    <span class="label label-success">
+                    <?php echo "selesai"; ?></span>
+                    <span class="label label-warning">
+                    <?php echo "$u[statusSkripsi]"; ?></span>
+                    <?php
+                  }
+                    ?>
                   </td>
                   <td><div class="btn-group">
                   
-                  <a href="" type="button" class="btn btn-warning btn-flat"><i class="fa fa-send"></i></a>
+                  <a data-toggle="modal" data-target="#myModal2" data-id="<?php echo "$u[user_id]" ?>"  class="btn btn-warning btn-flat cekSubmission"><i class="fa fa-send"></i></a>
                       <button type="button" class="btn btn-success btn-flat submission-valid" 
 					  data-id="<?php echo "$u[submission_id]"; ?>" data-author="<?php echo "$u[author_id]"; ?>" 
             data-user="<?php echo "$u[user_id]"; ?>" data-nama ="<?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?>">
@@ -142,7 +154,51 @@
           <!-- /.box -->
         </div>
         
-	  
+	  <!-- Modal 2 send -->
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Email</h4>
+      </div>
+      <div class="modal-body">
+      <div class="box-body">
+      <div class="form-group">
+                  <div class="radio">
+                    <label>
+                      <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+                      Mengirim Email ke mahasiswa
+                    </label>
+                  </div>
+                  <div class="radio">
+                    <label>
+                      <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                      Mengirim Email ke mahasiswa dan dosen pembimbing
+                    </label>
+                  </div>
+                </div>
+    <div class="form-group">
+    <label>Isi pesan email</label>
+    <input type="hidden" id="submission_id">
+    <textarea id="pesan" class="form-control" name="pesan" rows="10" >
+    Selesaikan Filkom App terlebih dahulu
+    <br><br>
+    Kind Regards,
+    <br>
+    Muhammad Ridwan
+    </textarea>
+		</div>
+    
+    </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary sendEmail" >Kirim</button>
+      </div>
+    </div>
+  </div>
+</div>
 		
 		
       <!-- /.row -->
@@ -178,6 +234,15 @@
 <!-- page script -->
 
 <script>
+$('.cekSubmission').on('click', function () {
+  var id=$(this).data('id');
+  //alert(id); 
+  $('#submission_id').val(id);//aslinya ini masih userid
+});
+
+$('#myModal').on('shown.bs.modal', function () {
+  
+});
   $(function () {
 	  $.ajaxSetup({
 	type:"post",
@@ -185,17 +250,24 @@
 	dataType: "json"
 	})
 	
-	$(document).on("click",".info-pembayaran",function(){
-	var id=$(this).attr("data-id");
-	var harga=$(this).attr("data-harga");
-	swal({
-		title: "Total Harga : Rp "+ harga +" ,-",
-		text:"Pembayaran harus sesuai dengan harga",
-		type: "info",
-		confirmButtonText: "Oke",
-		closeOnConfirm: true,
-	},
-		);
+	$(document).on("click",".sendEmail",function(){
+	 var id=$('#submission_id').val();
+	var pesan=$('textarea#pesan').val();
+  var option=0;
+  if($('#optionsRadios1').is(":checked")){
+    option=1;
+  }
+  console.log(id);
+	$.ajax({
+			url:"<?php echo base_url('c_submission/send_email'); ?>",
+			data:{id:id,pesan:pesan,option:option},
+			success: function(){
+        alert("Sukses! email berhasil dikirim.");
+			},
+        error: function() {
+     alert("gagal kirim email");
+      }
+		 });
 });
 
 $(document).on("click",".submission-valid",function(){
