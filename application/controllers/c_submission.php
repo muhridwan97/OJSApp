@@ -243,9 +243,13 @@ class c_submission extends CI_Controller {
 			'author_id' => $user_id
 			);
 		//print_r($dataSub);
-		$this->m_mahasiswa->insertSubmission($author_id,$user_id,$dataSub);
-
-		echo(json_decode($userFiles, TRUE));
+		$insert = $this->m_mahasiswa->getDataAuthor($user_id)->result();
+		if(count($insert)>0){
+			$this->m_mahasiswa->updateSubmission($submission_id,$user_id);
+		}else{
+			$this->m_mahasiswa->insertSubmission($author_id,$user_id,$dataSub);
+		}
+		//echo(json_decode($userFiles, TRUE));
 		echo "{}";
 	}
 	public function cekComboBox(){
@@ -309,6 +313,18 @@ class c_submission extends CI_Controller {
 		echo(json_decode($userFiles, TRUE));
 		echo "{}";
 	}
+	public function decline(){
+		$user_id= $this->input->post("id");
+		//print_r($date);
+		$data = array(
+			'user_id' => $user_id
+			);	
+			
+		$userFiles = $this->http_request_post("http://localhost/serviceOJS/api/decline",$data);
+		$this->m_mahasiswa->setRevisi($user_id);
+		echo "{}";
+	}
+
 	public function tambahPenulis(){
 		$submission_id= $this->input->post("id");
 		$first_name= $this->input->post("first_name");
