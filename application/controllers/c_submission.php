@@ -80,11 +80,12 @@ class c_submission extends CI_Controller {
 	function http_request_postFile($url,$post){
 		// persiapkan curl
 		$ch = curl_init(); 
-		$post = http_build_query($post);
-		$cfile = new CURLFile($post);
- 
+		print_r($post);
+		//$post = http_build_query($post);
+		//$cfile = new CURLFile('cats.jpg','image/jpeg','test_name');
+		//$file = curl_file_create($post);
 		// Assign POST data
-		$data = array('test_file' => $cfile);
+		//$data = array('fileArsip' => $file);
 		//print_r($post);
 		// set url 
 		curl_setopt($ch, CURLOPT_URL, $url);
@@ -92,7 +93,7 @@ class c_submission extends CI_Controller {
 		// return the transfer as a string 
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
 		curl_setopt($ch, CURLOPT_POST, true);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
 	
 		// $output contains the output string 
 		$output = curl_exec($ch); 
@@ -389,6 +390,74 @@ class c_submission extends CI_Controller {
 		print_r ($userFiles);
 		//print_r($fileArsip);
 		echo "{}";
+	}
+	public function send_email(){
+		$user_id= $this->input->post("id");
+		$pesan= $this->input->post("pesan");
+		$emailTujuan= array();
+		$getEmail = $this->http_request("http://localhost/serviceOJS/api/getEmail/".$user_id);
+		// ubah string JSON menjadi array
+		$getEmail = json_decode($getEmail, TRUE);
+		
+		if(true){//buat pilihan
+			$i=0;			
+		foreach($getEmail as $g){
+			$emailTujuan[$i]="";
+			if($g['primary_contact']==1){
+			$emailTujuan[$i]=$g['email'];}
+			$i++;
+		}
+		}else{
+			$i=0;
+			foreach($getEmail as $g){
+				$emailTujuan[$i]=$g['email'];
+				$i++;
+			}
+		}
+		// Konfigurasi email
+        $config = [
+			'mailtype'  => 'html',
+			'charset'   => 'iso-8859-1',
+			'protocol'  => 'smtp',
+			'smtp_host' => 'ssl://smtp.googlemail.com',
+			'smtp_user' => 'muh.ridwan97@gmail.com',    // Ganti dengan email gmail kamu
+			'smtp_pass' => '04013194385',      // Password gmail kamu
+			'smtp_port' => 465,
+			'wordwrap'   => TRUE
+		];
+
+	 // Load library email dan konfigurasinya
+	 $this->load->library('email', $config);
+	 $this->email->set_newline("\r\n");  
+
+	 // Email dan nama pengirim
+	 $this->email->from('muh.ridwan97@gmail.com', 'Muhammad Ridwan');
+
+	 // Email penerima
+	//  print_r($emailTujuan[0]);
+	//  print_r($emailTujuan[1]);
+	//  print_r($emailTujuan[2]);
+	if (true){
+	 $this->email->to($emailTujuan[0]); // Ganti dengan email tujuan kamu
+	}else{
+		$this->email->to($emailTujuan); // Ganti dengan email tujuan kamu
+	}
+	 // Lampiran email, isi dengan url/path file
+	 //$this->email->attach('https://masrud.com/content/images/20181215150137-codeigniter-smtp-gmail.png');
+
+	 // Subject email
+	 $this->email->subject('Coba kirim email pke OJSApp');
+
+	 // Isi email
+	 $this->email->message($pesan);
+
+	 // Tampilkan pesan sukses atau error
+	 if ($this->email->send()) {
+		 echo '{}';
+	 } else {
+		show_error($this->email->print_debugger()); 
+	 }
+	
 	}
 	
 }

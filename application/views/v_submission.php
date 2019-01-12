@@ -132,7 +132,7 @@
                   <a href="<?php echo base_url(); ?>c_submission/lihatBerkas/<?php echo "$u[user_id]" ?>" type="button" class="btn btn-info btn-flat"><i class="fa fa-info"></i></a>
                       <a data-toggle="modal" data-target="#myModal" class="btn btn-success btn-flat cek"
 					  data-id="<?php echo "$u[user_id]" ?>" ><i class="fa fa-check"  ></i></a>
-					  <a href="" type="button" class="btn btn-warning btn-flat"><i class="fa fa-send"></i></a>
+					  <a data-toggle="modal" data-target="#myModal2" data-id="<?php echo "$u[user_id]" ?>"  class="btn btn-warning btn-flat cekSubmission"><i class="fa fa-send"></i></a>
                     </div></td>
                 </tr>
                 <?php
@@ -239,7 +239,39 @@
     </div>
   </div>
 </div>
-	  
+
+<!-- Modal 2 send -->
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Email</h4>
+      </div>
+      <div class="modal-body">
+      <div class="box-body">
+		
+    <div class="form-group">
+    <label>Isi pesan email</label>
+    <input type="hidden" id="submission_id">
+    <textarea id="pesan" class="form-control" name="pesan" rows="10" >
+    isi pesan
+    <br><br>
+    Kind Regards,
+    <br>
+    Muhammad Ridwan
+    </textarea>
+		</div>
+    
+    </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary sendEmail" >Kirim</button>
+      </div>
+    </div>
+  </div>
+</div>
 		
 		
       <!-- /.row -->
@@ -281,6 +313,11 @@ $('.cek').on('click', function () {
   $('#id_orang').val(id);
 });
 
+$('.cekSubmission').on('click', function () {
+  var id=$(this).data('id');
+  //alert(id); 
+  $('#submission_id').val(id);//aslinya ini masih userid
+});
 
 $('#myModal').on('shown.bs.modal', function () {
   
@@ -318,6 +355,22 @@ $(document).on("click",".publication",function(){
 			success: function(){
         alert("data berhasil di update");
 			}
+		 });
+});
+
+$(document).on("click",".sendEmail",function(){
+	 var id=$('#submission_id').val();
+	var pesan=$('textarea#pesan').val();
+  console.log(pesan);
+	$.ajax({
+			url:"<?php echo base_url('c_submission/send_email'); ?>",
+			data:{id:id,pesan:pesan},
+			success: function(){
+        alert("Sukses! email berhasil dikirim.");
+			},
+        error: function() {
+     alert("gagal kirim email");
+      }
 		 });
 });
 
