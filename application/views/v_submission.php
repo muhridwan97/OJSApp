@@ -103,7 +103,7 @@
                 <tr>
                   <th>No</th>
                   <th>Nama</th>
-                  <th>Status</th>
+                  <th>Status Pemeriksaan</th>
                   <th>Action</th>
                 </tr>
                 
@@ -120,11 +120,13 @@
                   <td>
                   <?php if("$u[stage_id]"==3){
                   ?>
-                  <span class="label label-info">Verified</span><span class="label label-warning">Revisi</span>
-                  <?php }else{
+                  <span class="label label-info">Verified</span>
+                  <?php  }else{
                   ?>
-                  <span class="label label-danger">Pending</span><span class="label label-warning">Revisi</span>
-                  <?php }
+                  <span class="label label-danger">Pending</span>
+                  <?php if("$u[statusSkripsi]"=="revisi"){
+                  ?><span class="label label-warning">Revisi</span>
+                  <?php }}
                   ?>
                   </td>
                   <td><div class="btn-group">

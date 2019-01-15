@@ -9,6 +9,10 @@ class m_mahasiswa extends CI_Model {
 		$this->db->where('author_id',$id);
 		return $this->db->get('submission');
 	}
+	public function getMahasiswaById($id){
+		$this->db->where('mahasiswa_id',$id);
+		return $this->db->get('mahasiswa');
+	}
 	
 	public function set_centang($id,$value,$strState){
 		$this->db->set($value, $strState);

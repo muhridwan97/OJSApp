@@ -437,6 +437,8 @@ $(document).on("click",".verifikasi",function(){
             url:"<?php echo base_url('c_submission/verifikasi'); ?>",
             data:{id:id},
             success: function(){
+              alert("verifikasi berhasil");
+              location.href = "<?php echo base_url('c_submission/'); ?>"
             }
           });
         });

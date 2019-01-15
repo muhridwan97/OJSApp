@@ -19,18 +19,16 @@ class c_submission extends CI_Controller {
 		
 		//$mahasiswa = $this->m_mahasiswa->getMahasiswa()->result_array();	
 //print_r($profile);
-
-	// 	foreach($profile as $a){
-	// 		$nama=$a['first_name'].' '.$a['middle_name'].''.$a['last_name'];
-	// 		foreach($mahasiswa as $b){
-	// 			if(strtolower($nama) === strtolower($b['namaMahasiswa'])){
-	// 				//echo $b['namaMahasiswa'];
-	// 			} 
-	// 		}
-			
-				
-	// }
-		
+		$i=0;
+	 	foreach($profile as $a){
+			$mahasiswa=$this->m_mahasiswa->getMahasiswaById($a['user_id'])->result_array();
+			//print_r($mahasiswa);
+			foreach($mahasiswa as $b){
+			$profile[$i]['statusSkripsi']=$b['status'];
+			}
+		$i++;
+	 	}
+		//print_r($profile);
 		$data['user']=$profile;
 		$data['issue']=$issue;
 		$this->load->view('v_submission',$data);
@@ -145,24 +143,24 @@ class c_submission extends CI_Controller {
 		$data['user']=$metadata;
 		$data['userApp']=$this->m_mahasiswa->getDataAuthor($userId)->result_array();
 
-		$mahasiswa = $this->m_mahasiswa->getMahasiswa()->result_array();	
+		//$mahasiswa = $this->m_mahasiswa->getMahasiswa()->result_array();	
 //
-		$mahasiswa_id=0;
-		foreach($userFiles as $a){
-			$nama=$a['first_name'].' '.$a['middle_name'].''.$a['last_name'];
-			$nama=str_replace(' ', '', $nama);
-			foreach($mahasiswa as $b){
-				$namaSiswa=$b['namaMahasiswa'];//dri filkomappp
-				$namaSiswa=str_replace(' ', '', $namaSiswa);
+		
+		 foreach($userFiles as $a){
+		// 	$nama=$a['first_name'].' '.$a['middle_name'].''.$a['last_name'];
+		// 	$nama=str_replace(' ', '', $nama);
+		// 	foreach($mahasiswa as $b){
+		// 		$namaSiswa=$b['namaMahasiswa'];//dri filkomappp
+		// 		$namaSiswa=str_replace(' ', '', $namaSiswa);
 				
-				if(strtolower($nama) == strtolower($namaSiswa)){
-					//echo $nama;
-					$mahasiswa_id=$b['mahasiswa_id'];
-				} 
+		// 		if($a['uploader_user_id'] == $b['mahasiswa_id']){
+		// 			//echo $nama;
+		// 			$mahasiswa_id=$b['uploader_user_id'];
+		// 		} 
 				
-			}
+		// 	}
 				
-		}
+		 }$mahasiswa_id= $a['uploader_user_id'];
 		//print_r($mahasiswa_id);
 		$data['berkasApp']=$this->m_mahasiswa->getDataMahasiswa($mahasiswa_id)->result_array();
 		
