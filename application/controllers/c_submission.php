@@ -136,29 +136,17 @@ class c_submission extends CI_Controller {
 	public function lihatBerkas($userId){
 		$userFiles = $this->http_request("http://localhost/serviceOJS/api/userFiles/".$userId);
 		$metadata = $this->http_request("http://localhost/serviceOJS/api/metadata/".$userId);
+		$keyword = $this->http_request("http://localhost/serviceOJS/api/keyword/".$userId);
 		// ubah string JSON menjadi array
 		$userFiles = json_decode($userFiles, TRUE);
 		$metadata = json_decode($metadata, TRUE);
+		$keyword = json_decode($keyword, TRUE);
+
 		$data['userFiles']=$userFiles;
 		$data['user']=$metadata;
+		$data['keyword']=$keyword;
 		$data['userApp']=$this->m_mahasiswa->getDataAuthor($userId)->result_array();
-
-		//$mahasiswa = $this->m_mahasiswa->getMahasiswa()->result_array();	
-//
-		
 		 foreach($userFiles as $a){
-		// 	$nama=$a['first_name'].' '.$a['middle_name'].''.$a['last_name'];
-		// 	$nama=str_replace(' ', '', $nama);
-		// 	foreach($mahasiswa as $b){
-		// 		$namaSiswa=$b['namaMahasiswa'];//dri filkomappp
-		// 		$namaSiswa=str_replace(' ', '', $namaSiswa);
-				
-		// 		if($a['uploader_user_id'] == $b['mahasiswa_id']){
-		// 			//echo $nama;
-		// 			$mahasiswa_id=$b['uploader_user_id'];
-		// 		} 
-				
-		// 	}
 				
 		 }$mahasiswa_id= $a['uploader_user_id'];
 		//print_r($mahasiswa_id);
@@ -299,12 +287,14 @@ class c_submission extends CI_Controller {
 		$judul= $this->input->post("judul");
 		$subtitle= $this->input->post("subtitle");
 		$abstract= $this->input->post("abstract");
+		$keyword= $this->input->post("keyword");
 		//print_r($date);
 		$data = array(
 			'submission_id' => $submission_id,
 			'judul' => $judul,//editor id
 			'subtitle' => $subtitle,
-			'abstract' => $abstract
+			'abstract' => $abstract,
+			'keyword' => $keyword
 			);	
 			
 		$userFiles = $this->http_request_post("http://localhost/serviceOJS/api/setMetadata",$data);
@@ -320,6 +310,16 @@ class c_submission extends CI_Controller {
 			
 		$userFiles = $this->http_request_post("http://localhost/serviceOJS/api/decline",$data);
 		$this->m_mahasiswa->setRevisi($user_id);
+		echo "{}";
+	}
+	public function declineAntrian(){
+		$user_id= $this->input->post("id");
+		//print_r($date);
+		$data = array(
+			'user_id' => $user_id
+			);	
+			
+		$userFiles = $this->http_request_post("http://localhost/serviceOJS/api/decline",$data);
 		echo "{}";
 	}
 
@@ -378,6 +378,19 @@ class c_submission extends CI_Controller {
 		
 		$this->load->view('v_berkasPublication',$data);
 	}
+
+	public function getPage(){
+		$issueId= $this->input->post("issueId");			
+		$page = $this->http_request("http://localhost/serviceOJS/api/getPage/".$issueId);
+		$page=json_decode($page, TRUE);
+		$pages=0;
+		if(count($page)>0){
+		foreach($page as $a){
+		}$pages= $a['pages'];}
+		//echo "<input type='text' class='form-control' id='page' value='' name='page' placeholder='$pages'>";
+		echo "$pages";
+	}
+
 	public function setPublication(){
 		$user_id= $this->input->post("id");
 		$date= date('Y-m-d H:i:s');

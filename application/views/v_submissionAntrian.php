@@ -114,7 +114,7 @@
                 foreach($user as $u){
                   $i++;
                 ?>
-                <tr data-id="<?php echo "$u[submission_id]"; ?>" >
+                <tr data-id="<?php echo "$u[user_id]"; ?>" >
 				<td ><?php echo $i; ?></td>
                   <td><?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?></td>
                   
@@ -194,7 +194,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary sendEmail" >Kirim</button>
+        <button type="button" class="btn btn-primary sendEmail" data-dismiss="modal">Kirim</button>
       </div>
     </div>
   </div>
@@ -258,14 +258,26 @@ $('#myModal').on('shown.bs.modal', function () {
     option=1;
   }
   console.log(id);
-	$.ajax({
-			url:"<?php echo base_url('c_submission/send_email'); ?>",
-			data:{id:id,pesan:pesan,option:option},
+  $.ajax({
+			url:"<?php echo base_url('c_submission/declineAntrian'); ?>",
+			data:{id:id},
 			success: function(){
-        alert("Sukses! email berhasil dikirim.");
+          $.ajax({
+            url:"<?php echo base_url('c_submission/send_email'); ?>",
+            data:{id:id,pesan:pesan,option:option},
+            success: function(){
+              alert("Sukses! email berhasil dikirim.");
+              $("tr[data-id='"+id+"']").fadeOut("fast",function(){
+					$(this).remove();
+				});
+            },
+              error: function() {
+          alert("gagal kirim email");
+            }
+          });
 			},
         error: function() {
-     alert("gagal kirim email");
+     alert("gagal decline");
       }
 		 });
 });

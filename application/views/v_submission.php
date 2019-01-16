@@ -216,7 +216,10 @@
 		</div>
     <div class="form-group">
     <label>Tahun</label>
-      <input type="text" class="form-control" id="tahun" value="<?php    ?>" name="tahun" placeholder="2018">
+    <?php $tahun=getdate();
+
+    ?>
+      <input type="text" class="form-control" id="tahun" value="<?php  echo $tahun['year'];  ?>" name="tahun" placeholder="2018">
 		</div>
     <div class="form-group">
     <form id="formArsip" method="post" enctype="multipart/form-data">
@@ -430,53 +433,23 @@ $(document).on("click","#submitArsip",function(){
 		 });
 });
 
-$(document).on("click",".ijazah-valid",function(){
-	var id=$(this).attr("data-id");
-	var nama=$(this).attr("data-nama");
-	swal({
-		title: "Ijazah atas nama  "+ nama +" Valid",
-		text:"Yakin Ijazah ini valid?",
-		type: "warning",
-		showCancelButton: true,
-		confirmButtonText: "Yakin",
-		closeOnConfirm: true,
-	},
-		function(){
-		 $.ajax({
-			url:"<?php echo base_url('Adminika/ijazahValid'); ?>",
-			data:{id:id},
-			success: function(){
-				$("tr[data-id='"+id+"']").fadeOut("fast",function(){
-					$(this).remove();
-				});
-			}
-		 });
-	});
-});
+$("#issue").change(function(){
+	var value=$(this).val();
+  
+	$.ajax({
+    url:"<?php echo base_url('c_submission/getPage'); ?>",
+	data:{issueId:value},
+  dataType : "html",
+	success: function(response){
+    console.log(response);
+	$("#page").val(response);
+	}
+	})
 
-$(document).on("click",".hapus-member",function(){
-	var id=$(this).attr("data-id");
-	var nama=$(this).attr("data-nama");
-	swal({
-		title: "Hapus "+ nama +" sebagai Member",
-		text:"Yakin akan menghapus member ini?",
-		type: "warning",
-		showCancelButton: true,
-		confirmButtonText: "Hapus",
-		closeOnConfirm: true,
-	},
-		function(){
-		 $.ajax({
-			url:"<?php echo base_url('Adminika/hapus'); ?>",
-			data:{id:id},
-			success: function(){
-				$("tr[data-id='"+id+"']").fadeOut("fast",function(){
-					$(this).remove();
-				});
-			}
-		 });
 	});
-});
+
+
+
     $('#example1').DataTable()
     $('#example2').DataTable({
       'paging'      : true,

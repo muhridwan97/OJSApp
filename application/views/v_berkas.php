@@ -259,6 +259,14 @@
     <textarea id="editor2" class="form-control" name="editor2" rows="10" ><?php echo $abstract;?></textarea>
 		</div>
     <div class="form-group">
+			<label>Keyword</label>
+      <?php 
+      $hasilKeyword="";
+      foreach($keyword as $k){
+        $hasilKeyword="$k[setting_value]";}   ?>
+			<input type="text" class="form-control" id="keyword" value="<?php echo $hasilKeyword;  ?>" name="keyword" placeholder="Masukkan keyword">
+		</div>
+    <div class="form-group">
     <table id="example" class="table table-bordered table-striped">
                 <thead>
                 
@@ -455,10 +463,11 @@ $(document).on("click",".abstract",function(){
 	var judul=$('#judul').prop('value');
   var subtitle=$('#subtitle').prop('value');
   var abstract=$('textarea#editor2').val();
-  //console.log(abstract);
+  var keyword=$('#keyword').prop('value');
+  console.log(keyword);
 	$.ajax({
 			url:"<?php echo base_url('c_submission/metadata'); ?>",
-			data:{id:id,judul:judul,subtitle:subtitle,abstract:abstract},
+			data:{id:id,judul:judul,subtitle:subtitle,abstract:abstract,keyword:keyword},
 			success: function(){
         alert("data berhasil di update");
 			}
