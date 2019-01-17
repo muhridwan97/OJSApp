@@ -407,14 +407,20 @@ class c_submission extends CI_Controller {
 	}
 
 	public function submitArsip(){
-		$fileArsip= $_FILES['fileArsip'];
+		//$fileArsip= $_FILES['fileArsip'];
+		$fileArsip= realpath($_FILES["fileArsip"]["tmp_name"]);
+		$type = $_FILES['fileArsip']['type'];
+		$name = $_FILES['fileArsip']['name'];
 		//print_r($fileArsip);
 		//return $fileArsip;
 		$data = array(
 			'fileArsip' => $fileArsip
 			);	
-		$userFiles = $this->http_request_postFile("http://localhost/serviceOJS/api/uploadArsip",$data);
-		print_r ($userFiles);
+		$fields = [
+				'fileArsip' => new \CurlFile($fileArsip, $type, $name)
+		];
+		$userFiles = $this->http_request_postFile("http://localhost/serviceOJS/api/uploadArsip",$fields);
+		//print_r ($type);
 		//print_r($fileArsip);
 		echo "{}";
 	}

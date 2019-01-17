@@ -158,7 +158,7 @@
       <div class="modal-body">
       <div class="box-body">
 		<div class="form-group">
-			<label>Issue</label>
+			<label>Edisi</label>
 			<select name="" id="issue"class="form-control select" style="width: 100%;">
       <option>------Future Issue------</option>
       <?php
@@ -210,7 +210,7 @@
 		</div>
                              
     <div class="form-group">
-    <label>Page</label>
+    <label>Halaman</label>
       <input type="text" class="form-control" id="page" value="<?php  echo 10; ?>" name="page" placeholder="Masukkan page">
       <input type="hidden" id="id_orang">
 		</div>
@@ -238,8 +238,8 @@
     </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary publication" >Publication</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+        <button type="button" class="btn btn-primary publication" >Publikasi</button>
       </div>
     </div>
   </div>
@@ -284,7 +284,7 @@
     </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
         <button type="button" class="btn btn-primary sendEmail" data-dismiss="modal" >Kirim</button>
       </div>
     </div>
@@ -424,7 +424,8 @@ $(document).on("click","#submitArsip",function(){
       contentType: false,
       processData: false,
       dataType : "html",
-			success: function(){
+			success: function(response){
+        console.log(response);
         alert("file berhasil diupload");
       },
       error: function() {
