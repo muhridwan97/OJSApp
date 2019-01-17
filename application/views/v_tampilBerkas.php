@@ -1,5 +1,7 @@
 <?php
-
+  if($this->session->userdata('username')==null){
+    redirect(base_url()."c_login/");
+  }
 ?>
 <!DOCTYPE html>
 <html>

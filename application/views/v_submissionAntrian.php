@@ -1,5 +1,7 @@
 <?php
-
+  if($this->session->userdata('username')==null){
+    redirect(base_url()."c_login/");
+  }
 ?>
 <!DOCTYPE html>
 <html>
@@ -15,8 +17,6 @@
   <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
   <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/dist/css/AdminLTE.min.css">
   <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/dist/css/skins/_all-skins.min.css">
-  <!-- lighbox -->
-  <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/lightbox/dist/css/lightbox.css'); ?>">
   <!-- pop up -->
   <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/sweetalert/sweetalert.css'); ?>">
   <script type="text/javascript" src="<?php echo base_url('assets/sweetalert/sweetalert.min.js'); ?>"></script>
@@ -39,7 +39,7 @@
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
           <li>
-            <a href="<?php echo base_url(); ?>login/logoutAdmin" >KELUAR <i class="fa fa-power-off"></i></a>
+          <a href="<?php echo base_url(); ?>c_login/logout" > <i class="fa fa-sign-out"></i></a>
           </li>
         </ul>
       </div>
@@ -116,19 +116,32 @@
                 foreach($user as $u){
                   $i++;
                 ?>
-                <tr data-id="<?php echo "$u[submission_id]"; ?>" >
+                <tr data-id="<?php echo "$u[user_id]"; ?>" >
 				<td ><?php echo $i; ?></td>
                   <td><?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?></td>
-                  <td><span class="label 
+                  
+                  <td>
+                  <?php if("$u[statusSkripsi]"!="revisi"){
+                    ?>
+                    <span class="label 
                   <?php if("$u[statusSkripsi]"=="selesai")echo "label-success"; else echo "label-danger";?>">
                   
                   <?php echo "$u[statusSkripsi]"; ?></span>
+                  <?php }else{?>
+                    <span class="label label-success">
+                    <?php echo "selesai"; ?></span>
+                    <span class="label label-warning">
+                    <?php echo "$u[statusSkripsi]"; ?></span>
+                    <?php
+                  }
+                    ?>
                   </td>
                   <td><div class="btn-group">
                   
-                  <a href="" type="button" class="btn btn-warning btn-flat"><i class="fa fa-send"></i></a>
+                  <a data-toggle="modal" data-target="#myModal2" data-id="<?php echo "$u[user_id]" ?>"  class="btn btn-warning btn-flat cekSubmission"><i class="fa fa-send"></i></a>
                       <button type="button" class="btn btn-success btn-flat submission-valid" 
-					  data-id="<?php echo "$u[submission_id]"; ?>" data-nama ="<?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?>">
+					  data-id="<?php echo "$u[submission_id]"; ?>" data-author="<?php echo "$u[author_id]"; ?>" 
+            data-user="<?php echo "$u[user_id]"; ?>" data-nama ="<?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?>">
             <i class="fa fa-check"  ></i></button>
                     </div></td>
                 </tr>
@@ -143,7 +156,51 @@
           <!-- /.box -->
         </div>
         
-	  
+	  <!-- Modal 2 send -->
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Email</h4>
+      </div>
+      <div class="modal-body">
+      <div class="box-body">
+      <div class="form-group">
+                  <div class="radio">
+                    <label>
+                      <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+                      Mengirim Email ke mahasiswa
+                    </label>
+                  </div>
+                  <div class="radio">
+                    <label>
+                      <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                      Mengirim Email ke mahasiswa dan dosen pembimbing
+                    </label>
+                  </div>
+                </div>
+    <div class="form-group">
+    <label>Isi pesan email</label>
+    <input type="hidden" id="submission_id">
+    <textarea id="pesan" class="form-control" name="pesan" rows="10" >
+    Selesaikan Filkom App terlebih dahulu
+    <br><br>
+    Kind Regards,
+    <br>
+    Muhammad Ridwan
+    </textarea>
+		</div>
+    
+    </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary sendEmail" data-dismiss="modal">Kirim</button>
+      </div>
+    </div>
+  </div>
+</div>
 		
 		
       <!-- /.row -->
@@ -176,16 +233,18 @@
 <script src="<?php echo base_url(); ?>/assets/dist/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="<?php echo base_url(); ?>/assets/dist/js/demo.js"></script>
-<!-- lightbox -->
-<script src="<?php echo base_url(); ?>/assets/lightbox/dist/js/lightbox.js"></script>
 <!-- page script -->
+
 <script>
-    lightbox.option({
-      'resizeDuration': 200,
-      'wrapAround': true
-    })
-</script>
-<script>
+$('.cekSubmission').on('click', function () {
+  var id=$(this).data('id');
+  //alert(id); 
+  $('#submission_id').val(id);//aslinya ini masih userid
+});
+
+$('#myModal').on('shown.bs.modal', function () {
+  
+});
   $(function () {
 	  $.ajaxSetup({
 	type:"post",
@@ -193,22 +252,47 @@
 	dataType: "json"
 	})
 	
-	$(document).on("click",".info-pembayaran",function(){
-	var id=$(this).attr("data-id");
-	var harga=$(this).attr("data-harga");
-	swal({
-		title: "Total Harga : Rp "+ harga +" ,-",
-		text:"Pembayaran harus sesuai dengan harga",
-		type: "info",
-		confirmButtonText: "Oke",
-		closeOnConfirm: true,
-	},
-		);
+	$(document).on("click",".sendEmail",function(){
+	 var id=$('#submission_id').val();
+	var pesan=$('textarea#pesan').val();
+  var option=0;
+  if($('#optionsRadios1').is(":checked")){
+    option=1;
+  }
+  console.log(id);
+  $.ajax({
+			url:"<?php echo base_url('c_submission/declineAntrian'); ?>",
+			data:{id:id},
+			success: function(){
+          $.ajax({
+            url:"<?php echo base_url('c_submission/send_email'); ?>",
+            data:{id:id,pesan:pesan,option:option},
+            success: function(){
+              alert("Sukses! email berhasil dikirim.");
+              $("tr[data-id='"+id+"']").fadeOut("fast",function(){
+					$(this).remove();
+				});
+            },
+              error: function() {
+          alert("gagal kirim email");
+            }
+          });
+			},
+        error: function() {
+     alert("gagal decline");
+      }
+		 });
 });
 
 $(document).on("click",".submission-valid",function(){
 	var id=$(this).attr("data-id");
-	var nama=$(this).attr("data-nama");
+  var nama=$(this).attr("data-nama");
+  var author_id=$(this).attr("data-author");
+  var user_id=$(this).attr("data-user");
+  // console.log(id);
+  // console.log(nama);
+  // console.log(author_id);
+  // console.log(user_id);
 	swal({
 		title: "Submission atas nama "+ nama +" Valid",
 		text:"Yakin Submission ini valid?",
@@ -220,7 +304,7 @@ $(document).on("click",".submission-valid",function(){
 		function(){
 		 $.ajax({
 			url:"<?php echo base_url('c_submission/submitIn'); ?>",
-			data:{id:id},
+			data:{id:id,author_id:author_id,user_id:user_id},
 			success: function(){
 				$("tr[data-id='"+id+"']").fadeOut("fast",function(){
 					$(this).remove();
