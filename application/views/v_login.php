@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -30,19 +31,19 @@
 <body class="hold-transition login-page">
 <div class="login-box">
   <div class="login-logo">
-    <a href="../../index2.html"><b>OJS</b>App</a>
+    <a href="#"><b>OJS</b>App</a>
   </div>
   <!-- /.login-logo -->
   <div class="login-box-body">
     <p class="login-box-msg">Sign in to start your session</p>
-
-    <form action="<?php echo base_url();?>/login/cek" method="post">
+    <!-- action="<?php echo base_url();?>c_login/cek" -->
+    <form method="post">
       <div class="form-group has-feedback">
-        <input type="text" name="id" class="form-control" placeholder="User Name">
+        <input type="text" name="username" id="username" class="form-control" placeholder="User Name">
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
       </div>
       <div class="form-group has-feedback">
-        <input type="password" name="password" class="form-control" placeholder="Password">
+        <input type="password" name="password" id="password" class="form-control" placeholder="Password">
         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
       </div>
       <div class="row">
@@ -50,7 +51,7 @@
         </div>
         <!-- /.col -->
         <div class="col-xs-4">
-          <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+          <button type="button" class="btn btn-primary btn-block btn-flat login">Masuk</button>
         </div>
         <!-- /.col -->
       </div>
@@ -73,13 +74,24 @@
 <!-- iCheck -->
 <script src="<?php echo base_url();?>/assets/plugins/iCheck/icheck.min.js"></script>
 <script>
-  $(function () {
-    $('input').iCheck({
-      checkboxClass: 'icheckbox_square-blue',
-      radioClass: 'iradio_square-blue',
-      increaseArea: '20%' /* optional */
-    });
-  });
+  $(document).on("click",".login",function(){
+	var username=$('#username').val();
+  var password=$('#password').val();
+  //alert(password);
+	$.ajax({
+			url:"<?php echo base_url('c_login/cek'); ?>",
+			data:{username:username,password:password},
+      type:"post",
+	    cache:false,
+	    dataType: "html",
+			success: function(response){
+        if(response=="gagal")
+        alert("username atau password salah");
+        if(response=="berhasil")
+        location.href = "<?php echo base_url('c_dashboard/'); ?>";
+			}
+		 });
+});
 </script>
 
 </body>

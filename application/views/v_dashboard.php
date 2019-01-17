@@ -1,5 +1,7 @@
 <?php
-
+if($this->session->userdata('username')==null){
+	redirect(base_url()."c_login/");
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -15,8 +17,6 @@
   <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
   <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/dist/css/AdminLTE.min.css">
   <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/dist/css/skins/_all-skins.min.css">
-  <!-- lighbox -->
-  <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/lightbox/dist/css/lightbox.css'); ?>">
   <!-- pop up -->
   <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/sweetalert/sweetalert.css'); ?>">
   <script type="text/javascript" src="<?php echo base_url('assets/sweetalert/sweetalert.min.js'); ?>"></script>
@@ -26,8 +26,8 @@
 <div class="wrapper">
   <header class="main-header">
     <a href="<?php echo base_url(); ?>adminika/" class="logo">
-      <span class="logo-mini"><b>I</b>KA</span>
-      <span class="logo-lg"><b>Admin</b> KartuIKA</span>
+      <span class="logo-mini"><b>O</b>JS</span>
+      <span class="logo-lg"><b>Admin</b> OJSApp</span>
     </a>
     <nav class="navbar navbar-static-top">
       <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
@@ -39,7 +39,7 @@
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
           <li>
-            <a href="<?php echo base_url(); ?>login/logoutAdmin" >KELUAR <i class="fa fa-power-off"></i></a>
+            <a href="<?php echo base_url(); ?>c_login/logout" > <i class="fa fa-sign-out"></i></a>
           </li>
         </ul>
       </div>
@@ -173,15 +173,7 @@
 <script src="<?php echo base_url(); ?>/assets/dist/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="<?php echo base_url(); ?>/assets/dist/js/demo.js"></script>
-<!-- lightbox -->
-<script src="<?php echo base_url(); ?>/assets/lightbox/dist/js/lightbox.js"></script>
-<!-- page script -->
-<script>
-    lightbox.option({
-      'resizeDuration': 200,
-      'wrapAround': true
-    })
-</script>
+
 <script>
   $(function () {
 	  $.ajaxSetup({
@@ -190,99 +182,9 @@
 	dataType: "json"
 	})
 	
-	$(document).on("click",".info-pembayaran",function(){
-	var id=$(this).attr("data-id");
-	var harga=$(this).attr("data-harga");
-	swal({
-		title: "Total Harga : Rp "+ harga +" ,-",
-		text:"Pembayaran harus sesuai dengan harga",
-		type: "info",
-		confirmButtonText: "Oke",
-		closeOnConfirm: true,
-	},
-		);
-});
+	
 
-$(document).on("click",".pembayaran-valid",function(){
-	var id=$(this).attr("data-id2");
-	var nama=$(this).attr("data-nama2");
-	swal({
-		title: "Pembayaran atas nama "+ nama +" Valid",
-		text:"Yakin Pemabayaran ini valid?",
-		type: "warning",
-		showCancelButton: true,
-		confirmButtonText: "Yakin",
-		closeOnConfirm: true,
-	},
-		function(){
-		 $.ajax({
-			url:"<?php echo base_url('Adminika/pembayaranValid'); ?>",
-			data:{id:id},
-			success: function(){
-				$("tr[data-id2='"+id+"']").fadeOut("fast",function(){
-					$(this).remove();
-				});
-			}
-		 });
-	});
-});
 
-$(document).on("click",".ijazah-valid",function(){
-	var id=$(this).attr("data-id");
-	var nama=$(this).attr("data-nama");
-	swal({
-		title: "Ijazah atas nama  "+ nama +" Valid",
-		text:"Yakin Ijazah ini valid?",
-		type: "warning",
-		showCancelButton: true,
-		confirmButtonText: "Yakin",
-		closeOnConfirm: true,
-	},
-		function(){
-		 $.ajax({
-			url:"<?php echo base_url('Adminika/ijazahValid'); ?>",
-			data:{id:id},
-			success: function(){
-				$("tr[data-id='"+id+"']").fadeOut("fast",function(){
-					$(this).remove();
-				});
-			}
-		 });
-	});
-});
-
-$(document).on("click",".hapus-member",function(){
-	var id=$(this).attr("data-id");
-	var nama=$(this).attr("data-nama");
-	swal({
-		title: "Hapus "+ nama +" sebagai Member",
-		text:"Yakin akan menghapus member ini?",
-		type: "warning",
-		showCancelButton: true,
-		confirmButtonText: "Hapus",
-		closeOnConfirm: true,
-	},
-		function(){
-		 $.ajax({
-			url:"<?php echo base_url('Adminika/hapus'); ?>",
-			data:{id:id},
-			success: function(){
-				$("tr[data-id='"+id+"']").fadeOut("fast",function(){
-					$(this).remove();
-				});
-			}
-		 });
-	});
-});
-    $('#example1').DataTable()
-    $('#example2').DataTable({
-      'paging'      : true,
-      'lengthChange': false,
-      'searching'   : false,
-      'ordering'    : true,
-      'info'        : true,
-      'autoWidth'   : false
-    })
   })
 </script>
 </body>

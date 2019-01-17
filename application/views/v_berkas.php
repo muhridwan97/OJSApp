@@ -1,5 +1,7 @@
 <?php
-
+  if($this->session->userdata('username')==null){
+    redirect(base_url()."c_login/");
+  }
 ?>
 <!DOCTYPE html>
 <html>
@@ -41,7 +43,7 @@
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
           <li>
-            <a href="<?php echo base_url(); ?>login/logoutAdmin" >KELUAR <i class="fa fa-power-off"></i></a>
+          <a href="<?php echo base_url(); ?>c_login/logout" > <i class="fa fa-sign-out"></i></a>
           </li>
         </ul>
       </div>

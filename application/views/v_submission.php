@@ -1,5 +1,7 @@
 <?php
-
+  if($this->session->userdata('username')==null){
+    redirect(base_url()."c_login/");
+  }
 ?>
 <!DOCTYPE html>
 <html>
@@ -19,6 +21,9 @@
   <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/sweetalert/sweetalert.css'); ?>">
   <script type="text/javascript" src="<?php echo base_url('assets/sweetalert/sweetalert.min.js'); ?>"></script>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+  <!-- Include Editor style. -->
+  <link href="<?php echo base_url(); ?>/assets/froala/css/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
+    <link href="<?php echo base_url(); ?>/assets/froala/css/froala_style.min.css" rel="stylesheet" type="text/css" />
 </head>
 <body class="hold-transition skin-red sidebar-mini">
 <div class="wrapper">
@@ -37,7 +42,7 @@
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
           <li>
-            <a href="<?php echo base_url(); ?>login/logoutAdmin" >KELUAR <i class="fa fa-power-off"></i></a>
+          <a href="<?php echo base_url(); ?>c_login/logout" > <i class="fa fa-sign-out"></i></a>
           </li>
         </ul>
       </div>
@@ -323,8 +328,11 @@
 <!-- AdminLTE for demo purposes -->
 <script src="<?php echo base_url(); ?>/assets/dist/js/demo.js"></script>
 <!-- page script -->
-
+<!-- Include Editor JS files. -->
+<script type="text/javascript" src="<?php echo base_url(); ?>/assets/froala/js/froala_editor.pkgd.min.js"></script>
+<script> $(function() { $('textarea').froalaEditor() }); </script>
 <script>
+
 $('.cek').on('click', function () {
   var id=$(this).data('id');
   //alert(id); 
@@ -347,18 +355,7 @@ $('#myModal').on('shown.bs.modal', function () {
 	dataType: "json"
 	})
 	
-	$(document).on("click",".info-pembayaran",function(){
-	var id=$(this).attr("data-id");
-	var harga=$(this).attr("data-harga");
-	swal({
-		title: "Total Harga : Rp "+ harga +" ,-",
-		text:"Pembayaran harus sesuai dengan harga",
-		type: "info",
-		confirmButtonText: "Oke",
-		closeOnConfirm: true,
-	},
-		);
-});
+
 
 $(document).on("click",".publication",function(){
 	var id=$('#id_orang').val();
