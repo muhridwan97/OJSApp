@@ -221,8 +221,15 @@
                 </tr>
                 <tr data-id=" "" >
 				<td >2</td>
-                  <td><a href="<?php echo base_url(); ?>c_submission/alamatBerkasApp/<?php echo "$u[sc_12]" ?>" target="_blank" ><?php echo "$u[sc_12] "; ?></a></td>
-                  <td>SC-12
+                  <td><a href="<?php echo base_url(); ?>c_submission/alamatBerkasApp/<?php echo "$u[dokumenAkhir]" ?>" target="_blank" ><?php echo "$u[dokumenAkhir] "; ?></a></td>
+                  <td>dokumen akhir
+                  </td>
+                  
+                </tr>
+                <tr data-id=" "" >
+				<td >3</td>
+                  <td><a href="<?php echo base_url(); ?>c_submission/alamatBerkasApp/<?php echo "$u[lembarPengesahan]" ?>" target="_blank" ><?php echo "$u[lembarPengesahan] "; ?></a></td>
+                  <td>lembar pengesahan
                   </td>
                   
                 </tr>

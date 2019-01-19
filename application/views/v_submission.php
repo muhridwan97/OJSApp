@@ -138,7 +138,7 @@
                   
                   <a href="<?php echo base_url(); ?>c_submission/lihatBerkas/<?php echo "$u[user_id]" ?>" type="button" class="btn btn-info btn-flat"><i class="fa fa-info"></i></a>
                       <a data-toggle="modal" data-target="#myModal" class="btn btn-success btn-flat cek"
-					  data-id="<?php echo "$u[user_id]" ?>" ><i class="fa fa-check"  ></i></a>
+					  data-id="<?php echo "$u[user_id]" ?>" data-submission="<?php echo "$u[submission_id]" ?>" ><i class="fa fa-check"  ></i></a>
 					  <a data-toggle="modal" data-target="#myModal2" data-id="<?php echo "$u[user_id]" ?>"  class="btn btn-warning btn-flat cekSubmission"><i class="fa fa-send"></i></a>
                     </div></td>
                 </tr>
@@ -218,6 +218,7 @@
     <label>Halaman</label>
       <input type="text" class="form-control" id="page" value="<?php  echo 10; ?>" name="page" placeholder="Masukkan page">
       <input type="hidden" id="id_orang">
+      <input type="hidden" id="submission">
 		</div>
     <div class="form-group">
     <label>Tahun</label>
@@ -236,9 +237,9 @@
     <div class="form-group">
     <form id="formGalley" method="post" enctype="multipart/form-data">
     <label for="exampleInputFile">File galley</label>
-      <input type="file" id="galley" name="galley">
-      <button style="margin-top:10px;" id="submitGalley" class="btn btn-primary" >Upload File</button>
+      <input type="file" id="fileGalley" name="fileGalley">
       </form>
+      <button style="margin-top:10px;" type="submit" id="submitGalley" class="btn btn-primary" >Upload File</button>
     </div>
     </div>
       </div>
@@ -335,8 +336,10 @@
 
 $('.cek').on('click', function () {
   var id=$(this).data('id');
-  //alert(id); 
+  var submission=$(this).data('submission');
+  //alert(submission); 
   $('#id_orang').val(id);
+  $('#submission').val(submission);
 });
 
 $('.cekSubmission').on('click', function () {
@@ -407,15 +410,37 @@ $(document).on("click",".sendEmail",function(){
 
 $(document).on("click","#submitArsip",function(){
   var fileArsip = $('#fileArsip').prop('files')[0];
-  //var fileArsip = new FormData($("#formArsip"));
-  //var fileArsip = $('#fileArsip')[0].files[0];
-  //alert(qq);
-  //var file_data = $('#policy_image').prop('files')[0];
+  var submission_id=$('#submission').val();
   var form_data = new FormData();
   form_data.append('fileArsip', fileArsip);
+  form_data.append('submission_id', submission_id);
   console.log(fileArsip);
 	$.ajax({
 			url:"<?php echo base_url('c_submission/submitArsip'); ?>",
+      data:form_data,
+      type: "POST",
+      contentType: false,
+      processData: false,
+      dataType : "html",
+			success: function(response){
+        console.log(response);
+        alert("file berhasil diupload");
+      },
+      error: function() {
+     alert("gagal");
+      }
+		 });
+});
+
+$(document).on("click","#submitGalley",function(){
+  var fileGalley = $('#fileGalley').prop('files')[0];
+  var submission_id=$('#submission').val();
+  var form_data = new FormData();
+  form_data.append('fileGalley', fileGalley);
+  form_data.append('submission_id', submission_id);
+  console.log(fileGalley);
+	$.ajax({
+			url:"<?php echo base_url('c_submission/submitGalley'); ?>",
       data:form_data,
       type: "POST",
       contentType: false,

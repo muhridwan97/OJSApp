@@ -93,49 +93,49 @@ if($this->session->userdata('username')==null){
         <div class="col-lg-3 col-xs-6">
           <div class="small-box bg-red">
             <div class="inner">
-              <h3>33</h3>
-              <p>TOTAL REGISTRASI</p>
+              <h3><?php echo $countRevisi ;?></h3>
+              <p>TOTAL REVISI</p>
             </div>
             <div class="icon">
               <i class="fa fa-table"></i>
             </div>
-            <a href="<?php echo base_url(); ?>adminika/lihat/" class="small-box-footer">DETAIL <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="<?php echo base_url(); ?>c_submission/lihatAntrian" class="small-box-footer">DETAIL <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
         <div class="col-lg-3 col-xs-6">
           <div class="small-box bg-red">
             <div class="inner">
-              <h3>4</h3>
-              <p>TOTAL assignment</p>
+              <h3><?php echo $countAntrian ;?></h3>
+              <p>TOTAL ANTRIAN</p>
             </div>
             <div class="icon">
               <i class="fa fa-table"></i>
             </div>
-            <a href="#" class="small-box-footer">DETAIL <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="<?php echo base_url(); ?>c_submission/lihatAntrian" class="small-box-footer">DETAIL <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
 		<div class="col-lg-3 col-xs-6">
           <div class="small-box bg-red">
             <div class="inner">
-              <h3>10</h3>
-              <p>TOTAL TELAH MEMBAYAR</p>
+              <h3><?php echo $countSubmission ;?></h3>
+              <p>TOTAL SUBMISSION</p>
             </div>
             <div class="icon">
               <i class="fa fa-group"></i>
             </div>
-            <a href="<?php echo base_url(); ?>adminika/memberMembayar/" class="small-box-footer">DETAIL <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="<?php echo base_url(); ?>c_submission" class="small-box-footer">DETAIL <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
 		<div class="col-lg-3 col-xs-6">
           <div class="small-box bg-red">
             <div class="inner">
-              <h3>11</h3>
-              <p>TOTAL TELAH TERKIRIM</p>
+              <h3><?php echo $countPublikasi ;?></h3>
+              <p>TOTAL PUBLIKASI</p>
             </div>
             <div class="icon">
               <i class="fa fa-gear"></i>
             </div>
-            <a href="<?php echo base_url(); ?>adminika/memberTerkirim/" class="small-box-footer">DETAIL <i class="fa fa-arrow-circle-right"></i></a>
+            <a href="<?php echo base_url(); ?>c_submission/lihatPublication" class="small-box-footer">DETAIL <i class="fa fa-arrow-circle-right"></i></a>
           </div>
         </div>
       </div>

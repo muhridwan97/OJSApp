@@ -17,7 +17,7 @@ class c_login extends CI_Controller {
     public function cek(){
         $username =  $this->input->post('username');
         $password =  $this->input->post('password');
-        $cek = $this->m_login->getEditorAuth($username,$password)->result();
+        $cek = $this->m_login->getEditorAuth($username,md5($password))->result();
         $home = base_url();
         if (count($cek)==0){
 			// $gagal['gagal'] = "gagal";

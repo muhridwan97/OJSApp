@@ -141,7 +141,7 @@
                   <a data-toggle="modal" data-target="#myModal2" data-id="<?php echo "$u[user_id]" ?>"  class="btn btn-warning btn-flat cekSubmission"><i class="fa fa-send"></i></a>
                       <button type="button" class="btn btn-success btn-flat submission-valid" 
 					  data-id="<?php echo "$u[submission_id]"; ?>" data-author="<?php echo "$u[author_id]"; ?>" 
-            data-user="<?php echo "$u[user_id]"; ?>" data-nama ="<?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?>">
+            data-user="<?php echo "$u[user_id]"; ?>" data-status="<?php echo "$u[statusSkripsi]"; ?>" data-nama ="<?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?>">
             <i class="fa fa-check"  ></i></button>
                     </div></td>
                 </tr>
@@ -289,10 +289,18 @@ $(document).on("click",".submission-valid",function(){
   var nama=$(this).attr("data-nama");
   var author_id=$(this).attr("data-author");
   var user_id=$(this).attr("data-user");
+  var status=$(this).attr("data-status");
   // console.log(id);
   // console.log(nama);
   // console.log(author_id);
   // console.log(user_id);
+  if(status=="data tidak di temukan di sistem skripsi"){
+    swal({
+		title: "Data skripsi atas nama "+ nama +" tidak ditemukan di sistem skripsi",
+		type: "warning",
+		closeOnConfirm: true,
+	});
+  }else{
 	swal({
 		title: "Submission atas nama "+ nama +" Valid",
 		text:"Yakin Submission ini valid?",
@@ -306,61 +314,18 @@ $(document).on("click",".submission-valid",function(){
 			url:"<?php echo base_url('c_submission/submitIn'); ?>",
 			data:{id:id,author_id:author_id,user_id:user_id},
 			success: function(){
-				$("tr[data-id='"+id+"']").fadeOut("fast",function(){
+				$("tr[data-id='"+user_id+"']").fadeOut("fast",function(){
 					$(this).remove();
 				});
 			}
 		 });
 	});
+  }
 });
 
-$(document).on("click",".ijazah-valid",function(){
-	var id=$(this).attr("data-id");
-	var nama=$(this).attr("data-nama");
-	swal({
-		title: "Ijazah atas nama  "+ nama +" Valid",
-		text:"Yakin Ijazah ini valid?",
-		type: "warning",
-		showCancelButton: true,
-		confirmButtonText: "Yakin",
-		closeOnConfirm: true,
-	},
-		function(){
-		 $.ajax({
-			url:"<?php echo base_url('Adminika/ijazahValid'); ?>",
-			data:{id:id},
-			success: function(){
-				$("tr[data-id='"+id+"']").fadeOut("fast",function(){
-					$(this).remove();
-				});
-			}
-		 });
-	});
-});
 
-$(document).on("click",".hapus-member",function(){
-	var id=$(this).attr("data-id");
-	var nama=$(this).attr("data-nama");
-	swal({
-		title: "Hapus "+ nama +" sebagai Member",
-		text:"Yakin akan menghapus member ini?",
-		type: "warning",
-		showCancelButton: true,
-		confirmButtonText: "Hapus",
-		closeOnConfirm: true,
-	},
-		function(){
-		 $.ajax({
-			url:"<?php echo base_url('Adminika/hapus'); ?>",
-			data:{id:id},
-			success: function(){
-				$("tr[data-id='"+id+"']").fadeOut("fast",function(){
-					$(this).remove();
-				});
-			}
-		 });
-	});
-});
+
+
     $('#example1').DataTable()
     $('#example2').DataTable()
   })
