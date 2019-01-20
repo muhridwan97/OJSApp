@@ -92,21 +92,30 @@
       </h1>
     </section>
     <section class="content">
-	
+    <div class="row">
     <div class="col-sm-6 col-xs-12">
           
           <!-- /.box -->
 
-          <div class="box">
+          <div class="box box-info">
             <div class="box-header">
-              <h3 class="box-title"><?php foreach($userFiles as $u){ }echo "$u[first_name] $u[middle_name] $u[last_name]"; ?></h3>
-              <button type="button" style="margin-right:10px;" class="btn btn-primary pull-right" data-toggle="modal" data-target="#myModal">
+              <h3 class="box-title"><?php foreach($userFiles as $u){ }echo "$u[first_name] $u[middle_name] $u[last_name]"; ?>
+              </h3>
+              <!-- tools box -->
+              <div class="pull-right box-tools">
+              <button type="button" style="margin-right:10px;" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
                 Metadata
               </button>
+                <button type="button" class="btn btn-info btn-sm" data-widget="collapse" data-toggle="tooltip"
+                        title="Collapse">
+                  <i class="fa fa-minus"></i></button>
+                  
+              </div>
+              <!-- /. tools -->
             </div>
             <!-- /.box-header -->
-            <div class="box-body">
-              <table id="" class="table table-bordered table-striped">
+            <div class="box-body pad">
+            <table id="" class="table table-bordered table-striped">
                 <thead>
                 
                 <tr>
@@ -133,7 +142,7 @@
                 ?>
                 <tr data-id="<?php echo "$u[uploader_user_id] "; ?>" >
 				<td ><?php echo $i; ?></td>
-                  <td><a href="<?php echo base_url(); ?>c_submission/alamatBerkas/<?php echo "$u[file_id]" ?>" target="_blank" ><?php echo "$u[nama_file] "; ?></a></td>
+                  <td><a data-id="<?php echo "$u[file_id]" ?>" class="lihatBerkas" target="_blank" ><?php echo "$u[nama_file] "; ?></a></td>
                   <td><?php echo "$u[jenis_berkas] "; ?>
                   </td>
                   <td><div class="btn-group">
@@ -181,7 +190,6 @@
                 
               </div>
             </div>
-            <!-- /.box-body -->
           </div>
           <!-- /.box -->
         </div>
@@ -191,14 +199,21 @@
           
           <!-- /.box -->
 
-          <div class="box">
+          <div class="box box-info">
             <div class="box-header">
-              <h3 class="box-title"><?php foreach($userFiles as $u){ }echo "$u[first_name] $u[middle_name] $u[last_name]"; ?></h3>
-              
+              <h3 class="box-title"><?php foreach($berkasApp as $u){}echo "$u[judulSkripsi]"; ?>
+              </h3>
+              <!-- tools box -->
+              <div class="pull-right box-tools">
+                <button type="button" class="btn btn-info btn-sm" data-widget="collapse" data-toggle="tooltip"
+                        title="Collapse">
+                  <i class="fa fa-minus"></i></button>
+              </div>
+              <!-- /. tools -->
             </div>
             <!-- /.box-header -->
-            <div class="box-body">
-              <table id="" class="table table-bordered table-striped">
+            <div class="box-body pad">
+            <table id="" class="table table-bordered table-striped">
                 <thead>
                 
                 <tr>
@@ -214,21 +229,21 @@
                 ?>
                 <tr data-id=" "" >
 				<td >1</td>
-                  <td><a href="<?php echo base_url(); ?>c_submission/alamatBerkasApp/<?php echo "$u[hardcover]" ?>" target="_blank" ><?php echo "$u[hardcover] "; ?></a></td>
+                  <td><a data-id="<?php echo "$u[hardcover]" ?>" class="lihatBerkasApp" target="_blank" ><?php echo "$u[hardcover] "; ?></a></td>
                   <td>hardcover
                   </td>
                   
                 </tr>
                 <tr data-id=" "" >
 				<td >2</td>
-                  <td><a href="<?php echo base_url(); ?>c_submission/alamatBerkasApp/<?php echo "$u[dokumenAkhir]" ?>" target="_blank" ><?php echo "$u[dokumenAkhir] "; ?></a></td>
+                  <td><a data-id="<?php echo "$u[dokumenAkhir]" ?>" class="lihatBerkasApp"  target="_blank" ><?php echo "$u[dokumenAkhir] "; ?></a></td>
                   <td>dokumen akhir
                   </td>
                   
                 </tr>
                 <tr data-id=" "" >
 				<td >3</td>
-                  <td><a href="<?php echo base_url(); ?>c_submission/alamatBerkasApp/<?php echo "$u[lembarPengesahan]" ?>" target="_blank" ><?php echo "$u[lembarPengesahan] "; ?></a></td>
+                  <td><a data-id="<?php echo "$u[lembarPengesahan]" ?>" class="lihatBerkasApp" target="_blank" ><?php echo "$u[lembarPengesahan] "; ?></a></td>
                   <td>lembar pengesahan
                   </td>
                   
@@ -239,10 +254,20 @@
                 </tbody>
               </table>
             </div>
-            <!-- /.box-body -->
           </div>
           <!-- /.box -->
         </div>
+        </div>
+
+    <div class="row">
+    <div class="col-md-6">
+    <iframe height="700" width="100%" id="iframeOJS"  src="" allowfullscreen></iframe>
+    </div>
+      <div class="col-md-6">
+      
+      <iframe height="700" width="100%" id="iframeAPP"  src="" allowfullscreen></iframe>
+		  </div>
+    </div>    
   
   <!-- /.modal -->
   <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -414,7 +439,45 @@ $('#myModal').on('shown.bs.modal', function () {
 	dataType: "json"
 	})
 
-  
+  $(document).on("click",".lihatBerkas",function(){
+	var fileId=$(this).attr("data-id");
+  //alert(fileId);
+	$.ajax({
+			url:"<?php echo base_url('c_submission/alamatBerkasOJS'); ?>",
+			data:{fileId:fileId},
+      dataType:"html",
+			success: function(response){
+        console.log(response);
+        $('#iframeOJS').attr('src', response)
+        // $("tr[data-id='"+id+"']").fadeOut("fast",function(){
+				// 	$(this).remove();
+				// });
+			},
+        error: function() {
+     alert("submission gagal di publikasi");
+      }
+		 });
+});
+
+$(document).on("click",".lihatBerkasApp",function(){
+	var fileId=$(this).attr("data-id");
+  //alert(fileId);
+	$.ajax({
+			url:"<?php echo base_url('c_submission/alamatBerkasApp'); ?>",
+			data:{fileId:fileId},
+      dataType:"html",
+			success: function(response){
+        console.log(response);
+        $('#iframeAPP').attr('src', response)
+        // $("tr[data-id='"+id+"']").fadeOut("fast",function(){
+				// 	$(this).remove();
+				// });
+			},
+        error: function() {
+     alert("submission gagal di publikasi");
+      }
+		 });
+});
 
   $(document).ready(function(){
         $(".getSubmit").change(function() { 

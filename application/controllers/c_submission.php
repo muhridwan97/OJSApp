@@ -189,13 +189,25 @@ class c_submission extends CI_Controller {
 		//print_r($data['path']);
 		$this->load->view('v_tampilBerkas',$data);
 	}
-	public function alamatBerkasApp($namaBerkas){
-				
-		//return $path['alamat'];
-		$data['path']= base_url()."assets/dataSkripsi/$namaBerkas.pdf";
-		//print_r($data['path']);
+	public function alamatBerkasOJS(){
+		$fileId = $this->input->post("fileId");
+		$path = $this->http_request("http://localhost/serviceOJS/api/lihatFilesAsli/".$fileId);
 		
-		$this->load->view('v_tampilBerkas',$data);
+		// ubah string JSON menjadi array
+		$path = json_decode($path, TRUE);
+		
+		echo $path['alamat'];
+		// $data['path']=$path['alamat'];
+		// print_r($path);
+		// $this->load->view('v_tampilBerkas',$data);
+	}
+	public function alamatBerkasApp(){
+		$namaBerkas = $this->input->post("fileId");
+		//return $path['alamat'];
+		// $data['path']= base_url()."assets/dataSkripsi/$namaBerkas.pdf";
+		//print_r($data['path']);
+		echo base_url()."assets/dataSkripsi/$namaBerkas.pdf";
+		// $this->load->view('v_tampilBerkas',$data);
 	}
 	public function centang(){
 		$id= $this->input->post("id");
