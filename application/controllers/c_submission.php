@@ -398,18 +398,18 @@ class c_submission extends CI_Controller {
 		$page= $this->input->post("page");
 		$tahun= $this->input->post("tahun");
 		$date= date('Y-m-d H:i:s');
-		//print_r($date);
+		
 		$data = array(
 			'user_id' => $user_id,
 			'editor_user_id' => $this->session->userdata("user_id"),//editor id
-			'date_assigned' => $date,
+			'date' => $date,
 			'issue_id' => $issue_id,
 			'page' => $page,
 			'tahun' => $tahun
 			);	
-			
-		$userFiles = $this->http_request_post("http://localhost/serviceOJS/api/setPublication",$data);
-		echo(json_decode($userFiles, TRUE));
+			// print_r($data);
+		 $userFiles = $this->http_request_post("http://localhost/serviceOJS/api/setPublication",$data);
+		// echo(json_decode($userFiles, TRUE));
 		echo "{}";
 	}
 

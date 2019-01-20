@@ -246,7 +246,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
-        <button type="button" class="btn btn-primary publication" >Publikasi</button>
+        <button type="button" class="btn btn-primary publication" data-dismiss="modal">Publikasi</button>
       </div>
     </div>
   </div>
@@ -368,13 +368,19 @@ $(document).on("click",".publication",function(){
   var tahun=$('#tahun').prop('value');
   //var subtitle=$('#subtitle').prop('value');
   //var abstract=$('textarea#editor1').val();
-  alert(issue_id);
+  //alert(issue_id);
 	$.ajax({
 			url:"<?php echo base_url('c_submission/setPublication'); ?>",
 			data:{id:id,issue_id:issue_id,page:page,tahun:tahun},
 			success: function(){
-        alert("data berhasil di update");
-			}
+        alert("submission berhasil di publikasi");
+        $("tr[data-id='"+id+"']").fadeOut("fast",function(){
+					$(this).remove();
+				});
+			},
+        error: function() {
+     alert("submission gagal di publikasi");
+      }
 		 });
 });
 
