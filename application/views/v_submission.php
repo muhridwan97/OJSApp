@@ -219,6 +219,7 @@
       <input type="text" class="form-control" id="page" value="<?php  echo 10; ?>" name="page" placeholder="Masukkan page">
       <input type="hidden" id="id_orang">
       <input type="hidden" id="submission">
+      <input type="hidden" id="editor_id" value="<?php echo $this->session->userdata("user_id"); ?>">
 		</div>
     <div class="form-group">
     <label>Tahun</label>
@@ -364,12 +365,13 @@ $(document).on("click",".publication",function(){
 	var id=$('#id_orang').val();
   var issue_id=$('#issue').val();
 	var page=$('#page').prop('value');
+  var tahun=$('#tahun').prop('value');
   //var subtitle=$('#subtitle').prop('value');
   //var abstract=$('textarea#editor1').val();
   alert(issue_id);
 	$.ajax({
 			url:"<?php echo base_url('c_submission/setPublication'); ?>",
-			data:{id:id,judul:judul,subtitle:subtitle,abstract:abstract},
+			data:{id:id,issue_id:issue_id,page:page,tahun:tahun},
 			success: function(){
         alert("data berhasil di update");
 			}
@@ -411,10 +413,12 @@ $(document).on("click",".sendEmail",function(){
 $(document).on("click","#submitArsip",function(){
   var fileArsip = $('#fileArsip').prop('files')[0];
   var submission_id=$('#submission').val();
+  var editor_id=$('#editor_id').val();
   var form_data = new FormData();
   form_data.append('fileArsip', fileArsip);
   form_data.append('submission_id', submission_id);
-  console.log(fileArsip);
+  form_data.append('editor_id', editor_id);
+  // console.log(submission_id);
 	$.ajax({
 			url:"<?php echo base_url('c_submission/submitArsip'); ?>",
       data:form_data,
@@ -435,10 +439,12 @@ $(document).on("click","#submitArsip",function(){
 $(document).on("click","#submitGalley",function(){
   var fileGalley = $('#fileGalley').prop('files')[0];
   var submission_id=$('#submission').val();
+  var editor_id=$('#editor_id').val();
   var form_data = new FormData();
   form_data.append('fileGalley', fileGalley);
   form_data.append('submission_id', submission_id);
-  console.log(fileGalley);
+  form_data.append('editor_id', editor_id);
+  // console.log(fileGalley);
 	$.ajax({
 			url:"<?php echo base_url('c_submission/submitGalley'); ?>",
       data:form_data,

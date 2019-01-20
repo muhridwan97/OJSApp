@@ -394,15 +394,21 @@ class c_submission extends CI_Controller {
 
 	public function setPublication(){
 		$user_id= $this->input->post("id");
+		$issue_id= $this->input->post("issue_id");
+		$page= $this->input->post("page");
+		$tahun= $this->input->post("tahun");
 		$date= date('Y-m-d H:i:s');
 		//print_r($date);
 		$data = array(
 			'user_id' => $user_id,
 			'editor_user_id' => $this->session->userdata("user_id"),//editor id
-			'date_assigned' => $date
+			'date_assigned' => $date,
+			'issue_id' => $issue_id,
+			'page' => $page,
+			'tahun' => $tahun
 			);	
 			
-		$userFiles = $this->http_request_post("http://localhost/serviceOJS/api/verifikasi",$data);
+		$userFiles = $this->http_request_post("http://localhost/serviceOJS/api/setPublication",$data);
 		echo(json_decode($userFiles, TRUE));
 		echo "{}";
 	}
@@ -413,13 +419,15 @@ class c_submission extends CI_Controller {
 		$type = $_FILES['fileArsip']['type'];
 		$name = $_FILES['fileArsip']['name'];
 		$submission_id=$_POST['submission_id'];
+		$editor_id=$_POST['editor_id'];
 		//print_r($fileArsip);
 		//return $fileArsip;
 		$fields = [
 				'fileArsip' => new \CurlFile($fileArsip, $type, $name),
 				'submission_id' => $submission_id,
 				'name' => $name,
-				'type' => $type
+				'type' => $type,
+				'editor_id' => $editor_id
 		];
 		$userFiles = $this->http_request_postFile("http://localhost/serviceOJS/api/uploadArsip",$fields);
 		//print_r ($type);
@@ -433,13 +441,15 @@ class c_submission extends CI_Controller {
 		$type = $_FILES['fileGalley']['type'];
 		$name = $_FILES['fileGalley']['name'];
 		$submission_id=$_POST['submission_id'];
+		$editor_id=$_POST['editor_id'];
 		//print_r($fileArsip);
 		//return $fileArsip;	
 		$fields = [
 				'fileGalley' => new \CurlFile($fileGalley, $type, $name),
 				'submission_id' => $submission_id,
 				'name' => $name,
-				'type' => $type
+				'type' => $type,
+				'editor_id' => $editor_id
 		];
 		$userFiles = $this->http_request_postFile("http://localhost/serviceOJS/api/uploadGalley",$fields);
 		//print_r ($type);
