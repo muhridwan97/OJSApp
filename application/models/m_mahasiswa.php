@@ -19,6 +19,11 @@ class m_mahasiswa extends CI_Model {
 		$this->db->where('author_id', $id);
 		$this->db->update('submission');
 	}
+	public function set_catatan($id,$pesan){
+		$this->db->set('catatan', $pesan);
+		$this->db->where('author_id', $id);
+		$this->db->update('submission');
+	}
 	public function setRevisi($id){
 		$this->db->set('status', 'revisi');
 		$this->db->where('mahasiswa_id', $id);

@@ -216,7 +216,7 @@
                              
     <div class="form-group">
     <label>Halaman</label>
-      <input type="text" class="form-control" id="page" value="<?php  echo 10; ?>" name="page" placeholder="Masukkan page">
+      <input type="text" class="form-control" id="page" value="<?php  echo 0; ?>" name="page" placeholder="Masukkan page">
       <input type="hidden" id="id_orang">
       <input type="hidden" id="submission">
       <input type="hidden" id="editor_id" value="<?php echo $this->session->userdata("user_id"); ?>">

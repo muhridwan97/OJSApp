@@ -223,6 +223,12 @@ class c_submission extends CI_Controller {
 		$this->m_mahasiswa->set_centang($id,$value,$strState);
 		//print_r($id);
 	}
+	public function catatan(){
+		$id= $this->input->post("id");
+		$pesan= $this->input->post("pesan");
+		$this->m_mahasiswa->set_catatan($id,$pesan);
+		echo "{}";
+	}
 	public function submitIn(){
 		$submission_id= $this->input->post("id");
 		$author_id= $this->input->post("author_id");//dari filkomapp
