@@ -25,6 +25,13 @@
   <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/sweetalert/sweetalert.css'); ?>">
   <script type="text/javascript" src="<?php echo base_url('assets/sweetalert/sweetalert.min.js'); ?>"></script>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+  <!-- floating -->
+  <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/float/style.css">
+  <!-- Include Editor style. -->
+  <link href="<?php echo base_url(); ?>/assets/froala/css/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
+    <link href="<?php echo base_url(); ?>/assets/froala/css/froala_style.min.css" rel="stylesheet" type="text/css" />
+  
+
 </head>
 <body class="hold-transition skin-red sidebar-mini">
 <div class="wrapper">
@@ -92,21 +99,37 @@
       </h1>
     </section>
     <section class="content">
-	
+    <div class="row">
     <div class="col-sm-6 col-xs-12">
           
           <!-- /.box -->
 
-          <div class="box">
+          <div class="box box-info">
             <div class="box-header">
-              <h3 class="box-title"><?php foreach($userFiles as $u){ }echo "$u[first_name] $u[middle_name] $u[last_name]"; ?></h3>
-              <button type="button" style="margin-right:10px;" class="btn btn-primary pull-right" data-toggle="modal" data-target="#myModal">
+              <h3 class="box-title"><?php $namaPenulis=""; 
+               $foto=""; 
+               $judul="";
+               $abstractApp="";
+              foreach($userFiles as $u){ }
+              echo "$u[first_name] $u[middle_name] $u[last_name]"; 
+              
+              ?>
+              </h3>
+              <!-- tools box -->
+              <div class="pull-right box-tools">
+              <button type="button" style="margin-right:10px;" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
                 Metadata
               </button>
+                <button type="button" class="btn btn-info btn-sm" data-widget="collapse" data-toggle="tooltip"
+                        title="Collapse">
+                  <i class="fa fa-minus"></i></button>
+                  
+              </div>
+              <!-- /. tools -->
             </div>
             <!-- /.box-header -->
-            <div class="box-body">
-              <table id="" class="table table-bordered table-striped">
+            <div class="box-body pad">
+            <table id="" class="table table-bordered table-striped">
                 <thead>
                 
                 <tr>
@@ -123,23 +146,27 @@
                  $judul="";
                  $subtitle="";
                  $abstract="";
+                 $uploader_user_id="";
+                 $pesan="";
                 foreach($userFiles as $u){
                   $i++;
                   $judul="$u[judul]";
                   $subtitle="$u[subtitle]";
                   $abstract="$u[abstract]";
+                  $uploader_user_id="$u[uploader_user_id]";
                   $abstract=str_replace('<p>', '', $abstract);
                   $abstract=str_replace('</p>', '', $abstract);
                 ?>
                 <tr data-id="<?php echo "$u[uploader_user_id] "; ?>" >
 				<td ><?php echo $i; ?></td>
-                  <td><a href="<?php echo base_url(); ?>c_submission/alamatBerkas/<?php echo "$u[file_id]" ?>" target="_blank" ><?php echo "$u[nama_file] "; ?></a></td>
+                  <td><a data-id="<?php echo "$u[file_id]" ?>" class="lihatBerkas" target="_blank" ><?php echo "$u[nama_file] "; ?></a></td>
                   <td><?php echo "$u[jenis_berkas] "; ?>
                   </td>
                   <td><div class="btn-group">
                   <label>
                   <input type="checkbox" data-id="<?php echo "$u[uploader_user_id] "; ?>" class="getSubmit" value="<?php echo "$u[jenis_berkas] "; ?>"
                    <?php foreach($userApp as $us){ 
+                     $pesan="$us[catatan]";
                      if(str_replace(' ', '', "$u[jenis_berkas]")=="FormSC2-17"){
                        if("$us[FormSC2_17]"==1)
                        echo "checked";
@@ -181,7 +208,6 @@
                 
               </div>
             </div>
-            <!-- /.box-body -->
           </div>
           <!-- /.box -->
         </div>
@@ -191,14 +217,26 @@
           
           <!-- /.box -->
 
-          <div class="box">
+          <div class="box box-info">
             <div class="box-header">
-              <h3 class="box-title"><?php foreach($userFiles as $u){ }echo "$u[first_name] $u[middle_name] $u[last_name]"; ?></h3>
-              
+              <h3 class="box-title"><?php foreach($berkasApp as $u){}echo "$u[judulSkripsi]"; 
+                $namaPenulis="$u[namaMahasiswa]";
+                $foto="$u[foto]";
+                $judul="$u[judulSkripsi]";
+                $abstractApp="$u[abstract]";
+                ?>
+              </h3>
+              <!-- tools box -->
+              <div class="pull-right box-tools">
+                <button type="button" class="btn btn-info btn-sm" data-widget="collapse" data-toggle="tooltip"
+                        title="Collapse">
+                  <i class="fa fa-minus"></i></button>
+              </div>
+              <!-- /. tools -->
             </div>
             <!-- /.box-header -->
-            <div class="box-body">
-              <table id="" class="table table-bordered table-striped">
+            <div class="box-body pad">
+            <table id="" class="table table-bordered table-striped">
                 <thead>
                 
                 <tr>
@@ -214,15 +252,22 @@
                 ?>
                 <tr data-id=" "" >
 				<td >1</td>
-                  <td><a href="<?php echo base_url(); ?>c_submission/alamatBerkasApp/<?php echo "$u[hardcover]" ?>" target="_blank" ><?php echo "$u[hardcover] "; ?></a></td>
+                  <td><a data-id="<?php echo "$u[hardcover]" ?>" class="lihatBerkasApp" target="_blank" ><?php echo "$u[hardcover] "; ?></a></td>
                   <td>hardcover
                   </td>
                   
                 </tr>
                 <tr data-id=" "" >
 				<td >2</td>
-                  <td><a href="<?php echo base_url(); ?>c_submission/alamatBerkasApp/<?php echo "$u[sc_12]" ?>" target="_blank" ><?php echo "$u[sc_12] "; ?></a></td>
-                  <td>SC-12
+                  <td><a data-id="<?php echo "$u[dokumenAkhir]" ?>" class="lihatBerkasApp"  target="_blank" ><?php echo "$u[dokumenAkhir] "; ?></a></td>
+                  <td>dokumen akhir
+                  </td>
+                  
+                </tr>
+                <tr data-id=" "" >
+				<td >3</td>
+                  <td><a data-id="<?php echo "$u[lembarPengesahan]" ?>" class="lihatBerkasApp" target="_blank" ><?php echo "$u[lembarPengesahan] "; ?></a></td>
+                  <td>lembar pengesahan
                   </td>
                   
                 </tr>
@@ -232,10 +277,20 @@
                 </tbody>
               </table>
             </div>
-            <!-- /.box-body -->
           </div>
           <!-- /.box -->
         </div>
+        </div>
+
+    <div class="row">
+    <div class="col-md-6">
+    <iframe height="700" width="100%" id="iframeOJS"  src="" download></iframe>
+    </div>
+      <div class="col-md-6">
+      
+      <iframe height="700" width="100%" id="iframeAPP"  src="" ></iframe>
+		  </div>
+    </div>    
   
   <!-- /.modal -->
   <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -356,7 +411,334 @@
     </div>
   </div>
 </div>
-		
+<!-- /.modal3 -->
+<div class="modal fade" id="myModalNote" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Catatan</h4>
+      </div>
+      <div class="modal-body">
+      <div class="form-group">
+    <label>Isi catatan</label>
+    <input type="hidden" id="submission_id" value="<?php echo "$submission_id"; ?>">
+    <textarea id="catatan" class="form-control note" name="catatan" rows="10" data-id="<?php echo $uploader_user_id;?>">
+    <?php echo $pesan;?>
+    </textarea>
+		</div>
+      </div>
+      <div class="modal-footer">
+      <button type="button" data-id="<?php echo $uploader_user_id;?>" class="btn btn-primary updateNote" data-dismiss="modal" >Simpan</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal 4 send -->
+<div class="modal fade" id="myModalSend" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Email</h4>
+      </div>
+      <div class="modal-body">
+      <div class="box-body">
+      <div class="form-group">
+                  <div class="radio">
+                    <label>
+                      <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+                      Mengirim Email ke mahasiswa
+                    </label>
+                  </div>
+                  <div class="radio">
+                    <label>
+                      <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                      Mengirim Email ke mahasiswa dan dosen pembimbing
+                    </label>
+                  </div>
+                </div>
+    <div class="form-group">
+    <label>Isi pesan email</label>
+    <input type="hidden" id="submission_id">
+    <textarea id="pesan" class="form-control" name="pesan" rows="10" >
+    isi pesan<br>
+    <div id="isi"></div>
+    <br>
+    Kind Regards,
+    <br>
+    Muhammad Ridwan
+    </textarea>
+		</div>
+    
+    </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+        <button type="button" class="btn btn-primary sendEmail" data-dismiss="modal" >Kirim</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal 5 info -->
+<div class="modal fade" id="myModalInfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Info</h4>
+      </div>
+      <div class="modal-body">
+      <!-- Main content -->
+    <section class="content">
+
+<div class="row">
+  <div class="col-md-3">
+
+    <!-- Profile Image -->
+    <div class="box box-primary">
+      <div class="box-body box-profile">
+        <img class="profile-user-img img-responsive img" src="<?php echo base_url(); ?>/assets/images/foto/<?php echo $foto;?>" alt="User profile picture">
+
+        <h3 class="profile-username text-center"><?php echo $namaPenulis;?></h3>
+
+        <ul class="list-group list-group-unbordered">
+                <li class="list-group-item">
+                  <b>NIM</b> <a class="pull-right">15515020312312</a>
+                </li>
+                <li class="list-group-item">
+                <i class="fa fa-mobile-phone"></i> <a class="pull-right">0812312</a>
+                </li>
+                <li class="list-group-item">
+                <i class="fa fa-envelope"></i> <a class="">muh.ridwan97@gmail.com</a>
+                </li>
+              </ul>
+
+      </div>
+      <!-- /.box-body -->
+    </div>
+    <!-- /.box -->
+
+    <!-- About Me Box -->
+    <div class="box box-primary">
+      <div class="box-header with-border">
+        <h3 class="box-title">Keterangan</h3>
+      </div>
+      <!-- /.box-header -->
+      <div class="box-body">
+        <strong><i class="fa fa-user"></i> Pembimbing 1</strong>
+        <p class="text-muted">
+          Bapak Budi
+        </p>
+
+        <hr>
+        <strong><i class="fa fa-user"></i> Pembimbing 2</strong>
+        <p class="text-muted">
+          Ibu Budi
+        </p>
+
+        <hr>
+        <strong><i class="fa fa-book margin-r-5"></i> Bidang Skripsi</strong>
+
+        <p class="text-muted">
+        Rekayasa Perangkat Lunak
+        </p>
+
+        <hr>
+        <strong><i class="fa fa-book margin-r-5"></i> Tipe Penelitian</strong>
+
+        <p class="text-muted">
+        Implementatif - Pengembangan (Development)
+        </p>
+
+        <hr>
+        <strong><i class="fa fa-book margin-r-5"></i> Jalur Skripsi</strong>
+
+        <p class="text-muted">
+        Bimbingan
+        </p>
+
+        <hr>
+        <strong><i class="fa fa-book margin-r-5"></i> Asal Judul</strong>
+
+        <p class="text-muted">
+        Dosen
+        </p>
+
+        <hr>
+        <strong><i class="fa fa-book margin-r-5"></i> Pelaksanaan</strong>
+
+        <p class="text-muted">
+        31 Agt 2018 s/d 02 Agt 2019
+        </p>
+
+        <hr>
+      </div>
+      <!-- /.box-body -->
+    </div>
+    <!-- /.box -->
+  </div>
+  <!-- /.col -->
+  <div class="col-md-9">
+    <div class="nav-tabs-custom">
+      <ul class="nav nav-tabs">
+        <li class="active"><a href="#activity" data-toggle="tab">Beranda</a></li>
+        <li><a href="#timeline" data-toggle="tab">Timeline</a></li>
+      </ul>
+      <div class="tab-content">
+        <div class="active tab-pane" id="activity">
+          <!-- Post -->
+          <div class="post">
+            <div class="form-group">
+                  <span class="username">
+                    <h2 style =" "><?php echo $judul;?></h2>
+                    <h3>Abstract</h3>
+                  </span>
+            </div>
+            <!-- /.user-block -->
+            <p>
+            <?php echo $abstractApp;?>
+            </p>
+          </div>
+          <!-- /.post -->
+
+          
+          <!-- /.post -->
+
+          
+          <!-- /.post -->
+        </div>
+        <!-- /.tab-pane -->
+        <div class="tab-pane" id="timeline">
+          <!-- The timeline -->
+          <ul class="timeline timeline-inverse">
+            <!-- timeline time label -->
+            <li class="time-label">
+                  <span class="bg-red">
+                    10 Feb. 2014
+                  </span>
+            </li>
+            <!-- /.timeline-label -->
+            <!-- timeline item -->
+            <li>
+              <i class="fa fa-tag bg-aqua"></i>
+
+              <div class="timeline-item">
+                <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
+
+                <h3 class="timeline-header"><a href="#">Support Team</a> sent you an email</h3>
+
+                <div class="timeline-body">
+                  Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles,
+                  weebly ning heekya handango imeem plugg dopplr jibjab, movity
+                  jajah plickers sifteo edmodo ifttt zimbra. Babblely odeo kaboodle
+                  quora plaxo ideeli hulu weebly balihoo...
+                </div>
+                <div class="timeline-footer">
+                  <a class="btn btn-primary btn-xs">Read more</a>
+                  <a class="btn btn-danger btn-xs">Delete</a>
+                </div>
+              </div>
+            </li>
+            <!-- END timeline item -->
+            <!-- timeline item -->
+            <li>
+              <i class="fa fa-tag bg-aqua"></i>
+
+              <div class="timeline-item">
+                <span class="time"><i class="fa fa-clock-o"></i> 5 mins ago</span>
+
+                <h3 class="timeline-header no-border"><a href="#">Sarah Young</a> accepted your friend request
+                </h3>
+              </div>
+            </li>
+            <!-- END timeline item -->
+            <!-- timeline item -->
+            <li>
+              <i class="fa fa-tag bg-aqua"></i>
+
+              <div class="timeline-item">
+                <span class="time"><i class="fa fa-clock-o"></i> 27 mins ago</span>
+
+                <h3 class="timeline-header"><a href="#">Jay White</a> commented on your post</h3>
+
+                <div class="timeline-body">
+                  Take me to your leader!
+                  Switzerland is small and neutral!
+                  We are more like Germany, ambitious and misunderstood!
+                </div>
+                <div class="timeline-footer">
+                  <a class="btn btn-warning btn-flat btn-xs">View comment</a>
+                </div>
+              </div>
+            </li>
+            <!-- END timeline item -->
+            <!-- timeline time label -->
+            <li class="time-label">
+                  <span class="bg-green">
+                    3 Jan. 2014
+                  </span>
+            </li>
+            <!-- /.timeline-label -->
+            <!-- timeline item -->
+            <li>
+              <i class="fa fa-tag bg-aqua"></i>
+
+              <div class="timeline-item">
+                <span class="time"><i class="fa fa-clock-o"></i> 2 days ago</span>
+
+                <h3 class="timeline-header"><a href="#">Mina Lee</a> uploaded new photos</h3>
+
+                <div class="timeline-body">
+                  <img src="http://placehold.it/150x100" alt="..." class="margin">
+                  <img src="http://placehold.it/150x100" alt="..." class="margin">
+                  <img src="http://placehold.it/150x100" alt="..." class="margin">
+                  <img src="http://placehold.it/150x100" alt="..." class="margin">
+                </div>
+              </div>
+            </li>
+            <!-- END timeline item -->
+            <li>
+              <i class="fa fa-clock-o bg-gray"></i>
+            </li>
+          </ul>
+        </div>
+        <!-- /.tab-pane -->
+
+        
+        <!-- /.tab-pane -->
+      </div>
+      <!-- /.tab-content -->
+    </div>
+    <!-- /.nav-tabs-custom -->
+  </div>
+  <!-- /.col -->
+</div>
+<!-- /.row -->
+
+</section>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="container-floating">
+  <div class="nd3 nds" data-toggle="tooltip" data-placement="left" data-original-title="Info Mahasiswa" onclick="info()">
+  <img class="edit" src="<?php echo base_url(); ?>/assets/images/avatar2.png">
+  </div>
+  <div class="nd1 nds" data-toggle="tooltip" data-placement="left" data-original-title="Kirim email" onclick="kirim()">
+  <img class="edit" src="<?php echo base_url(); ?>/assets/images/send.png">
+  </div>
+  <div id="floating-button" data-toggle="tooltip" data-placement="left" data-original-title="Create" onclick="catatan()">
+    <p class="plus">+</p>
+    <img class="edit" src="<?php echo base_url(); ?>/assets/images/bt_compose2_1x.png">
+  </div>
+</div>
 		
       <!-- /.row -->
     </section>
@@ -395,11 +777,22 @@
 <script src="<?php echo base_url(); ?>/assets/bower_components/ckeditor/ckeditor.js"></script>
 <!-- Bootstrap WYSIHTML5 -->
 <script src="<?php echo base_url(); ?>/assets/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
-
+<!-- Include Editor JS files. -->
+<script type="text/javascript" src="<?php echo base_url(); ?>/assets/froala/js/froala_editor.pkgd.min.js"></script>
+<script> $(function() { $('textarea').froalaEditor() }); </script>
 <script>
 $('#myModal').on('shown.bs.modal', function () {
   $('#myInput').focus()
 })
+function catatan() {
+  $("#myModalNote").modal();
+}
+function kirim() {
+  $("#myModalSend").modal();
+}
+function info() {
+  $("#myModalInfo").modal();
+}
   $(function () {
 	  $.ajaxSetup({
 	type:"post",
@@ -407,7 +800,77 @@ $('#myModal').on('shown.bs.modal', function () {
 	dataType: "json"
 	})
 
-  
+  $(document).on("click",".lihatBerkas",function(){
+	var fileId=$(this).attr("data-id");
+  //alert(fileId);
+	$.ajax({
+			url:"<?php echo base_url('c_submission/alamatBerkasOJS'); ?>",
+			data:{fileId:fileId},
+      dataType:"html",
+			success: function(response){
+        console.log(response);
+        $('#iframeOJS').attr('src', response)
+        // $("tr[data-id='"+id+"']").fadeOut("fast",function(){
+				// 	$(this).remove();
+				// });
+			},
+        error: function() {
+     alert("submission gagal di publikasi");
+      }
+		 });
+});
+$(document).on("click",".sendEmail",function(){
+	 var id=$('#submission_id').val();
+	var pesan=$('textarea#pesan').val();
+  var option=0;
+  if($('#optionsRadios1').is(":checked")){
+    option=1;
+  }
+  console.log(id);
+	$.ajax({
+			url:"<?php echo base_url('c_submission/decline'); ?>",
+			data:{id:id},
+			success: function(){
+          $.ajax({
+            url:"<?php echo base_url('c_submission/send_email'); ?>",
+            data:{id:id,pesan:pesan,option:option},
+            success: function(){
+              alert("Sukses! email berhasil dikirim.");
+              $("tr[data-id='"+id+"']").fadeOut("fast",function(){
+					$(this).remove();
+				});
+            },
+              error: function() {
+          alert("gagal kirim email");
+            }
+          });
+			},
+        error: function() {
+     alert("gagal decline");
+      }
+		 });
+});
+
+$(document).on("click",".lihatBerkasApp",function(){
+	var fileId=$(this).attr("data-id");
+  //alert(fileId);
+	$.ajax({
+			url:"<?php echo base_url('c_submission/alamatBerkasApp'); ?>",
+			data:{fileId:fileId},
+      dataType:"html",
+			success: function(response){
+        
+        console.log(response);
+        $('#iframeAPP').attr('src', response)
+        // $("tr[data-id='"+id+"']").fadeOut("fast",function(){
+				// 	$(this).remove();
+				// });
+			},
+        error: function() {
+     alert("submission gagal di publikasi");
+      }
+		 });
+});
 
   $(document).ready(function(){
         $(".getSubmit").change(function() { 
@@ -427,6 +890,35 @@ $('#myModal').on('shown.bs.modal', function () {
         }); 
     });
 
+    // $(document).ready(function(){
+    //     $("#pesan").bind('input propertychange', function() {
+    //       alert("Onchange event" ); 
+    //       var id=$(this).attr("data-id");
+    //       var pesan=$('textarea#pesan').val();
+    //       alert(id);
+    //             $.ajax({
+    //                 url: "<?php echo base_url('c_submission/catatan'); ?>",
+    //                 data: { pesan:pesan }
+    //             });
+    //     }); 
+    // });
+
+    $(document).on("click",".updateNote",function(){
+      var id=$(this).attr("data-id");
+      var pesan=$('textarea#catatan').val();
+  // alert(pesan);
+	$.ajax({
+			url:"<?php echo base_url('c_submission/catatan'); ?>",
+			data:{id:id,pesan:pesan},
+      success: function(response){
+        console.log('response');
+        $('textarea#pesan').val('<p>isi catatan :</p><p>1. revisi</p>');
+        // $("tr[data-id='"+id+"']").fadeOut("fast",function(){
+				// 	$(this).remove();
+				// });
+			},
+		 });
+});
 
 $(document).on("click",".verifikasi",function(){
 	var id=$(this).attr("data-id");

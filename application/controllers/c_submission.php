@@ -11,7 +11,8 @@ class c_submission extends CI_Controller {
 
 	public function index()
 	{
-		$profile = $this->http_request("http://localhost/serviceOJS/api/userSubmit");
+		$editor_id = $this->session->userdata("user_id");
+		$profile = $this->http_request("http://localhost/serviceOJS/api/userSubmit/".$editor_id);
 		$issue = $this->http_request("http://localhost/serviceOJS/api/publicationIssue");
 		// ubah string JSON menjadi array
 		$profile = json_decode($profile, TRUE);
@@ -114,7 +115,7 @@ class c_submission extends CI_Controller {
 		foreach($profile as $a){
 			$nama=$a['first_name'].' '.$a['middle_name'].''.$a['last_name'];
 			$nama=str_replace(' ', '', $nama);
-			$profile[$i]['statusSkripsi']="data tidak di temukan di filkop APP";
+			$profile[$i]['statusSkripsi']="data tidak di temukan di sistem skripsi";
 			$profile[$i]['author_id']=0;
 			foreach($mahasiswa as $b){
 				$namaSiswa=$b['namaMahasiswa'];//dri filkomappp
@@ -188,13 +189,25 @@ class c_submission extends CI_Controller {
 		//print_r($data['path']);
 		$this->load->view('v_tampilBerkas',$data);
 	}
-	public function alamatBerkasApp($namaBerkas){
-				
-		//return $path['alamat'];
-		$data['path']= base_url()."assets/dataSkripsi/$namaBerkas.pdf";
-		//print_r($data['path']);
+	public function alamatBerkasOJS(){
+		$fileId = $this->input->post("fileId");
+		$path = $this->http_request("http://localhost/serviceOJS/api/lihatFilesAsli/".$fileId);
 		
-		$this->load->view('v_tampilBerkas',$data);
+		// ubah string JSON menjadi array
+		$path = json_decode($path, TRUE);
+		
+		echo $path['alamat'];
+		// $data['path']=$path['alamat'];
+		// print_r($path);
+		// $this->load->view('v_tampilBerkas',$data);
+	}
+	public function alamatBerkasApp(){
+		$namaBerkas = $this->input->post("fileId");
+		//return $path['alamat'];
+		// $data['path']= base_url()."assets/dataSkripsi/$namaBerkas.pdf";
+		//print_r($data['path']);
+		echo base_url()."assets/dataSkripsi/$namaBerkas.pdf";
+		// $this->load->view('v_tampilBerkas',$data);
 	}
 	public function centang(){
 		$id= $this->input->post("id");
@@ -210,6 +223,12 @@ class c_submission extends CI_Controller {
 		$this->m_mahasiswa->set_centang($id,$value,$strState);
 		//print_r($id);
 	}
+	public function catatan(){
+		$id= $this->input->post("id");
+		$pesan= $this->input->post("pesan");
+		$this->m_mahasiswa->set_catatan($id,$pesan);
+		echo "{}";
+	}
 	public function submitIn(){
 		$submission_id= $this->input->post("id");
 		$author_id= $this->input->post("author_id");//dari filkomapp
@@ -219,7 +238,7 @@ class c_submission extends CI_Controller {
 		$data = array(
 			'submission_id' => $submission_id,
 			'user_group_id' => 20,
-			'user_id' => 3,//editor id
+			'user_id' => $this->session->userdata("user_id"),//editor id
 			'date_assigned' => $date
 			);	
 			
@@ -274,7 +293,7 @@ class c_submission extends CI_Controller {
 		//print_r($date);
 		$data = array(
 			'user_id' => $user_id,
-			'editor_user_id' => 3,//editor id
+			'editor_user_id' => $this->session->userdata("user_id"),//editor id
 			'date_assigned' => $date
 			);	
 			
@@ -353,16 +372,16 @@ class c_submission extends CI_Controller {
 		$mahasiswa = $this->m_mahasiswa->getMahasiswa()->result_array();	
 //print_r($profile);
 
-		foreach($profile as $a){
-			$nama=$a['first_name'].' '.$a['middle_name'].''.$a['last_name'];
-			foreach($mahasiswa as $b){
-				if(strtolower($nama) === strtolower($b['namaMahasiswa'])){
-					//echo $b['namaMahasiswa'];
-				} 
-			}
+	// 	foreach($profile as $a){
+	// 		$nama=$a['first_name'].' '.$a['middle_name'].''.$a['last_name'];
+	// 		foreach($mahasiswa as $b){
+	// 			if(strtolower($nama) === strtolower($b['namaMahasiswa'])){
+	// 				//echo $b['namaMahasiswa'];
+	// 			} 
+	// 		}
 			
 				
-	}
+	// }
 		$data['user']=$profile;
 		$this->load->view('v_publication',$data);
 	}
@@ -393,16 +412,22 @@ class c_submission extends CI_Controller {
 
 	public function setPublication(){
 		$user_id= $this->input->post("id");
+		$issue_id= $this->input->post("issue_id");
+		$page= $this->input->post("page");
+		$tahun= $this->input->post("tahun");
 		$date= date('Y-m-d H:i:s');
-		//print_r($date);
+		
 		$data = array(
 			'user_id' => $user_id,
-			'editor_user_id' => 3,//editor id
-			'date_assigned' => $date
+			'editor_user_id' => $this->session->userdata("user_id"),//editor id
+			'date' => $date,
+			'issue_id' => $issue_id,
+			'page' => $page,
+			'tahun' => $tahun
 			);	
-			
-		$userFiles = $this->http_request_post("http://localhost/serviceOJS/api/verifikasi",$data);
-		echo(json_decode($userFiles, TRUE));
+			// print_r($data);
+		 $userFiles = $this->http_request_post("http://localhost/serviceOJS/api/setPublication",$data);
+		// echo(json_decode($userFiles, TRUE));
 		echo "{}";
 	}
 
@@ -411,19 +436,45 @@ class c_submission extends CI_Controller {
 		$fileArsip= realpath($_FILES["fileArsip"]["tmp_name"]);
 		$type = $_FILES['fileArsip']['type'];
 		$name = $_FILES['fileArsip']['name'];
+		$submission_id=$_POST['submission_id'];
+		$editor_id=$_POST['editor_id'];
 		//print_r($fileArsip);
 		//return $fileArsip;
-		$data = array(
-			'fileArsip' => $fileArsip
-			);	
 		$fields = [
-				'fileArsip' => new \CurlFile($fileArsip, $type, $name)
+				'fileArsip' => new \CurlFile($fileArsip, $type, $name),
+				'submission_id' => $submission_id,
+				'name' => $name,
+				'type' => $type,
+				'editor_id' => $editor_id
 		];
 		$userFiles = $this->http_request_postFile("http://localhost/serviceOJS/api/uploadArsip",$fields);
 		//print_r ($type);
 		//print_r($fileArsip);
 		echo "{}";
 	}
+
+	public function submitGalley(){
+		//$fileArsip= $_FILES['fileArsip'];
+		$fileGalley= realpath($_FILES["fileGalley"]["tmp_name"]);
+		$type = $_FILES['fileGalley']['type'];
+		$name = $_FILES['fileGalley']['name'];
+		$submission_id=$_POST['submission_id'];
+		$editor_id=$_POST['editor_id'];
+		//print_r($fileArsip);
+		//return $fileArsip;	
+		$fields = [
+				'fileGalley' => new \CurlFile($fileGalley, $type, $name),
+				'submission_id' => $submission_id,
+				'name' => $name,
+				'type' => $type,
+				'editor_id' => $editor_id
+		];
+		$userFiles = $this->http_request_postFile("http://localhost/serviceOJS/api/uploadGalley",$fields);
+		//print_r ($type);
+		//print_r($fileArsip);
+		echo "{}";
+	}
+
 	public function send_email(){
 		$user_id= $this->input->post("id");
 		$pesan= $this->input->post("pesan");
