@@ -23,10 +23,14 @@ class c_submission extends CI_Controller {
 		$i=0;
 	 	foreach($profile as $a){
 			$mahasiswa=$this->m_mahasiswa->getMahasiswaById($a['user_id'])->result_array();
+			$note=$this->m_mahasiswa->getDataAuthor($a['user_id'])->result_array();
 			//print_r($mahasiswa);
 			foreach($mahasiswa as $b){
 			$profile[$i]['statusSkripsi']=$b['status'];
 			}
+			foreach($note as $b){
+				$profile[$i]['catatan']=$b['catatan'];
+				}
 		$i++;
 	 	}
 		//print_r($profile);

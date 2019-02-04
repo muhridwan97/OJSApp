@@ -21,6 +21,344 @@ if($this->session->userdata('username')==null){
   <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/sweetalert/sweetalert.css'); ?>">
   <script type="text/javascript" src="<?php echo base_url('assets/sweetalert/sweetalert.min.js'); ?>"></script>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+  <script>
+window.onload = function () {
+
+  var submissionMasuk = [];
+  var publikasi = [];
+  var skripsi = [];
+  var submissionMasuk2 = [];
+  var publikasi2 = [];
+  var skripsi2 = [];
+
+var chart = new CanvasJS.Chart("chartContainer", {
+	animationEnabled: true,
+	theme: "light2",
+	title:{
+		text: "Submission Traffic"
+	},
+	axisX:{
+		valueFormatString: "DD MMM",
+		crosshair: {
+			enabled: true,
+			snapToDataPoint: true
+		}
+	},
+	axisY: {
+		title: "Jumlah Mahasiswa",
+		crosshair: {
+			enabled: true
+		}
+	},
+	toolTip:{
+		shared:true
+	},  
+	legend:{
+		cursor:"pointer",
+		verticalAlign: "bottom",
+		horizontalAlign: "left",
+		itemclick: toogleDataSeries
+	},
+	data: [{
+		type: "line",
+		showInLegend: true,
+		name: "Jumlah Submission Masuk",
+		markerType: "square",
+		xValueFormatString: "DD MMM, YYYY",
+		color: "#FF0800",
+		dataPoints: submissionMasuk
+	},
+  {
+		type: "line",
+		showInLegend: true,
+		name: "Jumlah Publikasi",
+		xValueFormatString: "DD MMM, YYYY",
+		color: "#008ECC",
+		dataPoints: publikasi
+	},
+  {
+		type: "line",
+		showInLegend: true,
+		name: "Skripsi Selesai",
+		lineDashType: "dash",
+    color: "#39FF14",
+		dataPoints: skripsi
+		
+	}]
+});
+chart.render();
+
+function toogleDataSeries(e){
+	if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+		e.dataSeries.visible = false;
+	} else{
+		e.dataSeries.visible = true;
+	}
+	chart.render();
+}
+
+function addData(data) {
+	for (var i = 0; i < data.length; i++) {
+		submissionMasuk.push({
+			x: new Date(data[i].date),
+			y: data[i].unit
+		});
+	}
+	chart.render();
+
+}
+
+$.getJSON("http://localhost/serviceOJS/api/getTanggalSubmission", addData);
+
+function addDataPub(data) {
+	for (var i = 0; i < data.length; i++) {
+		publikasi.push({
+			x: new Date(data[i].date),
+			y: data[i].unit
+		});
+	}
+	chart.render();
+
+}
+
+$.getJSON("http://localhost/serviceOJS/api/getTanggalPublication", addDataPub);
+
+function addDataSkr(data) {
+	for (var i = 0; i < data.length; i++) {
+		skripsi.push({
+			x: new Date(data[i].date),
+			y: data[i].unit
+		});
+	}
+	chart.render();
+
+}
+
+$.getJSON("<?php echo base_url('c_dashboard/getTanggalSkripsi'); ?>", addDataSkr);
+
+var totalVisitors = 0;
+var dataDonat=[];
+function addDataDonat(data) {
+    totalVisitors = data[0].total;
+    dataDonat.push(
+      { y: data[0].submission, name: "Submission Masuk", color: "#E7823A" },
+			{ y: data[0].publikasi, name: "Publication", color: "#546BC1" });
+	chart2.render();
+}
+
+$.getJSON("http://localhost/serviceOJS/api/getTotalSubPub", addDataDonat);
+
+var visitorsData = {
+	"Submission Masuk vs Publication": [{
+		click: visitorsChartDrilldownHandler,
+		cursor: "pointer",
+		explodeOnClick: false,
+		innerRadius: "60%",
+		legendMarkerType: "square",
+		name: "Submission Masuk vs Publication",
+		radius: "100%",
+		showInLegend: true,
+		startAngle: 90,
+		type: "doughnut",
+		dataPoints: dataDonat
+	}],
+	"Submission Masuk": [{
+		color: "#E7823A",
+		name: "Submission Masuk",
+		type: "column",
+		dataPoints: submissionMasuk2,
+    xValueFormatString: "MMM, YYYY"
+	}],
+	"Publication": [{
+		color: "#546BC1",
+		name: "Publication",
+		type: "column",
+		dataPoints: publikasi2,
+    xValueFormatString: "MMM, YYYY",\
+	}]
+};
+
+var newVSReturningVisitorsOptions = {
+	animationEnabled: true,
+	theme: "light2",
+	title: {
+		text: "Submission Masuk vs Publication"
+	},
+	subtitles: [{
+		text: "Klik untuk menampilkan detail",
+		backgroundColor: "#2eacd1",
+		fontSize: 16,
+		fontColor: "white",
+		padding: 5
+	}],
+	legend: {
+		fontFamily: "calibri",
+		fontSize: 14,
+		itemTextFormatter: function (e) {
+			return e.dataPoint.name + ": " + Math.round(e.dataPoint.y / totalVisitors * 100) + "%";  
+		}
+	},
+	data: []
+};
+
+var visitorsDrilldownedChartOptions = {
+	animationEnabled: true,
+	theme: "light2",
+	axisX: {
+		labelFontColor: "#717171",
+		lineColor: "#a2a2a2",
+		tickColor: "#a2a2a2"
+	},
+	axisY: {
+		gridThickness: 0,
+		includeZero: false,
+		labelFontColor: "#717171",
+		lineColor: "#a2a2a2",
+		tickColor: "#a2a2a2",
+		lineThickness: 1
+	},
+	data: []
+};
+
+var chart2 = new CanvasJS.Chart("chartContainer2", newVSReturningVisitorsOptions);
+chart2.options.data = visitorsData["Submission Masuk vs Publication"];
+chart2.render();
+
+function visitorsChartDrilldownHandler(e) {
+	chart2 = new CanvasJS.Chart("chartContainer2", visitorsDrilldownedChartOptions);
+	chart2.options.data = visitorsData[e.dataPoint.name];
+	chart2.options.title = { text: e.dataPoint.name }
+	chart2.render();
+	$("#backButton").toggleClass("invisible");
+}
+
+$("#backButton").click(function() { 
+	$(this).toggleClass("invisible");
+	chart2 = new CanvasJS.Chart("chartContainer2", newVSReturningVisitorsOptions);
+	chart2.options.data = visitorsData["Submission Masuk vs Publication"];
+	chart2.render();
+});
+
+
+
+var chart3 = new CanvasJS.Chart("chartContainer3", {
+	animationEnabled: true,
+	title:{
+		text: "Grafik 12 Bulan Terakhir"
+	},
+	axisX: {
+		interval: 1,
+		intervalType: "month",
+		valueFormatString: "MMM-YYYY"
+	},	
+	axisY: {
+		title: "Jumlah Mahasiswa",
+		titleFontColor: "#4F81BC",
+		lineColor: "#4F81BC",
+		labelFontColor: "#4F81BC",
+		tickColor: "#4F81BC"
+	},	
+	toolTip: {
+		shared: true
+	},
+	legend: {
+		cursor:"pointer",
+		itemclick: toggleDataSeries3
+	},
+	data: [{
+		type: "column",
+		name: "Jumlah Submission Masuk",
+		legendText: "Jumlah Submission Masuk",
+    xValueFormatString: "MMM, YYYY",
+		showInLegend: true, 
+		dataPoints:submissionMasuk2
+	},
+	{
+		type: "column",	
+		name: "Skripsi Selesai",
+		legendText: "Skripsi Selesai",
+    xValueFormatString: "MMM, YYYY",
+		showInLegend: true,
+		dataPoints:skripsi2
+	},
+  {
+		type: "column",
+		name: "Jumlah Publikasi",
+		legendText: "Jumlah Publikasi",
+    xValueFormatString: "MMM, YYYY",
+		showInLegend: true, 
+		dataPoints:publikasi2
+	}]
+});
+chart3.render();
+function toggleDataSeries3(e) {
+	if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+		e.dataSeries.visible = false;
+	}
+	else {
+		e.dataSeries.visible = true;
+	}
+	chart3.render();
+}
+function addData2(data) {
+	for (var i = 0; i < data.length; i++) {
+		submissionMasuk2.push({
+			x: new Date(data[i].date),
+			y: data[i].unit
+		});
+	}
+	chart3.render();
+
+}
+
+$.getJSON("http://localhost/serviceOJS/api/getBulanSubmission", addData2);
+
+function addDataPub2(data) {
+	for (var i = 0; i < data.length; i++) {
+		publikasi2.push({
+			x: new Date(data[i].date),
+			y: data[i].unit
+		});
+	}
+	chart3.render();
+
+}
+
+$.getJSON("http://localhost/serviceOJS/api/getBulanPublication", addDataPub2);
+
+function addDataSkr2(data) {
+	for (var i = 0; i < data.length; i++) {
+		skripsi2.push({
+			x: new Date(data[i].date),
+			y: data[i].unit
+		});
+	}
+	chart3.render();
+
+}
+
+$.getJSON("<?php echo base_url('c_dashboard/getBulanSkripsi'); ?>", addDataSkr2);
+
+
+}
+</script>
+<style>
+  #backButton {
+	border-radius: 4px;
+	padding: 8px;
+	border: none;
+	font-size: 16px;
+	background-color: #2eacd1;
+	color: white;
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	cursor: pointer;
+  }
+  .invisible {
+    display: none;
+  }
+</style>
 </head>
 <body class="hold-transition skin-red sidebar-mini">
 <div class="wrapper">
@@ -75,9 +413,8 @@ if($this->session->userdata('username')==null){
             <li ><a href="<?php echo base_url(); ?>c_submission/lihatPublication">Publication</a></li>
           </ul>
         </li>
-			<span class="pull-right-container">
-              
-            </span></a></li>
+			
+        <li ><a href="<?php echo base_url(); ?>c_settings/"><i class="fa fa-gear"></i> <span>SETTINGS</span></a></li>
        </ul>
     </section>
   </aside>
@@ -140,11 +477,11 @@ if($this->session->userdata('username')==null){
         </div>
       </div>
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-12">
           <!-- AREA CHART -->
           <div class="box box-primary">
             <div class="box-header with-border">
-              <h3 class="box-title">Area Chart</h3>
+              <h3 class="box-title">Traffic</h3>
 
               <div class="box-tools pull-right">
                 <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
@@ -154,13 +491,16 @@ if($this->session->userdata('username')==null){
             </div>
             <div class="box-body">
               <div class="chart">
-                <canvas id="areaChart" style="height:250px"></canvas>
+              <div id="chartContainer3" style="height: 370px; width: 100%;"></div>
               </div>
             </div>
             <!-- /.box-body -->
           </div>
+          </div>
+          </div>
           <!-- /.box -->
-
+          <div class="row">
+          <div class="col-md-6">
           <!-- DONUT CHART -->
           <div class="box box-danger">
             <div class="box-header with-border">
@@ -173,7 +513,8 @@ if($this->session->userdata('username')==null){
               </div>
             </div>
             <div class="box-body">
-              <canvas id="pieChart" style="height:250px"></canvas>
+            <div id="chartContainer2" style="height: 370px; width: 100%;"></div>
+            <button class="btn invisible" id="backButton">< Back</button>
             </div>
             <!-- /.box-body -->
           </div>
@@ -182,30 +523,12 @@ if($this->session->userdata('username')==null){
         </div>
         <!-- /.col (LEFT) -->
         <div class="col-md-6">
-          <!-- LINE CHART -->
-          <div class="box box-info">
-            <div class="box-header with-border">
-              <h3 class="box-title">Line Chart</h3>
-
-              <div class="box-tools pull-right">
-                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                </button>
-                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-              </div>
-            </div>
-            <div class="box-body">
-              <div class="chart">
-                <canvas id="lineChart" style="height:250px"></canvas>
-              </div>
-            </div>
-            <!-- /.box-body -->
-          </div>
           <!-- /.box -->
 
           <!-- BAR CHART -->
           <div class="box box-success">
             <div class="box-header with-border">
-              <h3 class="box-title">Bar Chart</h3>
+              <h3 class="box-title">Submission Traffic</h3>
 
               <div class="box-tools pull-right">
                 <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
@@ -215,7 +538,7 @@ if($this->session->userdata('username')==null){
             </div>
             <div class="box-body">
               <div class="chart">
-                <canvas id="barChart" style="height:230px"></canvas>
+              <div id="chartContainer" style="height: 370px; width: 100%;"></div>
               </div>
             </div>
             <!-- /.box-body -->
@@ -258,7 +581,9 @@ if($this->session->userdata('username')==null){
 <script src="<?php echo base_url(); ?>/assets/dist/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="<?php echo base_url(); ?>/assets/dist/js/demo.js"></script>
-
+<!-- canvasJs -->
+<script src="<?php echo base_url(); ?>/assets/canvasjs/canvasjs.min.js"></script>
+<script src="<?php echo base_url(); ?>/assets/canvasjs/jquery-1.11.1.min.js"></script>
 <script>
   $(function () {
 	  $.ajaxSetup({

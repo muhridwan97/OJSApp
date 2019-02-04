@@ -78,9 +78,8 @@
             <li ><a href="<?php echo base_url(); ?>c_submission/lihatPublication">Publication</a></li>
           </ul>
         </li>
-			<span class="pull-right-container">
-              
-            </span></a></li>
+     <li ><a href="<?php echo base_url(); ?>c_settings/"><i class="fa fa-gear"></i> <span>SETTINGS</span></a></li>
+			
        </ul>
     </section>
   </aside>
@@ -139,7 +138,7 @@
                   <a href="<?php echo base_url(); ?>c_submission/lihatBerkas/<?php echo "$u[user_id]" ?>" type="button" class="btn btn-info btn-flat"><i class="fa fa-info"></i></a>
                       <a data-toggle="modal" data-target="#myModal" class="btn btn-success btn-flat cek"
 					  data-id="<?php echo "$u[user_id]" ?>" data-submission="<?php echo "$u[submission_id]" ?>" ><i class="fa fa-check"  ></i></a>
-					  <a data-toggle="modal" data-target="#myModal2" data-id="<?php echo "$u[user_id]" ?>"  class="btn btn-warning btn-flat cekSubmission"><i class="fa fa-send"></i></a>
+					  <a data-toggle="modal" data-target="#myModal2" data-id="<?php echo "$u[user_id]" ?>"  data-catatan="<?php echo "$u[catatan]" ?>" class="btn btn-warning btn-flat cekSubmission"><i class="fa fa-send"></i></a>
                     </div></td>
                 </tr>
                 <?php
@@ -278,9 +277,11 @@
                 </div>
     <div class="form-group">
     <label>Isi pesan email</label>
+    <!-- <input type="hidden" id="catatan"> -->
     <input type="hidden" id="submission_id">
     <textarea id="pesan" class="form-control" name="pesan" rows="10" >
-    isi pesan
+    Isi pesan
+    <p></p>
     <br><br>
     Kind Regards,
     <br>
@@ -345,8 +346,10 @@ $('.cek').on('click', function () {
 
 $('.cekSubmission').on('click', function () {
   var id=$(this).data('id');
-  //alert(id); 
+  var catatan=$(this).data('catatan');
+  alert(catatan); 
   $('#submission_id').val(id);//aslinya ini masih userid
+  $('#catatan').val(catatan);
 });
 
 $('#myModal').on('shown.bs.modal', function () {

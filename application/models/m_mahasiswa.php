@@ -13,6 +13,11 @@ class m_mahasiswa extends CI_Model {
 		$this->db->where('mahasiswa_id',$id);
 		return $this->db->get('mahasiswa');
 	}
+	public function getTanggalSkripsi(){
+		$this->db->select('tanggalSelesai as date');
+		$this->db->where('status','selesai');
+		return $this->db->get('mahasiswa');
+	}
 	
 	public function set_centang($id,$value,$strState){
 		$this->db->set($value, $strState);

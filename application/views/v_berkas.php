@@ -86,9 +86,7 @@
             <li ><a href="<?php echo base_url(); ?>c_submission/lihatPublication">Publication</a></li>
           </ul>
         </li>
-			<span class="pull-right-container">
-              
-            </span></a></li>
+        <li ><a href="<?php echo base_url(); ?>c_settings/"><i class="fa fa-gear"></i> <span>SETTINGS</span></a></li>
        </ul>
     </section>
   </aside>
@@ -110,6 +108,18 @@
                $foto=""; 
                $judul="";
                $abstractApp="";
+               $prodi="";
+               $nim="";
+               $noHp="";
+               $email="";
+               $pembimbing1="";
+               $pembimbing2="";
+               $bidangSkripsi="";
+               $tipePenelitian="";
+               $jalurSkripsi="";
+               $asalJudul="";
+               $awalPelaksanaan="";
+               $akhirPelaksanaan="";
               foreach($userFiles as $u){ }
               echo "$u[first_name] $u[middle_name] $u[last_name]"; 
               
@@ -224,6 +234,18 @@
                 $foto="$u[foto]";
                 $judul="$u[judulSkripsi]";
                 $abstractApp="$u[abstract]";
+                $prodi="$u[prodi]";
+                $nim="$u[nim]";
+                $noHp="$u[noHp]";
+                $email="$u[email]";
+                $pembimbing1="$u[pembimbing1]";
+                $pembimbing2="$u[pembimbing2]";
+                $bidangSkripsi="$u[bidangSkripsi]";
+                $tipePenelitian="$u[tipePenelitian]";
+                $jalurSkripsi="$u[jalurSkripsi]";
+                $asalJudul="$u[asalJudul]";
+                $awalPelaksanaan="$u[awalPelaksanaan]";
+                $akhirPelaksanaan="$u[akhirPelaksanaan]";
                 ?>
               </h3>
               <!-- tools box -->
@@ -503,16 +525,16 @@
         <img class="profile-user-img img-responsive img" src="<?php echo base_url(); ?>/assets/images/foto/<?php echo $foto;?>" alt="User profile picture">
 
         <h3 class="profile-username text-center"><?php echo $namaPenulis;?></h3>
-
+        <p class="text-muted text-center"><?php echo $prodi;?></p>
         <ul class="list-group list-group-unbordered">
                 <li class="list-group-item">
-                  <b>NIM</b> <a class="pull-right">15515020312312</a>
+                  <b>NIM</b> <a class="pull-right"><?php echo $nim;?></a>
                 </li>
                 <li class="list-group-item">
-                <i class="fa fa-mobile-phone"></i> <a class="pull-right">0812312</a>
+                <i class="fa fa-mobile-phone"></i> <a class="pull-right"><?php echo $noHp;?></a>
                 </li>
                 <li class="list-group-item">
-                <i class="fa fa-envelope"></i> <a class="">muh.ridwan97@gmail.com</a>
+                <i class="fa fa-envelope"></i> <a class=""><?php echo $email;?></a>
                 </li>
               </ul>
 
@@ -530,48 +552,48 @@
       <div class="box-body">
         <strong><i class="fa fa-user"></i> Pembimbing 1</strong>
         <p class="text-muted">
-          Bapak Budi
+        <?php echo $pembimbing1;?>
         </p>
 
         <hr>
         <strong><i class="fa fa-user"></i> Pembimbing 2</strong>
         <p class="text-muted">
-          Ibu Budi
+        <?php echo $pembimbing2;?>
         </p>
 
         <hr>
         <strong><i class="fa fa-book margin-r-5"></i> Bidang Skripsi</strong>
 
         <p class="text-muted">
-        Rekayasa Perangkat Lunak
+        <?php echo $bidangSkripsi;?>
         </p>
 
         <hr>
         <strong><i class="fa fa-book margin-r-5"></i> Tipe Penelitian</strong>
 
         <p class="text-muted">
-        Implementatif - Pengembangan (Development)
+        <?php echo $tipePenelitian;?>
         </p>
 
         <hr>
         <strong><i class="fa fa-book margin-r-5"></i> Jalur Skripsi</strong>
 
         <p class="text-muted">
-        Bimbingan
+        <?php echo $jalurSkripsi;?>
         </p>
 
         <hr>
         <strong><i class="fa fa-book margin-r-5"></i> Asal Judul</strong>
 
         <p class="text-muted">
-        Dosen
+        <?php echo $asalJudul;?>
         </p>
 
         <hr>
         <strong><i class="fa fa-book margin-r-5"></i> Pelaksanaan</strong>
 
         <p class="text-muted">
-        31 Agt 2018 s/d 02 Agt 2019
+        <?php echo $awalPelaksanaan;?> s/d <?php echo $akhirPelaksanaan;?>
         </p>
 
         <hr>
