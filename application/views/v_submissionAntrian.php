@@ -132,6 +132,11 @@
                     <span class="label label-warning">
                     <?php echo "$u[statusSkripsi]"; ?></span>
                     <?php
+                  }if("$u[waktu]"==0){
+                    ?>
+                  <span class="label label-info">
+                    Melewati masa tenggang</span>
+                  <?php
                   }
                     ?>
                   </td>

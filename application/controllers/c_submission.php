@@ -114,6 +114,8 @@ class c_submission extends CI_Controller {
 		$profile = json_decode($profile, TRUE);
 		
 		$mahasiswa = $this->m_mahasiswa->getMahasiswa()->result_array();	
+		$this->load->model('m_settings');
+		$waktu = $this->m_settings->getWaktuTenggang()->result_array();
 //print_r($profile);
 		$i=0;
 		foreach($profile as $a){
@@ -129,6 +131,16 @@ class c_submission extends CI_Controller {
 					//echo $nama;
 					$profile[$i]['statusSkripsi']=$b['status'];
 					$profile[$i]['author_id']=$b['mahasiswa_id'];
+					$profile[$i]['tanggalSelesai']=$b['tanggalSelesai'];
+					$start_date = new DateTime($b['tanggalSelesai']);
+					$end_date = new DateTime($profile[$i]['date_submitted']);
+					$interval = $start_date->diff($end_date);
+					
+					if($interval->days<=$waktu[0]['waktuTenggang']){
+						$profile[$i]['waktu']=1;
+					}else{
+						$profile[$i]['waktu']=0;
+					}
 				} 
 				
 			}
@@ -136,6 +148,8 @@ class c_submission extends CI_Controller {
 				
 	}
 		$data['user']=$profile;
+		// print_r($waktu[0]['waktuTenggang']);
+		// print_r($profile);
 		$this->load->view('v_submissionAntrian',$data);
 	}
 	public function lihatBerkas($userId){
@@ -151,6 +165,7 @@ class c_submission extends CI_Controller {
 		$data['user']=$metadata;
 		$data['keyword']=$keyword;
 		$data['userApp']=$this->m_mahasiswa->getDataAuthor($userId)->result_array();
+		$data['tahapSkripsi']=$this->m_mahasiswa->getTahapSkripsi($userId)->result_array();
 		 foreach($userFiles as $a){
 				
 		 }$mahasiswa_id= $a['uploader_user_id'];

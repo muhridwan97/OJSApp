@@ -347,9 +347,9 @@ $('.cek').on('click', function () {
 $('.cekSubmission').on('click', function () {
   var id=$(this).data('id');
   var catatan=$(this).data('catatan');
-  alert(catatan); 
+  //alert(catatan); 
   $('#submission_id').val(id);//aslinya ini masih userid
-  $('#catatan').val(catatan);
+  $("textarea#pesan").froalaEditor('html.set', 'isi pesan<br>'+catatan+'<br>Kind Regards,<br>Muhammad Ridwan');
 });
 
 $('#myModal').on('shown.bs.modal', function () {

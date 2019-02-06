@@ -160,7 +160,7 @@
                  $pesan="";
                 foreach($userFiles as $u){
                   $i++;
-                  $judul="$u[judul]";
+                  $judulOJS="$u[judul]";
                   $subtitle="$u[subtitle]";
                   $abstract="$u[abstract]";
                   $uploader_user_id="$u[uploader_user_id]";
@@ -327,7 +327,7 @@
 	<div class="box-body">
 		<div class="form-group">
 			<label>Judul</label>
-			<input type="text" class="form-control" id="judul" value="<?php  echo $judul; ?>" name="judul" placeholder="Masukkan Judul">
+			<input type="text" class="form-control" id="judul" value="<?php  echo $judulOJS; ?>" name="judul" placeholder="Masukkan Judul">
 		</div>
 		<div class="form-group">
 			<label>Subtitle</label>
@@ -486,7 +486,7 @@
     <input type="hidden" id="submission_id">
     <textarea id="pesan" class="form-control" name="pesan" rows="10" >
     isi pesan<br>
-    <div id="isi"></div>
+    <?php echo $pesan;?>
     <br>
     Kind Regards,
     <br>
@@ -637,90 +637,45 @@
           <!-- The timeline -->
           <ul class="timeline timeline-inverse">
             <!-- timeline time label -->
-            <li class="time-label">
-                  <span class="bg-red">
-                    10 Feb. 2014
+            <?php
+            $temp="";
+            foreach($tahapSkripsi as $u){ 
+              $tgl = "$u[tanggal]"; 
+              if(date('Y-m-d',strtotime($tgl))!=date('Y-m-d',strtotime($temp))){              
+            ?>
+              <li class="time-label">
+                  <span class="bg-green">
+                  <?php 
+                  echo date('d M Y', strtotime($tgl)); ?>
                   </span>
             </li>
+            <?php
+              $temp=$tgl;
+            }
+            ?>
             <!-- /.timeline-label -->
             <!-- timeline item -->
             <li>
               <i class="fa fa-tag bg-aqua"></i>
 
               <div class="timeline-item">
-                <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
-
-                <h3 class="timeline-header"><a href="#">Support Team</a> sent you an email</h3>
-
-                <div class="timeline-body">
-                  Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles,
-                  weebly ning heekya handango imeem plugg dopplr jibjab, movity
-                  jajah plickers sifteo edmodo ifttt zimbra. Babblely odeo kaboodle
-                  quora plaxo ideeli hulu weebly balihoo...
-                </div>
-                <div class="timeline-footer">
-                  <a class="btn btn-primary btn-xs">Read more</a>
-                  <a class="btn btn-danger btn-xs">Delete</a>
-                </div>
-              </div>
-            </li>
-            <!-- END timeline item -->
-            <!-- timeline item -->
-            <li>
-              <i class="fa fa-tag bg-aqua"></i>
-
-              <div class="timeline-item">
-                <span class="time"><i class="fa fa-clock-o"></i> 5 mins ago</span>
-
-                <h3 class="timeline-header no-border"><a href="#">Sarah Young</a> accepted your friend request
-                </h3>
-              </div>
-            </li>
-            <!-- END timeline item -->
-            <!-- timeline item -->
-            <li>
-              <i class="fa fa-tag bg-aqua"></i>
-
-              <div class="timeline-item">
-                <span class="time"><i class="fa fa-clock-o"></i> 27 mins ago</span>
-
-                <h3 class="timeline-header"><a href="#">Jay White</a> commented on your post</h3>
+              <span class="time"><i class="fa fa-clock-o"></i>  <?php echo date('H:i', strtotime($tgl)); ?></span>
+                <h3 class="timeline-header"><a href="#"><?php echo "$u[namaTahap]"; ?></a> <?php echo "$u[status]"; ?></h3>
 
                 <div class="timeline-body">
-                  Take me to your leader!
-                  Switzerland is small and neutral!
-                  We are more like Germany, ambitious and misunderstood!
-                </div>
-                <div class="timeline-footer">
-                  <a class="btn btn-warning btn-flat btn-xs">View comment</a>
+                <?php echo "$u[keterangan]"; ?>
                 </div>
               </div>
             </li>
+            
+            <?php
+              
+            }
+            ?>
+            
             <!-- END timeline item -->
             <!-- timeline time label -->
-            <li class="time-label">
-                  <span class="bg-green">
-                    3 Jan. 2014
-                  </span>
-            </li>
-            <!-- /.timeline-label -->
-            <!-- timeline item -->
-            <li>
-              <i class="fa fa-tag bg-aqua"></i>
-
-              <div class="timeline-item">
-                <span class="time"><i class="fa fa-clock-o"></i> 2 days ago</span>
-
-                <h3 class="timeline-header"><a href="#">Mina Lee</a> uploaded new photos</h3>
-
-                <div class="timeline-body">
-                  <img src="http://placehold.it/150x100" alt="..." class="margin">
-                  <img src="http://placehold.it/150x100" alt="..." class="margin">
-                  <img src="http://placehold.it/150x100" alt="..." class="margin">
-                  <img src="http://placehold.it/150x100" alt="..." class="margin">
-                </div>
-              </div>
-            </li>
+          
             <!-- END timeline item -->
             <li>
               <i class="fa fa-clock-o bg-gray"></i>
@@ -858,9 +813,6 @@ $(document).on("click",".sendEmail",function(){
             data:{id:id,pesan:pesan,option:option},
             success: function(){
               alert("Sukses! email berhasil dikirim.");
-              $("tr[data-id='"+id+"']").fadeOut("fast",function(){
-					$(this).remove();
-				});
             },
               error: function() {
           alert("gagal kirim email");
@@ -928,17 +880,12 @@ $(document).on("click",".lihatBerkasApp",function(){
     $(document).on("click",".updateNote",function(){
       var id=$(this).attr("data-id");
       var pesan=$('textarea#catatan').val();
-  // alert(pesan);
+      var pesan2=$('textarea#pesan').val();
+      $("textarea#pesan").froalaEditor('html.set', 'isi pesan<br>'+pesan+'<br>Kind Regards,<br>Muhammad Ridwan');
+   //alert(pesan2);
 	$.ajax({
 			url:"<?php echo base_url('c_submission/catatan'); ?>",
 			data:{id:id,pesan:pesan},
-      success: function(response){
-        console.log('response');
-        $('textarea#pesan').val('<p>isi catatan :</p><p>1. revisi</p>');
-        // $("tr[data-id='"+id+"']").fadeOut("fast",function(){
-				// 	$(this).remove();
-				// });
-			},
 		 });
 });
 

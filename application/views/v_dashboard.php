@@ -174,7 +174,7 @@ var visitorsData = {
 		name: "Publication",
 		type: "column",
 		dataPoints: publikasi2,
-    xValueFormatString: "MMM, YYYY",\
+    xValueFormatString: "MMM, YYYY",
 	}]
 };
 
