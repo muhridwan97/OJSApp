@@ -70,6 +70,8 @@
 			<span class="pull-right-container">
               
             </span></a></li>
+            
+     <li ><a href="<?php echo base_url(); ?>c_settings/"><i class="fa fa-gear"></i> <span>SETTINGS</span></a></li>
        </ul>
     </section>
   </aside>

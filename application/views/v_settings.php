@@ -21,6 +21,9 @@
   <link rel="stylesheet" type="text/css" href="<?php echo base_url('assets/sweetalert/sweetalert.css'); ?>">
   <script type="text/javascript" src="<?php echo base_url('assets/sweetalert/sweetalert.min.js'); ?>"></script>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+  <!-- Include Editor style. -->
+  <link href="<?php echo base_url(); ?>/assets/froala/css/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
+    <link href="<?php echo base_url(); ?>/assets/froala/css/froala_style.min.css" rel="stylesheet" type="text/css" />
 </head>
 <body class="hold-transition skin-red sidebar-mini">
 <div class="wrapper">
@@ -62,7 +65,7 @@
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header">MAIN NAVIGATION</li>
 		<li ><a href="<?php echo base_url(); ?>"><i class="fa fa-dashboard"></i> <span>DASHBOARD</span></a></li>
-    <li class="active" class="treeview">
+    <li  class="treeview">
           <a href="<?php echo base_url(); ?>c_submission/">
             <i class="fa fa-envelope"></i>  <span>SUBMISSION</span>
             <span class="pull-right-container">
@@ -71,80 +74,47 @@
           </a>
           <ul class="treeview-menu">
             <li  ><a href="<?php echo base_url(); ?>c_submission/lihatAntrian">Antrian Submission</a></li>
-            <li ><a href="<?php echo base_url(); ?>c_submission/">Submission</a></li>
-            
-            <li class="active" ><a href="<?php echo base_url(); ?>c_submission/lihatPublication">Publication</a></li>       
+            <li  ><a href="<?php echo base_url(); ?>c_submission/">Submission</a></li>
+            <li ><a href="<?php echo base_url(); ?>c_submission/lihatPublication">Publication</a></li>
           </ul>
         </li>
-			
-        <li ><a href="<?php echo base_url(); ?>c_settings/"><i class="fa fa-gear"></i> <span>SETTINGS</span></a></li>
+        <li class="active" ><a href="<?php echo base_url(); ?>c_settings/"><i class="fa fa-gear"></i> <span>SETTINGS</span></a></li>
        </ul>
     </section>
   </aside>
   <div class="content-wrapper">
     <section class="content-header">
       <h1>
-      SUBMISSION
+      SETTINGS
       </h1>
     </section>
     <section class="content">
 	
     <div class="col-sm-6 col-xs-12">
-          
-          <!-- /.box -->
-
-          <div class="box">
-            <div class="box-header">
-              <h3 class="box-title">Data Submission</h3>
+    <div class="box box-info">
+            <div class="box-header with-border">
+              <h3 class="box-title">Settings jarak tenggang waktu upload OJS</h3>
             </div>
-            <!-- /.box-header -->
             <div class="box-body">
-              <table id="example1" class="table table-bordered table-striped">
-                <thead>
-                
-                <tr>
-                  <th>No</th>
-                  <th>Nama</th>
-                  <th>Status</th>
-                  <th>Action</th>
-                </tr>
-                
-                </thead>
-                <tbody>
-                <?php
-                 $i=0;
-                foreach($user as $u){
-                  $i++;
-                ?>
-                <tr data-id="" >
-				<td ><?php echo $i; ?></td>
-                  <td><?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?></td>
-                  <td>
-                  <span class="label label-info">Publised</span>
-                  
-                  </td>
-                  <td><div class="btn-group">
-                  
-                  <a href="<?php echo base_url(); ?>c_submission/lihatBerkasPublication/<?php echo "$u[user_id]" ?>" type="button" class="btn btn-info btn-flat"><i class="fa fa-info"></i></a>
-                      
-                    </div></td>
-                </tr>
-                <?php
-                }
-                ?>
-                </tbody>
-              </table>
+              <!-- /input-group -->
+              <h4>Masukkan jarak dalam hari</h4>
+
+              <div class="input-group">
+                <?php foreach($waktu as $u){} ?>
+                <input type="number" class="form-control" id="hari" name="hari" value="<?php echo "$u[waktuTenggang]" ?>">
+                <div class="input-group-btn">
+                  <button type="button" class="btn btn-info btn-flat waktu">Simpan</button>
+                </div>
+                <!-- /btn-group -->
+              </div>
+              
+              <!-- /input-group -->
             </div>
             <!-- /.box-body -->
           </div>
-          <!-- /.box -->
-        </div>
-	  
-	  
-		
-		
-      <!-- /.row -->
+    </div>
     </section>
+    
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
@@ -174,8 +144,11 @@
 <!-- AdminLTE for demo purposes -->
 <script src="<?php echo base_url(); ?>/assets/dist/js/demo.js"></script>
 <!-- page script -->
-
+<!-- Include Editor JS files. -->
+<script type="text/javascript" src="<?php echo base_url(); ?>/assets/froala/js/froala_editor.pkgd.min.js"></script>
+<script> $(function() { $('textarea').froalaEditor() }); </script>
 <script>
+
   $(function () {
 	  $.ajaxSetup({
 	type:"post",
@@ -183,28 +156,24 @@
 	dataType: "json"
 	})
 	
-	$(document).on("click",".info-pembayaran",function(){
-	var id=$(this).attr("data-id");
-	var harga=$(this).attr("data-harga");
-	swal({
-		title: "Total Harga : Rp "+ harga +" ,-",
-		text:"Pembayaran harus sesuai dengan harga",
-		type: "info",
-		confirmButtonText: "Oke",
-		closeOnConfirm: true,
-	},
-		);
+$(document).on("click",".waktu",function(){
+  var hari=$('#hari').val();
+   console.log(hari);
+	$.ajax({
+		url:"<?php echo base_url('c_settings/setWaktuTenggang'); ?>",
+        data:{hari:hari},
+		success: function(){
+        alert("berhasil mengubah waktu tenggang");
+      },
+      error: function() {
+     alert("gagal mengubah waktu tenggang");
+      }
+		 });
 });
 
-    $('#example1').DataTable()
-    $('#example2').DataTable({
-      'paging'      : true,
-      'lengthChange': false,
-      'searching'   : false,
-      'ordering'    : true,
-      'info'        : true,
-      'autoWidth'   : false
-    })
+
+
+
   })
 </script>
 </body>

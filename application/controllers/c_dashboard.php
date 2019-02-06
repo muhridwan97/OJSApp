@@ -72,5 +72,57 @@ class c_dashboard extends CI_Controller {
 		// mengembalikan hasil curl
 		return $output;
 	}
+	public function getTanggalSkripsi(){
+		$dataUser = $this->m_mahasiswa->getTanggalSkripsi()->result();
+		//print_r($mahasiswa);
+		$date= date('Y-m-d H:i:s');
+		$myArr = array();
+        //print_r($dataUser);
+        
+        for($i=-13;$i<=0;$i++){
+            $init = new \stdClass;
+            $days_ago = date('Y-m-d', strtotime("$i days", strtotime($date)));
+            $init->date = $days_ago;
+            $init->unit = 0;
+            foreach($dataUser as $d){
+                if($days_ago==date('Y-m-d', strtotime($d->date))){
+                    $init->unit++;
+                }
+            }
+            // $init->date = strtotime($days_ago);
+            array_push($myArr,$init);
+        //print_r($days_ago);
+        // print_r("\n");
+		}
+		$this->output
+		->set_content_type('application/json')
+		->set_output(json_encode($myArr)) ;
+	}
+	public function getBulanSkripsi(){
+		$dataUser = $this->m_mahasiswa->getTanggalSkripsi()->result();
+		//print_r($mahasiswa);
+		$date= date('Y-m-d H:i:s');
+		$myArr = array();
+        //print_r($dataUser);
+        
+        for($i=-11;$i<=0;$i++){
+            $init = new \stdClass;
+            $months_ago = date('Y-m-d', strtotime("$i months", strtotime($date)));
+            $init->date = $months_ago;
+            $init->unit = 0;
+            foreach($dataUser as $d){
+                if(date('Y-m',strtotime($months_ago))===date('Y-m', strtotime($d->date))){
+                    $init->unit++;
+                }
+            }
+            // $init->date = strtotime($days_ago);
+            array_push($myArr,$init);
+        //print_r($days_ago);
+        // print_r("\n");
+		}
+		$this->output
+		->set_content_type('application/json')
+		->set_output(json_encode($myArr)) ;
+	}
 	
 }

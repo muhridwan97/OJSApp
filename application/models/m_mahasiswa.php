@@ -9,8 +9,18 @@ class m_mahasiswa extends CI_Model {
 		$this->db->where('author_id',$id);
 		return $this->db->get('submission');
 	}
+	public function getTahapSkripsi($id){
+		$this->db->where('mahasiswa_id',$id);
+		$this->db->order_by('tanggal', "DESC");
+		return $this->db->get('tahapSkripsi');
+	}
 	public function getMahasiswaById($id){
 		$this->db->where('mahasiswa_id',$id);
+		return $this->db->get('mahasiswa');
+	}
+	public function getTanggalSkripsi(){
+		$this->db->select('tanggalSelesai as date');
+		$this->db->where('status','selesai');
 		return $this->db->get('mahasiswa');
 	}
 	
