@@ -294,10 +294,11 @@ $(document).on("click",".submission-valid",function(){
   var author_id=$(this).attr("data-author");
   var user_id=$(this).attr("data-user");
   var status=$(this).attr("data-status");
-  // console.log(id);
-  // console.log(nama);
-  // console.log(author_id);
-  // console.log(user_id);
+ console.log(id);
+   console.log(nama);
+   console.log(author_id);
+  
+   console.log(user_id);
   if(status=="data tidak di temukan di sistem skripsi"){
     swal({
 		title: "Data skripsi atas nama "+ nama +" tidak ditemukan di sistem skripsi",

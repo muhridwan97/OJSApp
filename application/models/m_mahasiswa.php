@@ -9,6 +9,10 @@ class m_mahasiswa extends CI_Model {
 		$this->db->where('author_id',$id);
 		return $this->db->get('submission');
 	}
+	public function getDataAuthorMahasiswa($id){
+		$this->db->where('mahasiswa_id',$id);
+		return $this->db->get('mahasiswa');
+	}
 	public function getTahapSkripsi($id){
 		$this->db->where('mahasiswa_id',$id);
 		$this->db->order_by('tanggal', "DESC");
@@ -39,13 +43,22 @@ class m_mahasiswa extends CI_Model {
 		$this->db->where('mahasiswa_id', $id);
 		$this->db->update('mahasiswa');
 	}
-	
+	public function insertSubmissionSwap($author_id,$user_id,$dataSub){
+		$this->db->set('mahasiswa_id', 999999999);
+		$this->db->where('mahasiswa_id', $user_id);
+		$this->db->update('mahasiswa');
+		$this->db->set('mahasiswa_id', $user_id);
+		$this->db->where('mahasiswa_id', $author_id);
+		$this->db->update('mahasiswa');
+		$this->db->set('mahasiswa_id', $author_id);
+		$this->db->where('mahasiswa_id', 999999999);
+		$this->db->update('mahasiswa');
+		return $this->db->insert('submission',$dataSub);;
+	}
 	public function insertSubmission($author_id,$user_id,$dataSub){
 		$this->db->set('mahasiswa_id', $user_id);
 		$this->db->where('mahasiswa_id', $author_id);
 		$this->db->update('mahasiswa');
-
-		
 		return $this->db->insert('submission',$dataSub);;
 	}
 	public function updateSubmission($submission_id,$id){

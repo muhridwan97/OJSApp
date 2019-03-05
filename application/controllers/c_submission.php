@@ -149,7 +149,7 @@ class c_submission extends CI_Controller {
 	}
 		$data['user']=$profile;
 		// print_r($waktu[0]['waktuTenggang']);
-		// print_r($profile);
+		//print_r($data);
 		$this->load->view('v_submissionAntrian',$data);
 	}
 	public function lihatBerkas($userId){
@@ -268,10 +268,16 @@ class c_submission extends CI_Controller {
 			);
 		//print_r($dataSub);
 		$insert = $this->m_mahasiswa->getDataAuthor($user_id)->result();
+		//print_r(count($insert));
 		if(count($insert)>0){
 			$this->m_mahasiswa->updateSubmission($submission_id,$user_id);
 		}else{
-			$this->m_mahasiswa->insertSubmission($author_id,$user_id,$dataSub);
+			$temp = $this->m_mahasiswa->getDataAuthorMahasiswa($user_id)->result();
+			if(count($temp)>0){
+				$this->m_mahasiswa->insertSubmissionSwap($author_id,$user_id,$dataSub);
+			}else{
+				$this->m_mahasiswa->insertSubmission($author_id,$user_id,$dataSub);
+			}
 		}
 		//echo(json_decode($userFiles, TRUE));
 		echo "{}";

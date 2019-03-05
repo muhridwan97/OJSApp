@@ -159,7 +159,8 @@
 $(document).on("click",".waktu",function(){
   var hari=$('#hari').val();
    console.log(hari);
-	$.ajax({
+   if(hari>=0){
+	  $.ajax({
 		url:"<?php echo base_url('c_settings/setWaktuTenggang'); ?>",
         data:{hari:hari},
 		success: function(){
@@ -169,6 +170,9 @@ $(document).on("click",".waktu",function(){
      alert("gagal mengubah waktu tenggang");
       }
 		 });
+     }else{
+      alert("gagal mengubah waktu tenggang");
+     }
 });
 
 
