@@ -142,11 +142,11 @@
                   </td>
                   <td><div class="btn-group">
                   
-                  <a data-toggle="modal" data-target="#myModal2" data-id="<?php echo "$u[user_id]" ?>"  class="btn btn-warning btn-flat cekSubmission"><i class="fa fa-send"></i></a>
+                  <a data-toggle="modal" data-target="#myModal2" data-id="<?php echo "$u[user_id]" ?>"  class="btn btn-warning btn-flat cekSubmission"><i data-toggle="tooltip" data-placement="top" data-original-title="Tolak" class="fa fa-send"> </i></a>
                       <button type="button" class="btn btn-success btn-flat submission-valid" 
 					  data-id="<?php echo "$u[submission_id]"; ?>" data-author="<?php echo "$u[author_id]"; ?>" 
             data-user="<?php echo "$u[user_id]"; ?>" data-status="<?php echo "$u[statusSkripsi]"; ?>" data-nama ="<?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?>">
-            <i class="fa fa-check"  ></i></button>
+            <i data-toggle="tooltip" data-placement="top" data-original-title="Assign" class="fa fa-check"  ></i></button>
                     </div></td>
                 </tr>
                 <?php
@@ -307,8 +307,8 @@ $(document).on("click",".submission-valid",function(){
 	});
   }else{
 	swal({
-		title: "Submission atas nama "+ nama +" Valid",
-		text:"Yakin Submission ini valid?",
+		title: "Submission atas nama "+ nama +"",
+		text:"Assign Submission ini?",
 		type: "warning",
 		showCancelButton: true,
 		confirmButtonText: "Yakin",

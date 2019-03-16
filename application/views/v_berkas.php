@@ -30,7 +30,41 @@
   <!-- Include Editor style. -->
   <link href="<?php echo base_url(); ?>/assets/froala/css/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
     <link href="<?php echo base_url(); ?>/assets/froala/css/froala_style.min.css" rel="stylesheet" type="text/css" />
+  <!-- ngtags -->
+  <link rel="stylesheet" href="path/to/ng-tags-input.min.css">     
+<link rel="stylesheet" href="path/to/ng-tags-input.bootstrap.min.css">
   
+  
+
+
+    <!-- These few CSS files are just to make this example page look nice. You can ignore them. -->
+    <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.9.0/build/reset-fonts/reset-fonts.css">
+    <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.9.0/build/base/base-min.css">
+    <link href="http://fonts.googleapis.com/css?family=Brawler" rel="stylesheet" type="text/css">
+    <link href="<?=base_url()?>assets/custom-select/_static/master.css" rel="stylesheet" type="text/css">
+    <link href="<?=base_url()?>assets/custom-select/_static/subpage.css" rel="stylesheet" type="text/css">
+    <link href="<?=base_url()?>assets/custom-select/_static/examples.css" rel="stylesheet" type="text/css">
+    <!-- /ignore -->
+
+
+    <!-- INSTRUCTIONS -->
+
+    <!-- 2 CSS files are required: -->
+    <!--   * Tag-it's base CSS (jquery.tagit.css). -->
+    <!--   * Any theme CSS (either a jQuery UI theme such as "flick", or one that's bundled with Tag-it, e.g. tagit.ui-zendesk.css as in this example.) -->
+    <!-- The base CSS and tagit.ui-zendesk.css theme are scoped to the Tag-it widget, so they shouldn't affect anything else in your site, unlike with jQuery UI themes. -->
+    <link href="<?=base_url()?>assets/custom-select/css/jquery.tagit.css" rel="stylesheet" type="text/css">
+    <link href="<?=base_url()?>assets/custom-select/css/tagit.ui-zendesk.css" rel="stylesheet" type="text/css">
+    <!-- If you want the jQuery UI "flick" theme, you can use this instead, but it's not scoped to just Tag-it like tagit.ui-zendesk is: -->
+    <!--   <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1/themes/flick/jquery-ui.css"> -->
+
+    <!-- jQuery and jQuery UI are required dependencies. -->
+    <!-- Although we use jQuery 1.4 here, it's tested with the latest too (1.8.3 as of writing this.) -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js" type="text/javascript" charset="utf-8"></script>
+
+    <!-- The real deal -->
+    <script src="<?=base_url()?>assets/custom-select/js/tag-it.js" type="text/javascript" charset="utf-8"></script>
 
 </head>
 <body class="hold-transition skin-red sidebar-mini">
@@ -155,7 +189,7 @@
                  $i=0;
                  $judul="";
                  $subtitle="";
-                 $abstract="";
+                 $abstract2="";
                  $uploader_user_id="";
                  $pesan="";
                 foreach($userFiles as $u){
@@ -163,9 +197,10 @@
                   $judulOJS="$u[judul]";
                   $subtitle="$u[subtitle]";
                   $abstract="$u[abstract]";
+                  $abstract2="$u[abstract2]";
                   $uploader_user_id="$u[uploader_user_id]";
-                  $abstract=str_replace('<p>', '', $abstract);
-                  $abstract=str_replace('</p>', '', $abstract);
+                  // $abstract=str_replace('<p>', '', $abstract);
+                  // $abstract=str_replace('</p>', '', $abstract);
                 ?>
                 <tr data-id="<?php echo "$u[uploader_user_id] "; ?>" >
 				<td ><?php echo $i; ?></td>
@@ -326,27 +361,42 @@
 <form action="<?php echo base_url(); ?>#" method="post" enctype="multipart/form-data">
 	<div class="box-body">
 		<div class="form-group">
-			<label>Judul</label>
+			<h4>Judul Inggris</h4>
 			<input type="text" class="form-control" id="judul" value="<?php  echo $judulOJS; ?>" name="judul" placeholder="Masukkan Judul">
 		</div>
 		<div class="form-group">
-			<label>Subtitle</label>
+			<h4>Judul Indonesia</h4>
 			<input type="text" class="form-control" id="subtitle" value="<?php echo $subtitle;  ?>" name="subtitle" placeholder="Masukkan Subtitle">
 		</div>
 		<div class="form-group">
-    <label>Abstract</label>
+    <h4>Abstract Inggris</h4>
     <textarea id="editor2" class="form-control" name="editor2" rows="10" ><?php echo $abstract;?></textarea>
+    </div>
+    <div class="form-group">
+    <h4>Abstract Indonesia</h4>
+    <textarea id="editor3" class="form-control" name="editor3" rows="10" ><?php echo $abstract2;?></textarea>
 		</div>
     <div class="form-group">
-			<label>Keyword</label>
+			<h4>Keyword inggris</h4>
       <?php 
       $hasilKeyword="";
       foreach($keyword as $k){
         $hasilKeyword="$k[setting_value]";}   ?>
-			<input type="text" class="form-control" id="keyword" value="<?php echo $hasilKeyword;  ?>" name="keyword" placeholder="Masukkan keyword">
+			<!--<input type="text" class="form-control" id="keyword" value="<?php echo $hasilKeyword;  ?>" name="keyword" placeholder="Masukkan keyword">-->
+      <input name="keyword" id="keyword" value="<?php echo $hasilKeyword;  ?>" disabled="true" hidden>
+            <ul id="keywordTags"></ul>
 		</div>
-    <div class="form-group">
-    <label>Penulis</label>
+    
+        <div class="form-group">
+        <h4>Keyword Indonesia</h4>
+       
+        </div>
+        <div class="form-group">
+            <input name="namaVaribel" id="mySingleField" value="<?php echo $hasilKeyword;  ?>" disabled="true" hidden>
+            <ul id="singleFieldTags"></ul>
+        </div>
+        <div class="form-group">
+    <h4>Penulis</h4>
     <table id="example" class="table table-bordered table-striped">
                 <thead>
                 
@@ -401,27 +451,27 @@
       <div class="modal-body">
       <div class="row">
       <div class="form-group col-xs-3">
-			<label>First Name</label>
+			<h4>First Name</h4>
 			<input type="text" class="form-control" id="first_name" value="" name="first_name">
 		</div>
     <div class="form-group col-xs-3">
-			<label>Middle Name</label>
+			<h4>Middle Name</h4>
 			<input type="text" class="form-control" id="middle_name" value="" name="middle_name">
 		</div>
     <div class="form-group col-xs-3">
-			<label>Last Name</label>
+			<h4>Last Name</h4>
 			<input type="text" class="form-control" id="last_name" value="" name="last_name">
 		</div>
     </div>
     <div class="row">
       <div class="form-group col-xs-6">
-			<label>Email</label>
+			<h4>Email</h4>
 			<input type="text" class="form-control" id="email" value="" name="email">
 		</div>
     </div>
     <div class="row">
       <div class="form-group col-xs-6">
-			<label>Affiliation</label>
+			<h4>Affiliation</h4>
 			<input type="text" class="form-control" id="affiliation" value="Universitas Brawijaya" name="affiliation">
 		</div>
     </div>
@@ -443,7 +493,7 @@
       </div>
       <div class="modal-body">
       <div class="form-group">
-    <label>Isi catatan</label>
+    <h4>Isi catatan</h4>
     <input type="hidden" id="submission_id" value="<?php echo "$submission_id"; ?>">
     <textarea id="catatan" class="form-control note" name="catatan" rows="10" data-id="<?php echo $uploader_user_id;?>">
     <?php echo $pesan;?>
@@ -469,20 +519,20 @@
       <div class="box-body">
       <div class="form-group">
                   <div class="radio">
-                    <label>
+                    <h4>
                       <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
                       Mengirim Email ke mahasiswa
-                    </label>
+                    </h4>
                   </div>
                   <div class="radio">
-                    <label>
+                    <h4>
                       <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
                       Mengirim Email ke mahasiswa dan dosen pembimbing
-                    </label>
+                    </h4>
                   </div>
                 </div>
     <div class="form-group">
-    <label>Isi pesan email</label>
+    <h4>Isi pesan email</h4>
     <input type="hidden" id="submission_id">
     <textarea id="pesan" class="form-control" name="pesan" rows="10" >
     isi pesan<br>
@@ -733,7 +783,7 @@
 <!-- ./wrapper -->
 
 <!-- jQuery 3 -->
-<script src="<?php echo base_url(); ?>/assets/bower_components/jquery/dist/jquery.min.js"></script>
+<!-- <script src="<?php echo base_url(); ?>/assets/bower_components/jquery/dist/jquery.min.js"></script> -->
 <!-- Bootstrap 3.3.7 -->
 <script src="<?php echo base_url(); ?>/assets/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 <!-- DataTables -->
@@ -756,8 +806,29 @@
 <script src="<?php echo base_url(); ?>/assets/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
 <!-- Include Editor JS files. -->
 <script type="text/javascript" src="<?php echo base_url(); ?>/assets/froala/js/froala_editor.pkgd.min.js"></script>
+
+
 <script> $(function() { $('textarea').froalaEditor() }); </script>
 <script>
+        $(function(){
+            var sampleTags = ['inisialisasi variabel contohnya'];
+            $('#myTags').tagit();
+            $('#singleFieldTags').tagit({
+                availableTags: sampleTags,
+                // This will make Tag-it submit a single form value, as a comma-delimited field.
+                singleField: true,
+                singleFieldNode: $('#mySingleField')
+            });
+            $('#keywordTags').tagit({
+                availableTags: sampleTags,
+                // This will make Tag-it submit a single form value, as a comma-delimited field.
+                singleField: true,
+                singleFieldNode: $('#keyword')
+            });
+        });
+    </script>
+<script>
+
 $('#myModal').on('shown.bs.modal', function () {
   $('#myInput').focus()
 })
@@ -927,11 +998,12 @@ $(document).on("click",".abstract",function(){
 	var judul=$('#judul').prop('value');
   var subtitle=$('#subtitle').prop('value');
   var abstract=$('textarea#editor2').val();
+  var abstract2=$('textarea#editor3').val();
   var keyword=$('#keyword').prop('value');
   console.log(keyword);
 	$.ajax({
 			url:"<?php echo base_url('c_submission/metadata'); ?>",
-			data:{id:id,judul:judul,subtitle:subtitle,abstract:abstract,keyword:keyword},
+			data:{id:id,judul:judul,subtitle:subtitle,abstract:abstract,abstract2:abstract2,keyword:keyword},
 			success: function(){
         alert("data berhasil di update");
 			}

@@ -28,8 +28,32 @@ class c_submission extends CI_Controller {
 			foreach($mahasiswa as $b){
 			$profile[$i]['statusSkripsi']=$b['status'];
 			}
+			$onProgress=0;
 			foreach($note as $b){
 				$profile[$i]['catatan']=$b['catatan'];
+				if($b['ArticleText']==1){
+					$onProgress++;
+				}
+				if($b['PerjanjianHakCipta']==1){
+					$onProgress++;
+				}
+				if($b['EtikaPublikasi']==1){
+					$onProgress++;
+				}
+				if($b['CekPlagiasidenganTurnitin']==1){
+					$onProgress++;
+				}
+				if($b['FormSC2_17']==1){
+					$onProgress++;
+				}
+				if($b['FormSC2_12']==1){
+					$onProgress++;
+				}
+				if($onProgress==0){
+					$profile[$i]['onProgress']=0;
+				}else{
+					$profile[$i]['onProgress']=1;
+				}
 				}
 		$i++;
 	 	}
@@ -331,6 +355,7 @@ class c_submission extends CI_Controller {
 		$judul= $this->input->post("judul");
 		$subtitle= $this->input->post("subtitle");
 		$abstract= $this->input->post("abstract");
+		$abstract2= $this->input->post("abstract2");
 		$keyword= $this->input->post("keyword");
 		//print_r($date);
 		$data = array(
@@ -338,6 +363,7 @@ class c_submission extends CI_Controller {
 			'judul' => $judul,//editor id
 			'subtitle' => $subtitle,
 			'abstract' => $abstract,
+			'abstract2' => $abstract2  ,
 			'keyword' => $keyword
 			);	
 			

@@ -122,7 +122,10 @@
 				<td ><?php echo $i; ?></td>
                   <td><?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?></td>
                   <td>
-                  <?php if("$u[stage_id]"==3){
+                  <?php if("$u[onProgress]"==1){
+                  ?>
+                  <span class="label label-info">On Progress</span>
+                  <?php  }else if("$u[stage_id]"==3){
                   ?>
                   <span class="label label-info">Verified</span>
                   <?php  }else{
@@ -135,10 +138,10 @@
                   </td>
                   <td><div class="btn-group">
                   
-                  <a href="<?php echo base_url(); ?>c_submission/lihatBerkas/<?php echo "$u[user_id]" ?>" type="button" class="btn btn-info btn-flat"><i class="fa fa-info"></i></a>
+                  <a href="<?php echo base_url(); ?>c_submission/lihatBerkas/<?php echo "$u[user_id]" ?>" type="button" class="btn btn-info btn-flat"><i data-toggle="tooltip" data-placement="top" data-original-title="Detail Berkas" class="fa fa-info"></i></a>
                       <a data-toggle="modal" data-target="#myModal" class="btn btn-success btn-flat cek"
-					  data-id="<?php echo "$u[user_id]" ?>" data-submission="<?php echo "$u[submission_id]" ?>" ><i class="fa fa-check"  ></i></a>
-					  <a data-toggle="modal" data-target="#myModal2" data-id="<?php echo "$u[user_id]" ?>"  data-catatan="<?php echo "$u[catatan]" ?>" class="btn btn-warning btn-flat cekSubmission"><i class="fa fa-send"></i></a>
+					  data-id="<?php echo "$u[user_id]" ?>" data-submission="<?php echo "$u[submission_id]" ?>" ><i data-toggle="tooltip" data-placement="top" data-original-title="Publikasi" class="fa fa-check"  ></i></a>
+					  <a data-toggle="modal" data-target="#myModal2" data-id="<?php echo "$u[user_id]" ?>"  data-catatan="<?php echo "$u[catatan]" ?>" class="btn btn-warning btn-flat cekSubmission"><i data-toggle="tooltip" data-placement="top" data-original-title="Tolak" class="fa fa-send"></i></a>
                     </div></td>
                 </tr>
                 <?php
