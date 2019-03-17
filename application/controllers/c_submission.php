@@ -180,14 +180,17 @@ class c_submission extends CI_Controller {
 		$userFiles = $this->http_request("http://localhost/serviceOJS/api/userFiles/".$userId);
 		$metadata = $this->http_request("http://localhost/serviceOJS/api/metadata/".$userId);
 		$keyword = $this->http_request("http://localhost/serviceOJS/api/keyword/".$userId);
+		$keywordInd = $this->http_request("http://localhost/serviceOJS/api/keywordInd/".$userId);
 		// ubah string JSON menjadi array
 		$userFiles = json_decode($userFiles, TRUE);
 		$metadata = json_decode($metadata, TRUE);
 		$keyword = json_decode($keyword, TRUE);
+		$keywordInd = json_decode($keywordInd, TRUE);
 
 		$data['userFiles']=$userFiles;
 		$data['user']=$metadata;
 		$data['keyword']=$keyword;
+		$data['keywordInd']=$keywordInd;
 		$data['userApp']=$this->m_mahasiswa->getDataAuthor($userId)->result_array();
 		$data['tahapSkripsi']=$this->m_mahasiswa->getTahapSkripsi($userId)->result_array();
 		 foreach($userFiles as $a){
@@ -212,9 +215,17 @@ class c_submission extends CI_Controller {
 		$hasil="";
 		$hasil.= "<tr data-id='$submission_id'>";
 		$hasil.="<td > $i</td>";
-		$hasil.="<td>".$u['first_name'].$u['middle_name'].$u['last_name']."</td>";
-		$hasil.="<td>".$u['email']."</td></tr>";
+		$hasil.="<td>".$u['first_name']." ".$u['middle_name']." ".$u['last_name']."</td>";
+		$hasil.="<td>".$u['email']."</td>";
+		$hasil.='<td>
+		<a data-author_id="'.$u['author_id'].'" data-first_name="'.$u['first_name'].'" data-middle_name="'.$u['middle_name'].'"
+		data-last_name="'.$u['last_name'].'" data-email="'.$u['email'].'" data-toggle="modal" data-target="#myModalEdit" type="button" 
+		class="btn btn-info btn-flat cekEdit"><i data-toggle="tooltip" data-placement="top" data-original-title="Edit" class="fa fa-edit"></i></a>
+		<a data-toggle="modal" data-target="#myModal" class="btn btn-danger btn-flat cek"><i data-toggle="tooltip" data-placement="top" data-original-title="Hapus" class="fa fa-close"  ></i></a>
+                  </td>
+                </tr>';
 		echo $hasil;
+
 		}
 	}else{
 		echo $userId;
@@ -243,6 +254,24 @@ class c_submission extends CI_Controller {
 		// $data['path']=$path['alamat'];
 		// print_r($path);
 		// $this->load->view('v_tampilBerkas',$data);
+	}
+	public function alamatBerkasPubOJS(){
+		$fileId = $this->input->post("fileId");
+		$path = $this->http_request("http://localhost/serviceOJS/api/lihatFilesAsliPub/".$fileId);
+		
+		// ubah string JSON menjadi array
+		$path = json_decode($path, TRUE);
+		
+		echo $path['alamat'];
+	}
+	public function alamatBerkasArsipOJS(){
+		$fileId = $this->input->post("fileId");
+		$path = $this->http_request("http://localhost/serviceOJS/api/lihatFilesAsliArsip/".$fileId);
+		
+		// ubah string JSON menjadi array
+		$path = json_decode($path, TRUE);
+		
+		echo $path['alamat'];
 	}
 	public function alamatBerkasApp(){
 		$namaBerkas = $this->input->post("fileId");
@@ -357,6 +386,7 @@ class c_submission extends CI_Controller {
 		$abstract= $this->input->post("abstract");
 		$abstract2= $this->input->post("abstract2");
 		$keyword= $this->input->post("keyword");
+		$keywordInd= $this->input->post("keywordInd");
 		//print_r($date);
 		$data = array(
 			'submission_id' => $submission_id,
@@ -364,7 +394,8 @@ class c_submission extends CI_Controller {
 			'subtitle' => $subtitle,
 			'abstract' => $abstract,
 			'abstract2' => $abstract2  ,
-			'keyword' => $keyword
+			'keyword' => $keyword,
+			'keywordInd' => $keywordInd
 			);	
 			
 		$userFiles = $this->http_request_post("http://localhost/serviceOJS/api/setMetadata",$data);
@@ -414,6 +445,27 @@ class c_submission extends CI_Controller {
 		echo(json_decode($userFiles, TRUE));
 		echo "{}";
 	}
+	public function editPenulis(){
+		$author_id= $this->input->post("author_id");
+		$first_name= $this->input->post("first_name");
+		$middle_name= $this->input->post("middle_name");
+		$last_name= $this->input->post("last_name");
+		$email= $this->input->post("email");
+		$affiliation= $this->input->post("affiliation");
+		//print_r($date);
+		$data = array(
+			'author_id' => $author_id,
+			'first_name' => $first_name,
+			'middle_name' => $middle_name,
+			'last_name' => $last_name,
+			'affiliation' => $affiliation,
+			'email' => $email
+			);	
+			
+		$userFiles = $this->http_request_post("http://localhost/serviceOJS/api/editPenulis",$data);
+		echo(json_decode($userFiles, TRUE));
+		echo "{}";
+	}
 	public function lihatPublication(){
 		$profile = $this->http_request("http://localhost/serviceOJS/api/publication");
 		
@@ -439,12 +491,40 @@ class c_submission extends CI_Controller {
 	public function lihatBerkasPublication($userId){
 		$userFiles = $this->http_request("http://localhost/serviceOJS/api/userFiles/".$userId);
 		$metadata = $this->http_request("http://localhost/serviceOJS/api/metadata/".$userId);
+		$keyword = $this->http_request("http://localhost/serviceOJS/api/keyword/".$userId);
+		$keywordInd = $this->http_request("http://localhost/serviceOJS/api/keywordInd/".$userId);
+		$userFilesPub = $this->http_request("http://localhost/serviceOJS/api/userFilesPub/".$userId);
+		$userFilesArsip = $this->http_request("http://localhost/serviceOJS/api/userFilesArsip/".$userId);
 		// ubah string JSON menjadi array
 		$userFiles = json_decode($userFiles, TRUE);
 		$metadata = json_decode($metadata, TRUE);
+		$keyword = json_decode($keyword, TRUE);
+		$keywordInd = json_decode($keywordInd, TRUE);
+		$userFilesPub = json_decode($userFilesPub, TRUE);
+		$userFilesArsip = json_decode($userFilesArsip, TRUE);
+
 		$data['userFiles']=$userFiles;
+		$data['userFilesPub']=$userFilesPub;
+		$data['userFilesArsip']=$userFilesArsip;
 		$data['user']=$metadata;
+		$data['keyword']=$keyword;
+		$data['keywordInd']=$keywordInd;
 		$data['userApp']=$this->m_mahasiswa->getDataAuthor($userId)->result_array();
+		$data['tahapSkripsi']=$this->m_mahasiswa->getTahapSkripsi($userId)->result_array();
+		 foreach($userFiles as $a){
+				
+		 }$mahasiswa_id= $a['uploader_user_id'];
+		//print_r($mahasiswa_id);
+		$data['berkasApp']=$this->m_mahasiswa->getDataMahasiswa($mahasiswa_id)->result_array();
+
+		// $userFiles = $this->http_request("http://localhost/serviceOJS/api/userFiles/".$userId);
+		// $metadata = $this->http_request("http://localhost/serviceOJS/api/metadata/".$userId);
+		// // ubah string JSON menjadi array
+		// $userFiles = json_decode($userFiles, TRUE);
+		// $metadata = json_decode($metadata, TRUE);
+		// $data['userFiles']=$userFiles;
+		// $data['user']=$metadata;
+		// $data['userApp']=$this->m_mahasiswa->getDataAuthor($userId)->result_array();
 		
 		$this->load->view('v_berkasPublication',$data);
 	}

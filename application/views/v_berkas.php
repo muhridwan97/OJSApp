@@ -386,14 +386,15 @@
       <input name="keyword" id="keyword" value="<?php echo $hasilKeyword;  ?>" disabled="true" hidden>
             <ul id="keywordTags"></ul>
 		</div>
-    
+  
         <div class="form-group">
         <h4>Keyword Indonesia</h4>
-       
-        </div>
-        <div class="form-group">
-            <input name="namaVaribel" id="mySingleField" value="<?php echo $hasilKeyword;  ?>" disabled="true" hidden>
-            <ul id="singleFieldTags"></ul>
+        <?php 
+        $hasilKeywordInd="";
+        foreach($keywordInd as $k){
+          $hasilKeywordInd="$k[setting_value]";}   ?>
+            <input name="keywordInd" id="keywordInd" value="<?php echo $hasilKeywordInd;  ?>" disabled="true" hidden>
+            <ul id="keywordIndTags"></ul>
         </div>
         <div class="form-group">
     <h4>Penulis</h4>
@@ -404,10 +405,11 @@
                   <th>No</th>
                   <th>Nama</th>
                   <th>E-mail</th>
+                  <th>Action</th>
                 </tr>
                 
                 </thead>
-                <tbody id="penulis">
+                <tbody class="penulis">
                 <?php
                  $i=0;
                  $submission_id=0;
@@ -419,7 +421,13 @@
 				<td ><?php echo $i; ?></td>
                   <td><?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?></td>
                   <td><?php echo "$u[email]"; ?></td>
-                  
+                  <td>
+                  <a data-author_id="<?php echo "$u[author_id]"; ?>" data-first_name="<?php echo "$u[first_name]"; ?>" data-middle_name="<?php echo "$u[middle_name]"; ?>" 
+                  data-last_name="<?php echo "$u[last_name]"; ?>" data-email="<?php echo "$u[email]"; ?>" data-toggle="modal" data-target="#myModalEdit" type="button" 
+                  class="btn btn-info btn-flat cekEdit"><i data-toggle="tooltip" data-placement="top" data-original-title="Edit" class="fa fa-edit"></i></a>
+                  <a data-toggle="modal" data-target="#myModal" class="btn btn-danger btn-flat cek"
+					        data-id="" data-submission="" ><i data-toggle="tooltip" data-placement="top" data-original-title="Hapus" class="fa fa-close"  ></i></a>
+                  </td>
                 </tr>
                 <?php
                 }
@@ -472,7 +480,7 @@
     <div class="row">
       <div class="form-group col-xs-6">
 			<h4>Affiliation</h4>
-			<input type="text" class="form-control" id="affiliation" value="Universitas Brawijaya" name="affiliation">
+			<input type="text" class="form-control" id="affiliation" value="Fakultas Ilmu Komputer Universitas Brawijaya" name="affiliation">
 		</div>
     </div>
       </div>
@@ -754,6 +762,59 @@
   </div>
 </div>
 
+  
+
+<div class="modalDinamis">
+<?php $i=0; foreach($user as $u){ $i++; ?>
+
+<!-- /.modal6 -->
+<div class="modal fade" id="myModalEdit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+      <input type="text" id="author_id" value="" name="author_id" hidden>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Edit Penulis <?=$i?></h4>
+      </div>
+      <div class="modal-body">
+      <div class="row">
+      <div class="form-group col-xs-3">
+			<h4>First Name</h4>
+			<input type="text" class="form-control" id="first_nameEdit" value="" name="first_nameEdit">
+		</div>
+    <div class="form-group col-xs-3">
+			<h4>Middle Name</h4>
+			<input type="text" class="form-control" id="middle_nameEdit" value="" name="middle_nameEdit">
+		</div>
+    <div class="form-group col-xs-3">
+			<h4>Last Name</h4>
+			<input type="text" class="form-control" id="last_nameEdit" value="" name="last_nameEdit">
+		</div>
+    </div>
+    <div class="row">
+      <div class="form-group col-xs-6">
+			<h4>Email</h4>
+			<input type="text" class="form-control" id="emailEdit" value="" name="emailEdit">
+		</div>
+    </div>
+    <div class="row">
+      <div class="form-group col-xs-6">
+			<h4>Affiliation</h4>
+			<input type="text" class="form-control" id="affiliationEdit" value="Fakultas Ilmu Komputer Universitas Brawijaya" name="affiliationEdit">
+		</div>
+    </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+        <button type="button" class="btn btn-primary editPenulis"data-dismiss="modal">Simpan</button>
+      </div>
+    </div>
+  </div>
+</div>
+<?php } ?>
+
+</div>
+
 <div id="container-floating">
   <div class="nd3 nds" data-toggle="tooltip" data-placement="left" data-original-title="Info Mahasiswa" onclick="info()">
   <img class="edit" src="<?php echo base_url(); ?>/assets/images/avatar2.png">
@@ -825,10 +886,29 @@
                 singleField: true,
                 singleFieldNode: $('#keyword')
             });
+            $('#keywordIndTags').tagit({
+                availableTags: sampleTags,
+                // This will make Tag-it submit a single form value, as a comma-delimited field.
+                singleField: true,
+                singleFieldNode: $('#keywordInd')
+            });
         });
     </script>
 <script>
-
+$('.cekEdit').on('click', function () {
+  var first_name=$(this).data('first_name');
+  var middle_name=$(this).data('middle_name');
+  var last_name=$(this).data('last_name');
+  var email=$(this).data('email');
+  var author_id=$(this).data('author_id');
+  alert(author_id);
+  console.log(first_name); 
+  $('#first_nameEdit').val(first_name);
+  $('#middle_nameEdit').val(middle_name);
+  $('#last_nameEdit').val(last_name);
+  $('#emailEdit').val(email);
+  $('#author_id').val(author_id);
+});
 $('#myModal').on('shown.bs.modal', function () {
   $('#myInput').focus()
 })
@@ -863,7 +943,7 @@ function info() {
 				// });
 			},
         error: function() {
-     alert("submission gagal di publikasi");
+     alert("gagal ");
       }
 		 });
 });
@@ -1000,10 +1080,11 @@ $(document).on("click",".abstract",function(){
   var abstract=$('textarea#editor2').val();
   var abstract2=$('textarea#editor3').val();
   var keyword=$('#keyword').prop('value');
+  var keywordInd=$('#keywordInd').prop('value');
   console.log(keyword);
 	$.ajax({
 			url:"<?php echo base_url('c_submission/metadata'); ?>",
-			data:{id:id,judul:judul,subtitle:subtitle,abstract:abstract,abstract2:abstract2,keyword:keyword},
+			data:{id:id,judul:judul,subtitle:subtitle,abstract:abstract,abstract2:abstract2,keyword:keyword,keywordInd:keywordInd},
 			success: function(){
         alert("data berhasil di update");
 			}
@@ -1044,7 +1125,41 @@ $(document).on("click",".tambahPenulis",function(){
 			}
 		 });
 });
-
+$(document).on("click",".editPenulis",function(){
+  var author_id=$('#author_id').prop('value');
+	var first_name=$('#first_nameEdit').prop('value');
+  var middle_name=$('#middle_nameEdit').prop('value');
+  var last_name=$('#last_nameEdit').prop('value');
+  var email=$('#emailEdit').prop('value');
+  var affiliation=$('#affiliationEdit').prop('value');
+  //console.log(id);
+	$.ajax({
+			url:"<?php echo base_url('c_submission/editPenulis'); ?>",
+      data:{author_id:author_id,first_name:first_name,
+        middle_name:middle_name,
+        last_name:last_name,
+        email:email,
+        affiliation:affiliation},
+			success: function(){
+        var userId=$('#uploader_user_id').val();
+        console.log(userId);
+        $.ajax({
+        url:"<?php echo base_url('c_submission/reloadPenulis'); ?>",
+        data:{userId:userId},
+        type: "POST",
+        dataType : "html",
+        success: function(response){
+          console.log(response);
+        $(".penulis").html(response);
+        },
+        error: function() {
+     alert("gagal reload");
+      }
+        })
+        alert("data berhasil di update");
+			}
+		 });
+});
 
 
 //Flat red color scheme for iCheck

@@ -352,7 +352,7 @@ $('.cekSubmission').on('click', function () {
   var catatan=$(this).data('catatan');
   //alert(catatan); 
   $('#submission_id').val(id);//aslinya ini masih userid
-  $("textarea#pesan").froalaEditor('html.set', 'isi pesan<br>'+catatan+'<br>Kind Regards,<br>Muhammad Ridwan');
+  $("textarea#pesan").froalaEditor('html.set', ''+catatan+'<br>Kind Regards,<br>Muhammad Ridwan');
 });
 
 $('#myModal').on('shown.bs.modal', function () {
