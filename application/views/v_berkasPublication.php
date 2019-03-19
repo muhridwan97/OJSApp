@@ -177,9 +177,10 @@
                   $i++;
                 ?>
                 <tr data-id="<?php echo "$u[uploader_user_id] "; ?>" >
-				<td ><?php echo $i; ?></td>
-                  <td><a data-id="<?php echo "$u[file_id]" ?>" class="lihatBerkas" target="_blank" ><?php echo "$u[nama_file] "; ?></a></td>
-                  <td><?php echo "Galley"; ?>
+        <td ><?php echo $i; ?><input type="hidden" id="uploader_user_id" value="<?php echo "$u[uploader_user_id]"; ?>"></td>
+        
+                  <td><a data-id="<?php echo "$u[file_id]" ?>" class="lihatBerkasArsip" target="_blank" ><?php echo "$u[nama_file] "; ?></a></td>
+                  <td><?php echo "Arsip"; ?>
                   </td>
                   
                 </tr>
@@ -256,7 +257,7 @@
                 </tr>
                 
                 </thead>
-                <tbody id="penulis">
+                <tbody class="penulis">
                 <?php
                  $i=0;
                  $submission_id=0;
@@ -264,7 +265,7 @@
                   $i++;
                   $submission_id="$u[submission_id]";
                 ?>
-                <tr data-id="<?php echo "$u[seq]"; ?>" >
+                <tr class ="author<?php echo "$u[author_id]";?>" data-id="<?php echo "$u[seq]"; ?>" >
 				<td ><?php echo $i; ?></td>
                   <td><?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?></td>
                   <td><?php echo "$u[email]"; ?></td>
@@ -338,6 +339,9 @@
     </div>
   </div>
 </div>
+<div class="modalDinamis">
+<?php $i=0; foreach($user as $u){ $i++; ?>
+
 <!-- /.modal6 -->
 <div class="modal fade" id="myModalEdit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog modal-lg" role="document">
@@ -345,7 +349,7 @@
       <div class="modal-header">
       <input type="text" id="author_id" value="" name="author_id" hidden>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Edit Penulis</h4>
+        <h4 class="modal-title" id="myModalLabel">Edit Penulis <?=$i?></h4>
       </div>
       <div class="modal-body">
       <div class="row">
@@ -381,6 +385,9 @@
       </div>
     </div>
   </div>
+</div>
+<?php } ?>
+
 </div>
 		
 		
@@ -475,6 +482,22 @@ $('#myModal').on('shown.bs.modal', function () {
       }
 		 });
 });
+$(document).on("click",".lihatBerkasArsip",function(){
+	var fileId=$(this).attr("data-id");
+  //alert(fileId);
+	$.ajax({
+			url:"<?php echo base_url('c_submission/alamatBerkasArsipOJS'); ?>",
+			data:{fileId:fileId},
+      dataType:"html",
+			success: function(response){
+        console.log(response);
+        $('#iframeOJS').attr('src', response)
+			},
+        error: function() {
+     alert("gagal");
+      }
+		 });
+});
     $(document).on("click",".abstract",function(){
 	var id=$(this).attr("data-id");
 	var judul=$('#judul').prop('value');
@@ -527,6 +550,20 @@ $(document).on("click",".tambahPenulis",function(){
 			}
 		 });
 });
+$('.cekEdit').on('click', function () {
+  var first_name=$(this).data('first_name');
+  var middle_name=$(this).data('middle_name');
+  var last_name=$(this).data('last_name');
+  var email=$(this).data('email');
+  var author_id=$(this).data('author_id');
+  // alert(author_id);
+  console.log(first_name); 
+  $('#first_nameEdit').val(first_name);
+  $('#middle_nameEdit').val(middle_name);
+  $('#last_nameEdit').val(last_name);
+  $('#emailEdit').val(email);
+  $('#author_id').val(author_id);
+});
 $(document).on("click",".editPenulis",function(){
   var author_id=$('#author_id').prop('value');
 	var first_name=$('#first_nameEdit').prop('value');
@@ -546,13 +583,13 @@ $(document).on("click",".editPenulis",function(){
         var userId=$('#uploader_user_id').val();
         console.log(userId);
         $.ajax({
-        url:"<?php echo base_url('c_submission/reloadPenulis'); ?>",
-        data:{userId:userId},
+        url:"<?php echo base_url('c_submission/reloadPenulisEdit'); ?>",
+        data:{userId:userId,author_id:author_id},
         type: "POST",
         dataType : "html",
         success: function(response){
           console.log(response);
-        $("#penulis").html(response);
+        $(".author"+author_id).html(response);
         },
         error: function() {
      alert("gagal reload");
@@ -562,6 +599,7 @@ $(document).on("click",".editPenulis",function(){
 			}
 		 });
 });
+
 
 
 //Flat red color scheme for iCheck

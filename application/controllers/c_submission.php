@@ -208,12 +208,50 @@ class c_submission extends CI_Controller {
 
 		$i=0;
 		$submission_id=0;
+		$author_id=0;
 		if( !empty($user) ) {
         foreach($user as $u){
             $i++;
 			$submission_id=$u['seq'];
-		$hasil="";
-		$hasil.= "<tr data-id='$submission_id'>";
+			$author_id=$u['author_id'];
+			// $hasil="";
+				
+		// $hasil.= "<tr class='author$author_id' data-id='$submission_id'>";
+		// $hasil.="<td > $i</td>";
+		// $hasil.="<td>".$u['first_name']." ".$u['middle_name']." ".$u['last_name']."</td>";
+		// $hasil.="<td>".$u['email']."</td>";
+		// $hasil.='<td>
+		// <a data-author_id="'.$u['author_id'].'" data-first_name="'.$u['first_name'].'" data-middle_name="'.$u['middle_name'].'"
+		// data-last_name="'.$u['last_name'].'" data-email="'.$u['email'].'" data-toggle="modal" data-target="#myModalEdit" type="button" 
+		// class="btn btn-info btn-flat cekEdit"><i data-toggle="tooltip" data-placement="top" data-original-title="Edit" class="fa fa-edit"></i></a>
+		// <a data-toggle="modal" data-target="#myModal" class="btn btn-danger btn-flat cek"><i data-toggle="tooltip" data-placement="top" data-original-title="Hapus" class="fa fa-close"  ></i></a>
+        //           </td>
+        //         </tr>';
+		
+		// echo $hasil;
+		
+		}echo $author_id;
+	}else{
+		echo $userId;
+	}
+	}
+
+	public function reloadPenulisEdit(){
+		$userId= $this->input->post("userId");
+		$author_id= $this->input->post("author_id");
+		$user = $this->http_request("http://localhost/serviceOJS/api/metadata/".$userId);
+		$user = json_decode($user, TRUE);
+
+		$i=0;
+		$submission_id=0;
+		if( !empty($user) ) {
+        foreach($user as $u){
+            $i++;
+			$submission_id=$u['seq'];
+			$hasil="";
+			if($u['author_id']==$author_id){
+				
+		//$hasil.= "<tr data-id='$submission_id'>";
 		$hasil.="<td > $i</td>";
 		$hasil.="<td>".$u['first_name']." ".$u['middle_name']." ".$u['last_name']."</td>";
 		$hasil.="<td>".$u['email']."</td>";
@@ -224,6 +262,8 @@ class c_submission extends CI_Controller {
 		<a data-toggle="modal" data-target="#myModal" class="btn btn-danger btn-flat cek"><i data-toggle="tooltip" data-placement="top" data-original-title="Hapus" class="fa fa-close"  ></i></a>
                   </td>
                 </tr>';
+			}
+		
 		echo $hasil;
 
 		}
@@ -463,6 +503,17 @@ class c_submission extends CI_Controller {
 			);	
 			
 		$userFiles = $this->http_request_post("http://localhost/serviceOJS/api/editPenulis",$data);
+		echo(json_decode($userFiles, TRUE));
+		echo "{}";
+	}
+	public function hapusPenulis(){
+		$author_id= $this->input->post("author_id");
+		//print_r($date);
+		$data = array(
+			'author_id' => $author_id,
+			);	
+			
+		$userFiles = $this->http_request_post("http://localhost/serviceOJS/api/hapusPenulis",$data);
 		echo(json_decode($userFiles, TRUE));
 		echo "{}";
 	}
