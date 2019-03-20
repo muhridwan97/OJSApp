@@ -30,12 +30,6 @@
   <!-- Include Editor style. -->
   <link href="<?php echo base_url(); ?>/assets/froala/css/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
     <link href="<?php echo base_url(); ?>/assets/froala/css/froala_style.min.css" rel="stylesheet" type="text/css" />
-  <!-- ngtags -->
-  <link rel="stylesheet" href="path/to/ng-tags-input.min.css">     
-<link rel="stylesheet" href="path/to/ng-tags-input.bootstrap.min.css">
-  
-  
-
 
     <!-- These few CSS files are just to make this example page look nice. You can ignore them. -->
     <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/2.9.0/build/reset-fonts/reset-fonts.css">
@@ -143,10 +137,13 @@
                   <th>No</th>
                   <th>Nama Berkas</th>
                   <th>Jenis Berkas</th>
+                  <th>Ubah Berkas</th>
                 </tr>
                 
                 </thead>
                 <tbody>
+                <input type="hidden" id="submission" value="<?php echo "$u[submission_id] "; ?>">
+                <input type="hidden" id="editor_id" value="<?php echo $this->session->userdata("user_id"); ?>">
                 <?php
                  $judul="";
                  $subtitle="";
@@ -169,7 +166,14 @@
                   <td><a data-id="<?php echo "$u[file_id]" ?>" class="lihatBerkas" target="_blank" ><?php echo "$u[nama_file] "; ?></a></td>
                   <td><?php echo "Galley"; ?>
                   </td>
+                  <td><div class="form-group">
+                  <form id="formGalley" method="post" enctype="multipart/form-data">
                   
+                    <input type="file" id="fileGalley" name="fileGalley">
+                    </form>
+                    <button style="margin-top:10px;" type="submit" id="submitGalley" class="btn btn-primary" >Ubah Berkas Galley</button>
+                  </div>
+                  </td>
                 </tr>
                 <?php
                 }
@@ -181,6 +185,16 @@
         
                   <td><a data-id="<?php echo "$u[file_id]" ?>" class="lihatBerkasArsip" target="_blank" ><?php echo "$u[nama_file] "; ?></a></td>
                   <td><?php echo "Arsip"; ?>
+                  </td>
+                  <td><div class="form-group">
+                  <form id="formArsip" method="post" enctype="multipart/form-data">
+                    <input type="file" id="fileArsip" name="fileArsip">
+                    <!-- <input type="hidden" name="submission_id" id="submission_id" value="<?php echo "$u[submission_id] "; ?>">
+                   <input type="hidden" name="editor_id" id="editor_id" value="<?php echo $this->session->userdata("user_id"); ?>"> -->
+                   
+                    </form>
+                    <button style="margin-top:10px;" type="submit" id="submitArsip" class="btn btn-primary" >Ubah Berkas Arsip</button>
+                  </div>
                   </td>
                   
                 </tr>
@@ -265,16 +279,19 @@
                   $i++;
                   $submission_id="$u[submission_id]";
                 ?>
-                <tr class ="author<?php echo "$u[author_id]";?>" data-id="<?php echo "$u[seq]"; ?>" >
-				<td ><?php echo $i; ?></td>
-                  <td><?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?></td>
-                  <td><?php echo "$u[email]"; ?></td>
+                <tr id="<?php echo "$u[author_id]"; ?>" >
+				        <td data-target="nomer"><?php echo $i; ?></td>
+                  <td data-target="name"><?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?></td>
+                  <td data-target="email"><?php echo "$u[email]"; ?></td>
+                  <td data-target="first_name" hidden><?php echo "$u[first_name]"; ?></td>
+                  <td data-target="middle_name" hidden><?php echo "$u[middle_name]"; ?></td>
+                  <td data-target="last_name" hidden><?php echo "$u[last_name]"; ?></td>
+                  <td data-target="author_id" hidden><?php echo "$u[author_id]"; ?></td>
                   <td>
-                  <a data-author_id="<?php echo "$u[author_id]"; ?>" data-first_name="<?php echo "$u[first_name]"; ?>" data-middle_name="<?php echo "$u[middle_name]"; ?>" 
-                  data-last_name="<?php echo "$u[last_name]"; ?>" data-email="<?php echo "$u[email]"; ?>" data-toggle="modal" data-target="#myModalEdit" type="button" 
+                  <a data-author_id="<?php echo "$u[author_id]"; ?>"  type="button" 
                   class="btn btn-info btn-flat cekEdit"><i data-toggle="tooltip" data-placement="top" data-original-title="Edit" class="fa fa-edit"></i></a>
-                  <a data-toggle="modal" data-target="#myModal" class="btn btn-danger btn-flat cek"
-					        data-id="" data-submission="" ><i data-toggle="tooltip" data-placement="top" data-original-title="Hapus" class="fa fa-close"  ></i></a>
+                  <a data-author_id="<?php echo "$u[author_id]"; ?>" class="btn btn-danger btn-flat hapus"
+					        ><i data-toggle="tooltip" data-placement="top" data-original-title="Hapus" class="fa fa-close"  ></i></a>
                   </td>
                 </tr>
                 <?php
@@ -334,7 +351,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
-        <button type="button" class="btn btn-primary tambahPenulis"data-dismiss="modal" data-id="<?php echo "$submission_id"; ?>">Simpan</button>
+        <button type="button" class="btn btn-primary tambahPenulis"data-dismiss="modal" data-nomer="<?php echo $i; ?>" data-id="<?php echo "$submission_id"; ?>">Simpan</button>
       </div>
     </div>
   </div>
@@ -515,6 +532,47 @@ $(document).on("click",".lihatBerkasArsip",function(){
 			}
 		 });
 });
+
+$('.cekEdit').on('click', function () {
+  var author_id=$(this).data('author_id');
+  var first_name=$('#'+author_id).children('td[data-target=first_name]').text();
+  var middle_name=$('#'+author_id).children('td[data-target=middle_name]').text();
+  var last_name=$('#'+author_id).children('td[data-target=last_name]').text();
+  var email=$('#'+author_id).children('td[data-target=email]').text();
+  
+  // alert(author_id);
+  console.log(author_id); 
+  $('#first_nameEdit').val(first_name);
+  $('#middle_nameEdit').val(middle_name);
+  $('#last_nameEdit').val(last_name);
+  $('#emailEdit').val(email);
+  $('#author_id').val(author_id);
+  $('#myModalEdit').modal('toggle');
+});
+$(document).on("click",".hapus",function(){
+	var author_id=$(this).data('author_id');
+  //console.log(keyword);
+  swal({
+		title: "Hapus penulis",
+		text:"",
+		type: "warning",
+		showCancelButton: true,
+		confirmButtonText: "Yakin",
+		closeOnConfirm: true,
+	},
+		function(){
+      console.log(author_id);
+		 $.ajax({
+			url:"<?php echo base_url('c_submission/hapusPenulis'); ?>",
+			data:{author_id:author_id},
+			success: function(){
+				$("tr[id='"+author_id+"']").fadeOut("fast",function(){
+					$(this).remove();
+				});
+			}
+		 });
+	});
+});
 $(document).on("click",".tambahPenulis",function(){
   var id=$(this).attr("data-id");
 	var first_name=$('#first_name').prop('value');
@@ -522,7 +580,9 @@ $(document).on("click",".tambahPenulis",function(){
   var last_name=$('#last_name').prop('value');
   var email=$('#email').prop('value');
   var affiliation=$('#affiliation').prop('value');
-  //console.log(id);
+  var nomer=$(this).data('nomer')+1;
+  // var nomer=$('#'+author_id).children('td[data-target=nomer]').text();
+  console.log();
 	$.ajax({
 			url:"<?php echo base_url('c_submission/tambahPenulis'); ?>",
       data:{id:id,first_name:first_name,
@@ -540,7 +600,23 @@ $(document).on("click",".tambahPenulis",function(){
         dataType : "html",
         success: function(response){
           console.log(response);
-        $("#penulis").html(response);
+          var ele="";
+          ele+="<tr data-id='"+response+"'>";
+          ele+="<td >"+nomer+"</td>";
+          ele+="<td>"+first_name+" "+middle_name+" "+last_name+"</td>";
+          ele+="<td>"+email+"</td>";
+          ele+="<td data-target='"+first_name+"' hidden>"+first_name+"</td>";
+          ele+="<td data-target='"+middle_name+"' hidden>"+middle_name+"</td>";
+          ele+="<td data-target='"+last_name+"' hidden>"+last_name+"</td>";
+          ele+="<td data-target='"+response+"' hidden>"+response+"</td>";
+          ele+="<td><a data-author_id='"+response+"' type='button' class='btn btn-info btn-flat cekEdit'><i data-toggle='tooltip' data-placement='top' data-original-title='Edit' class='fa fa-edit'></i></a><a data-author_id='"+response+"' class='btn btn-danger btn-flat cek'><i data-toggle='tooltip' data-placement='top' data-original-title='Hapus' class='fa fa-close'  ></i></a> </td></tr>";
+          
+          // var element=$(ele);
+          // element.hide();
+          // element.prependTo(".penulis").fadeIn(1500);
+          $(".penulis").append(ele);
+    
+        // $(".penulis").html(response);
         },
         error: function() {
      alert("gagal reload");
@@ -550,20 +626,6 @@ $(document).on("click",".tambahPenulis",function(){
 			}
 		 });
 });
-$('.cekEdit').on('click', function () {
-  var first_name=$(this).data('first_name');
-  var middle_name=$(this).data('middle_name');
-  var last_name=$(this).data('last_name');
-  var email=$(this).data('email');
-  var author_id=$(this).data('author_id');
-  // alert(author_id);
-  console.log(first_name); 
-  $('#first_nameEdit').val(first_name);
-  $('#middle_nameEdit').val(middle_name);
-  $('#last_nameEdit').val(last_name);
-  $('#emailEdit').val(email);
-  $('#author_id').val(author_id);
-});
 $(document).on("click",".editPenulis",function(){
   var author_id=$('#author_id').prop('value');
 	var first_name=$('#first_nameEdit').prop('value');
@@ -571,6 +633,7 @@ $(document).on("click",".editPenulis",function(){
   var last_name=$('#last_nameEdit').prop('value');
   var email=$('#emailEdit').prop('value');
   var affiliation=$('#affiliationEdit').prop('value');
+  var name=""+first_name+" "+middle_name+" "+last_name+"";
   //console.log(id);
 	$.ajax({
 			url:"<?php echo base_url('c_submission/editPenulis'); ?>",
@@ -582,24 +645,73 @@ $(document).on("click",".editPenulis",function(){
 			success: function(){
         var userId=$('#uploader_user_id').val();
         console.log(userId);
-        $.ajax({
-        url:"<?php echo base_url('c_submission/reloadPenulisEdit'); ?>",
-        data:{userId:userId,author_id:author_id},
-        type: "POST",
-        dataType : "html",
-        success: function(response){
-          console.log(response);
-        $(".author"+author_id).html(response);
-        },
-        error: function() {
-     alert("gagal reload");
-      }
-        })
+        $('#'+author_id).children('td[data-target=name]').text(name);
+          $('#'+author_id).children('td[data-target=email]').text(email);
+          $('#'+author_id).children('td[data-target=first_name]').text(first_name);
+          $('#'+author_id).children('td[data-target=middle_name]').text(middle_name);
+          $('#'+author_id).children('td[data-target=last_name]').text(last_name);
+          $('#'+author_id).children('td[data-target=email]').text(email);
+          // $('#myModalEdit').modal('toggle'); 
         alert("data berhasil di update");
 			}
 		 });
 });
+$(document).on("click","#submitGalley",function(){
+  var fileGalley = $('#fileGalley').prop('files')[0];
+  var submission_id=$('#submission').val();
+  var editor_id=$('#editor_id').val();
+  var form_data = new FormData();
+  form_data.append('fileGalley', fileGalley);
+  form_data.append('submission_id', submission_id);
+  form_data.append('editor_id', editor_id);
+  // console.log(submission_id);
+  // console.log(editor_id);
+  // console.log(form_data);
+  // console.log(fileGalley);
+	$.ajax({
+			url:"<?php echo base_url('c_submission/submitGalleyEdit'); ?>",
+      data:form_data,
+      type: "POST",
+      enctype: 'multipart/form-data',
+      processData: false,  // Important!
+      contentType: false,
+      cache: false,
+      dataType : "html",
+			success: function(response){
+        console.log(response);
+        alert("file berhasil diupload");
+      },
+      error: function() {
+     alert("gagal");
+      }
+		 });
+});
 
+$(document).on("click","#submitArsip",function(){
+   var fileArsip = $('#fileArsip').prop('files')[0];  
+  var submission_id=$('#submission').val();
+  var editor_id=$('#editor_id').val();
+  var form_data = new FormData();
+  form_data.append('fileArsip', fileArsip);
+  form_data.append('submission_id', submission_id);
+  form_data.append('editor_id', editor_id);
+  //  console.log(form_data);
+	$.ajax({
+			url:"<?php echo base_url('c_submission/submitArsipEdit'); ?>",
+      data:form_data,
+      type: "POST",
+      contentType: false,
+      processData: false,
+      dataType : "html",
+			success: function(response){
+        console.log(response);
+        alert("file berhasil diupload");
+      },
+      error: function() {
+     alert("gagal");
+      }
+		 });
+});
 
 
 //Flat red color scheme for iCheck
@@ -618,5 +730,25 @@ $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
     })
   })
 </script>
+<!-- <script>
+$(document).ready(function(e){
+    $("#formArsip").on('submit', function(e){
+        e.preventDefault();
+        console.log("sadas");
+        $.ajax({
+            type: 'POST',
+            url: "<?php echo base_url('c_submission/submitArsipEdit'); ?>",
+            data: new FormData(this),
+            contentType: false,
+            cache: false,
+            processData:false,
+            dataType : "html",
+            success: function(response){
+        console.log(response);}
+        });
+    });
+    
+});
+</script> -->
 </body>
 </html>

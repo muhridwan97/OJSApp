@@ -952,8 +952,8 @@ function info() {
       }
 		 });
 });
-$(document).on("click",".sendEmail",function(){
-	 var id=$('#submission_id').val();
+$(document).on("click",".sendEmail",function(){//menggunakan user_id ingat!!
+	 var id=$('#uploader_user_id').val();
 	var pesan=$('textarea#pesan').val();
   var option=0;
   if($('#optionsRadios1').is(":checked")){
@@ -1151,8 +1151,12 @@ $(document).on("click",".tambahPenulis",function(){
           ele+="<td >"+nomer+"</td>";
           ele+="<td>"+first_name+" "+middle_name+" "+last_name+"</td>";
           ele+="<td>"+email+"</td>";
-          ele+="<td><a data-author_id='"+response+"' type='button' class='btn btn-info btn-flat cekEdit'><i data-toggle='tooltip' data-placement='top' data-original-title='Edit' class='fa fa-edit'></i></a><a data-toggle='modal' data-target='#myModal' class='btn btn-danger btn-flat cek'><i data-toggle='tooltip' data-placement='top' data-original-title='Hapus' class='fa fa-close'  ></i></a> </td></tr>";
-
+          ele+="<td data-target='"+first_name+"' hidden>"+first_name+"</td>";
+          ele+="<td data-target='"+middle_name+"' hidden>"+middle_name+"</td>";
+          ele+="<td data-target='"+last_name+"' hidden>"+last_name+"</td>";
+          ele+="<td data-target='"+response+"' hidden>"+response+"</td>";
+          ele+="<td><a data-author_id='"+response+"' type='button' class='btn btn-info btn-flat cekEdit'><i data-toggle='tooltip' data-placement='top' data-original-title='Edit' class='fa fa-edit'></i></a><a data-author_id='"+response+"' class='btn btn-danger btn-flat cek'><i data-toggle='tooltip' data-placement='top' data-original-title='Hapus' class='fa fa-close'  ></i></a> </td></tr>";
+          
           // var element=$(ele);
           // element.hide();
           // element.prependTo(".penulis").fadeIn(1500);

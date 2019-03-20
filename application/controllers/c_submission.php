@@ -656,6 +656,53 @@ class c_submission extends CI_Controller {
 		//print_r($fileArsip);
 		echo "{}";
 	}
+	public function submitGalleyEdit(){
+		$fileGalley= realpath($_FILES["fileGalley"]["tmp_name"]);
+		$type = $_FILES['fileGalley']['type'];
+		$name = $_FILES['fileGalley']['name'];
+		$submission_id=$_POST['submission_id'];
+		$editor_id=$_POST['editor_id'];
+		$submission_id=(int)$submission_id;
+		$editor_id=(int)$editor_id;
+		 //print_r($fileGalley);
+		//return $fileArsip;	
+		$fields = [
+				'fileGalley' => new \CurlFile($fileGalley, $type, $name),
+				'submission_id' => $submission_id,
+				'name' => $name,
+				'type' => $type,
+				'editor_id' => $editor_id
+		];
+		$userFiles = $this->http_request_postFile("http://localhost/serviceOJS/api/uploadGalleyEdit",$fields);
+		//print_r ($type);
+		//print_r($fields);
+		echo "{}";
+	}
+	public function submitArsipEdit(){
+		//$fileArsip= $_FILES['fileArsip'];
+		$submission_id=$_POST['submission_id'];
+		$editor_id=$_POST['editor_id'];
+		$fileArsip= realpath($_FILES["fileArsip"]["tmp_name"]);
+		$type = $_FILES['fileArsip']['type'];
+		$name = $_FILES['fileArsip']['name'];
+		$submission_id=(int)$submission_id;
+		$editor_id=(int)$editor_id;
+		// $submission_id= $this->input->post("submission_id");
+		// $editor_id= $this->input->post("editor_id");
+		// print_r( $_FILES);
+		//return $fileArsip;
+		$fields = [
+				'fileArsip' => new \CurlFile($fileArsip, $type, $name),
+				'submission_id' => $submission_id,
+				'name' => $name,
+				'type' => $type,
+				'editor_id' => $editor_id
+		];
+		$userFiles = $this->http_request_postFile("http://localhost/serviceOJS/api/uploadArsipEdit",$fields);
+		//print_r ($type);
+		print_r($userFiles);
+		echo "{}";
+	}
 
 	public function send_email(){
 		$user_id= $this->input->post("id");
