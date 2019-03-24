@@ -122,13 +122,15 @@
 				<td ><?php echo $i; ?></td>
                   <td><?php echo "$u[first_name] $u[middle_name] $u[last_name]"; ?></td>
                   <td>
-                  <?php if("$u[onProgress]"==1){
+                  <?php if("$u[stage_id]"==3){
+                  ?>
+                  <span class="label label-success">Verified</span>
+                  <?php  }else if("$u[onProgress]"==1){
                   ?>
                   <span class="label label-info">On Progress</span>
-                  <?php  }else if("$u[stage_id]"==3){
-                  ?>
-                  <span class="label label-info">Verified</span>
-                  <?php  }else{
+                  <?php if("$u[statusSkripsi]"=="revisi"){
+                  ?><span class="label label-warning">Revisi</span>
+                  <?php  }}else{
                   ?>
                   <span class="label label-danger">Pending</span>
                   <?php if("$u[statusSkripsi]"=="revisi"){
@@ -167,7 +169,7 @@
 		<div class="form-group">
 			<label>Edisi</label>
 			<select name="" id="issue"class="form-control select" style="width: 100%;">
-      <option>------Future Issue------</option>
+      <option value="kosong">------Future Issue------</option>
       <?php
           foreach($issue as $i){
                 ?>
@@ -182,7 +184,7 @@
                 <?php
               }
               ?>
-      <option>------Current Issue------</option>
+      <option value="kosong">------Current Issue------</option>
       <?php
           foreach($issue as $i){
                 ?>
@@ -197,7 +199,7 @@
                 <?php
               }
               ?>
-      <option>------Back Issue------</option>
+      <option value="kosong">------Back Issue------</option>
       <?php
           foreach($issue as $i){
                 ?>
@@ -232,14 +234,14 @@
 		</div>
     <div class="form-group">
     <form id="formArsip" method="post" enctype="multipart/form-data">
-    <label for="exampleInputFile">File arsip</label>
+    <label for="exampleInputFile">File arsip <span style="color:grey;">(type docx)</span></label>
       <input type="file" id="fileArsip" name="fileArsip">
       </form>
       <button style="margin-top:10px;" type="submit" id="submitArsip" class="btn btn-primary" >Upload File</button>
     </div>
     <div class="form-group">
     <form id="formGalley" method="post" enctype="multipart/form-data">
-    <label for="exampleInputFile">File galley</label>
+    <label for="exampleInputFile">File galley <span style="color:grey;">(type pdf)</span></label>
       <input type="file" id="fileGalley" name="fileGalley">
       </form>
       <button style="margin-top:10px;" type="submit" id="submitGalley" class="btn btn-primary" >Upload File</button>
@@ -248,7 +250,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
-        <button type="button" class="btn btn-primary publication" data-dismiss="modal">Publikasi</button>
+        <button type="button" class="btn btn-primary publication" >Publikasi</button>
       </div>
     </div>
   </div>
@@ -374,7 +376,10 @@ $(document).on("click",".publication",function(){
   var tahun=$('#tahun').prop('value');
   //var subtitle=$('#subtitle').prop('value');
   //var abstract=$('textarea#editor1').val();
-  //alert(issue_id);
+  var tombol1 =$("#submitArsip").html();
+  var tombol2 =$("#submitGalley").html();
+  if(id!=null && issue_id!="kosong" && page != null && tahun!= null){
+  if(tombol1=="Uploaded" && tombol2=="Uploaded"){
 	$.ajax({
 			url:"<?php echo base_url('c_submission/setPublication'); ?>",
 			data:{id:id,issue_id:issue_id,page:page,tahun:tahun},
@@ -383,11 +388,19 @@ $(document).on("click",".publication",function(){
         $("tr[data-id='"+id+"']").fadeOut("fast",function(){
 					$(this).remove();
 				});
+        $('#myModal').modal('toggle'); 
 			},
         error: function() {
      alert("submission gagal di publikasi");
       }
 		 });
+  
+  }else{
+    alert("Silahkan Upload File Terlebih Dahulu");
+  }
+  }else{
+    alert("Silahkan melengkapi inputan form");
+  }
 });
 
 $(document).on("click",".sendEmail",function(){
@@ -406,7 +419,7 @@ $(document).on("click",".sendEmail",function(){
             url:"<?php echo base_url('c_submission/send_email'); ?>",
             data:{id:id,pesan:pesan,option:option},
             success: function(){
-              alert("Sukses! email berhasil dikirim.");
+              alert("Sukses! email berhasil dikirim dan submission di tolak");
               $("tr[data-id='"+id+"']").fadeOut("fast",function(){
 					$(this).remove();
 				});
@@ -430,8 +443,29 @@ $(document).on("click","#submitArsip",function(){
   form_data.append('fileArsip', fileArsip);
   form_data.append('submission_id', submission_id);
   form_data.append('editor_id', editor_id);
-  // console.log(submission_id);
-	$.ajax({
+   
+   if(fileArsip['type']=="application/vnd.openxmlformats-officedocument.wordprocessingml.document"){
+    
+  var tombol =$("#submitArsip").html();
+  if(tombol=="Uploaded"){
+    $.ajax({
+			url:"<?php echo base_url('c_submission/submitArsipEdit'); ?>",
+      data:form_data,
+      type: "POST",
+      contentType: false,
+      processData: false,
+      dataType : "html",
+			success: function(response){
+        console.log(response);
+        alert("file berhasil diupload");
+        $("#submitArsip").html('Uploaded');
+      },
+      error: function() {
+     alert("gagal");
+      }
+		 });
+  }else{
+    $.ajax({
 			url:"<?php echo base_url('c_submission/submitArsip'); ?>",
       data:form_data,
       type: "POST",
@@ -441,11 +475,16 @@ $(document).on("click","#submitArsip",function(){
 			success: function(response){
         console.log(response);
         alert("file berhasil diupload");
+        $("#submitArsip").html('Uploaded');
       },
       error: function() {
      alert("gagal");
       }
 		 });
+  }
+   }else{
+    alert("Upload File docx");
+   }
 });
 
 $(document).on("click","#submitGalley",function(){
@@ -456,7 +495,27 @@ $(document).on("click","#submitGalley",function(){
   form_data.append('fileGalley', fileGalley);
   form_data.append('submission_id', submission_id);
   form_data.append('editor_id', editor_id);
-  // console.log(fileGalley);
+//  console.log(fileGalley['type']);
+  if(fileGalley['type']=="application/pdf"){
+  var tombol =$("#submitGalley").html();
+  if(tombol=="Uploaded"){
+    $.ajax({
+			url:"<?php echo base_url('c_submission/submitGalleyEdit'); ?>",
+      data:form_data,
+      type: "POST",
+      contentType: false,
+      processData: false,
+      dataType : "html",
+			success: function(response){
+        console.log(response);
+        alert("file berhasil diupload");
+        $("#submitGalley").html('Uploaded');
+      },
+      error: function() {
+     alert("gagal");
+      }
+		 });
+  }else{
 	$.ajax({
 			url:"<?php echo base_url('c_submission/submitGalley'); ?>",
       data:form_data,
@@ -467,11 +526,16 @@ $(document).on("click","#submitGalley",function(){
 			success: function(response){
         console.log(response);
         alert("file berhasil diupload");
+        $("#submitGalley").html('Uploaded');
       },
       error: function() {
      alert("gagal");
       }
 		 });
+     }
+  }else{
+    alert("Upload File pdf");
+  }
 });
 
 $("#issue").change(function(){

@@ -589,10 +589,10 @@
         <p class="text-muted text-center"><?php echo $prodi;?></p>
         <ul class="list-group list-group-unbordered">
                 <li class="list-group-item">
-                  <b>NIM</b> <a class="pull-right"><?php echo $nim;?></a>
+                  <b>NIM</b> <a class=""><?php echo $nim;?></a>
                 </li>
                 <li class="list-group-item">
-                <i class="fa fa-mobile-phone"></i> <a class="pull-right"><?php echo $noHp;?></a>
+                <i class="fa fa-mobile-phone"></i> <a class=""><?php echo $noHp;?></a>
                 </li>
                 <li class="list-group-item">
                 <i class="fa fa-envelope"></i> <a class=""><?php echo $email;?></a>
@@ -1168,7 +1168,7 @@ $(document).on("click",".tambahPenulis",function(){
      alert("gagal reload");
       }
         })
-        alert("data berhasil di update");
+        // $('#myModal').modal('toggle');
 			}
 		 });
 });
